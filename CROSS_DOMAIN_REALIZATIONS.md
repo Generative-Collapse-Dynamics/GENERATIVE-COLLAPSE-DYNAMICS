@@ -327,13 +327,92 @@ heals or breaks channel balance.
 
 ---
 
+## III. Biological Realizations (Brain + Evolution Kernels)
+
+The brain kernel (10 channels, 19 species) and evolution kernel (8 channels, 40 organisms) reveal 8 previously unnamed patterns. All numbers are reproducible via `python scripts/jungian_analysis.py`.
+
+### Realization 9: Claustrum Linguae — The Language Bottleneck
+
+**Receipt**: `language_architecture` is the weakest channel (IC bottleneck) for 17/19 brain species (89.5%).
+
+**Mechanism**: The brain kernel measures 10 channels with equal weights. The geometric mean (IC) is dominated by the smallest channel. For almost every non-human species, the language channel is near ε, dragging IC toward zero regardless of how high the other 9 channels score.
+
+**What it means**: Language is the single largest barrier to high brain integrity. Only H. sapiens and Neanderthals have overcome this bottleneck — and for H. sapiens, the weakest channel shifts to `synaptic_density` (0.700), demonstrating *shadow rotation*: solving the deepest vulnerability reveals the next one.
+
+### Realization 10: Inversio Cerebri-Corporis — Brain Mass Correlates Positively
+
+**Receipt**: Pearson r(log₁₀ brain mass, IC/F) = +0.739 across 19 species.
+
+**Mechanism**: Larger brains have higher IC/F because larger brains *also* have more developed channels across the board. The correlation is positive, not negative — integrity grows with brain mass because the channels improve together, not because mass *causes* integrity.
+
+**What it means**: The naive expectation that "bigger brains have more heterogeneity" is wrong. Bigger brains have *more balanced channels*, producing higher multiplicative coherence. This is the inverse of the particle physics finding where heavier particles have *lower* F (T4: Spearman ρ = 0.77 between log mass and F for quarks, but with mass spread across 13 OOM).
+
+### Realization 11: Apex Adolescentis — Peak Integrity at Adolescence
+
+**Receipt**: Developmental trajectory IC/F values:
+- Newborn: 0.669
+- Child: 0.977
+- **Adolescent: 0.992** (peak)
+- Young Adult: 0.981
+- Middle Age: 0.945
+- Elderly: 0.883
+- Alzheimer's: 0.764
+
+**Mechanism**: The 10 brain channels reach maximum balance at adolescence (14–16 years). Before this point, `temporal_integration` is the weakest channel; after this point, `plasticity_window` declines, introducing new heterogeneity. The peak is not at maturity but at the cusp.
+
+**What it means**: Maximum multiplicative coherence precedes maximum capability. Adolescence is the point of highest *potential* — the moment when all channels are most balanced — not the point of highest *performance*. This is counter-intuitive but structurally necessary: specialization (adulthood) trades channel balance for channel depth.
+
+### Realization 12: Transitus Vulnerabilitatis — 36% IC Destruction Per Complex
+
+**Receipt**: Setting any single H. sapiens brain channel to 0.01 destroys 34.6–36.8% of IC (average ~36.4%).
+
+**Mechanism**: With 10 equal-weight channels, the geometric mean treats each channel symmetrically. One channel at 0.01 relative to others at ~0.93 creates a 0.01^(1/10) ≈ 0.631 multiplier on the geometric mean. The near-uniformity of the destruction across channels confirms the equal-weight architecture.
+
+**What it means**: Brain integrity has no safe channel. There is no "redundant" cognitive dimension. Loss of any single channel (language, social cognition, connectivity) produces the same catastrophic ~36% integrity collapse. This is the same geometric slaughter (*trucidatio geometrica*) observed at the subatomic scale (§1, R1) — one dead channel kills IC while F stays healthy.
+
+### Realization 13: Desertum Stabilitatis — The Stability Desert
+
+**Receipt**: 0/40 organisms in Stable regime. 40/40 in Collapse (100%).
+
+**Mechanism**: The 8-channel evolution kernel (behavioral_complexity, lineage_persistence, environmental_breadth, immune_competence, reproductive_success, etc.) produces ω ≥ 0.30 for every extant organism. The Stable regime threshold (ω < 0.038 AND F > 0.90 AND S < 0.15 AND C < 0.14, conjunctive) is structurally unreachable at evolutionary scale.
+
+**What it means**: Biological life is a Collapse-regime phenomenon. Stability is not the goal of evolution; persistence through collapse is. This parallels the cosmological finding (R7) where the universe's IC/F drops from 0.383 (z ≈ 0.7) to 0.014 (present) — the arrow of time is a drift arrow, and life *operates* in that drift rather than resisting it.
+
+### Realization 14: Paradoxum Humanum — The Shallowest Shadow
+
+**Receipt**: H. sapiens has Δ/F = 0.4% (shallowest of 19 species). C. elegans has Δ/F = 45.5% (deepest).
+
+**Mechanism**: Shadow depth (Δ/F = (F − IC)/F) measures how much the weakest channel drags IC below F. H. sapiens has highly balanced channels (weakest = `synaptic_density` at 0.700), so the heterogeneity gap is minimal. C. elegans has `language_architecture` at ε, creating maximum geometric drag.
+
+**What it means**: The human paradox — extreme capability coexisting with maximum self-awareness of limitation — has a kernel signature: the shallowest shadow. Having no deeply collapsed channel means no single weakness dominates, but *also* means no channel can be safely ignored. The paradox is structural: minimum heterogeneity implies maximum sensitivity to any perturbation.
+
+### Realization 15: Scalae Obex — Scale-Dependent Bottlenecks
+
+**Receipt**:
+- Brain kernel #1 bottleneck: `language_architecture` (17/19 = 89.5%)
+- Evolution kernel #1 bottleneck: `behavioral_complexity` (22/40 = 55.0%)
+
+**Mechanism**: Different scales select different bottlenecks. At the cognitive scale (brain kernel), the language channel dominates because it requires the most integrated neural architecture. At the evolutionary scale, behavioral complexity dominates because it requires the most adaptation channels to be simultaneously viable.
+
+**What it means**: The bottleneck is scale-dependent, not universal. This is the opposite of what a naive "one bottleneck rules all" model would predict. The kernel correctly identifies that *what limits integrity changes with the scale of observation* — the same Tier-1 machinery produces different regime-critical channels at different scales.
+
+### Realization 16: Gradus Interfectionis — Exponential vs Linear Decay
+
+**Receipt**: Under progressive channel attacks (setting channels to 0.01 one at a time), F drops approximately linearly while IC drops approximately exponentially.
+
+**Mechanism**: F = Σ wᵢcᵢ is arithmetic (linear in channels). IC = exp(Σ wᵢ ln cᵢ) is geometric (exponential in log-channels). A single channel at 0.01 subtracts ~0.09 from F but multiplies IC by ~0.63. Two channels at 0.01 double the F loss but *square* the IC multiplier.
+
+**What it means**: The integrity bound IC ≤ F is tightest when all channels are equal, and loosest when channels are heterogeneous. The exponential-vs-linear divergence IS the heterogeneity gap Δ = F − IC — and it grows faster than F shrinks. This is the computational proof of why geometric slaughter works: the arithmetic mean is blind to inequality that the geometric mean punishes exponentially.
+
+---
+
 ## Data Summary
 
 | Metric | Value |
 |--------|-------|
-| Total objects analyzed | 357 |
-| Scales | 6 |
-| Domains | 13 |
+| Total objects analyzed | 416 |
+| Scales | 8 |
+| Domains | 14 |
 | SM theorems | 10/10 PROVEN (74/74 subtests) |
 | Duality F + ω = 1 | Exact (0.0e+00 residual) |
 | Integrity bound IC ≤ F | 100% verified |
@@ -347,6 +426,15 @@ heals or breaks channel balance.
 | Cosmic IC present | z = 0, IC/F = 0.014 |
 | Confinement cliff magnitude | 23× |
 | Atomic healing magnitude | 35× |
+| Brain species analyzed | 19 |
+| Brain #1 bottleneck | language_architecture (89.5%) |
+| Shallowest shadow (brain) | H. sapiens (Δ/F = 0.4%) |
+| Deepest shadow (brain) | C. elegans (Δ/F = 45.5%) |
+| Peak developmental IC/F | Adolescent (0.992) |
+| Evolution organisms analyzed | 40 |
+| Evo #1 bottleneck | behavioral_complexity (55%) |
+| Organisms in Stable regime | 0/40 (0%) |
+| IC drop per complex | ~36.4% |
 
 ---
 
@@ -363,7 +451,10 @@ from closures.standard_model.particle_physics_formalism import run_all_theorems
 for r in run_all_theorems(): print(f'{r.name}: {r.verdict} ({r.n_passed}/{r.n_tests})')
 "
 
-# Run the full test suite (4,144+ tests)
+# Re-derive all biological / Jungian kernel receipts
+python scripts/jungian_analysis.py
+
+# Run the full test suite (5,247 tests)
 python -m pytest -q --tb=no
 
 # Validate the repository
