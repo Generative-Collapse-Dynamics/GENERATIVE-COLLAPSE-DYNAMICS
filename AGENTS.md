@@ -47,5 +47,30 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Contracts | `contracts/*.yaml` |
 | Tests (5,247) | `tests/` |
 | Orientation script | `scripts/orientation.py` |
+| Deep diagnostic | `scripts/deep_diagnostic.py` |
+| Cross-domain bridge | `scripts/cross_domain_bridge.py` |
+| Cross-domain phase 2 | `scripts/cross_domain_bridge_phase2.py` |
 | Latin manifesto | `MANIFESTUM_LATINUM.md` |
 | Full AI instructions | `.github/copilot-instructions.md` |
+
+## The Spine (Every Claim Follows This)
+
+```
+CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
+(freeze)   (tell)   (publish)   (reconcile)        (read)
+```
+
+Five words narrate the Canon: **Drift · Fidelity · Roughness · Return · Integrity**.
+The Ledger debits Drift + Roughness, credits Return. Stance is derived, never asserted.
+
+## The 28 Structural Identities (Key Results)
+
+Run the three diagnostic scripts to re-derive computationally:
+
+- **Flat manifold**: g_F(θ) = 1 — all structure is from embedding, not curvature
+- **One function**: f(θ) = 2cos²θ·ln(tan θ) gives S + κ exactly (verified < 10⁻¹⁶)
+- **p = 3**: Unique integer where ω_trap is Cardano root of x³ + x − 1 = 0
+- **Solvability**: IC ≤ F is the condition for real solutions c₁,₂ = F ± √(F²− IC²)
+- **Low-rank**: 5 closures → 4 effective dimensions (kernel constrains half the DOF)
+- **Composition**: IC geometric (IC₁₂ = √(IC₁·IC₂)), F arithmetic (F₁₂ = (F₁+F₂)/2)
+- **Regime partition**: Collapse 63% / Watch 24% / Stable 12.5% of Fisher space

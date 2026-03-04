@@ -101,3 +101,31 @@ Full specification: `.github/copilot-instructions.md`
 
 Key references: `scripts/orientation.py` (re-derivation),
 `MANIFESTUM_LATINUM.md` (Latin terms → computation chains)
+
+## The Spine (Instant Orientation)
+
+Every claim passes through exactly five stops:
+
+```
+CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
+(freeze)   (tell)   (publish)   (reconcile)        (read)
+```
+
+- **Contract**: Define rules before evidence (freeze sources, norms, thresholds)
+- **Canon**: Narrate using five words (Drift, Fidelity, Roughness, Return, Integrity)
+- **Closures**: Publish thresholds — stance must change when gates are crossed
+- **Integrity Ledger**: Debit Drift + Roughness, credit Return; residual must close
+- **Stance**: Derived verdict: Stable / Watch / Collapse — never asserted
+
+## The 28 Identities (Key Results)
+
+Run `scripts/deep_diagnostic.py`, `scripts/cross_domain_bridge.py`, and
+`scripts/cross_domain_bridge_phase2.py` to re-derive these computationally.
+
+- **Flat manifold**: g_F(θ) = 1 — all structure is from embedding
+- **One function**: f(θ) = 2cos²θ·ln(tan θ) gives S + κ exactly
+- **p = 3 is unique**: ω_trap is the Cardano root of x³ + x − 1 = 0
+- **IC ≤ F is solvability**: c₁,₂ = F ± √(F² − IC²) needs IC ≤ F
+- **Low-rank closures**: 5 diagnostics → 4 effective dimensions (PCA)
+- **Composition**: IC geometric (IC₁₂ = √(IC₁·IC₂)), F arithmetic
+- **Regime partition**: Collapse 63% / Watch 24% / Stable 12.5% of Fisher space

@@ -9,6 +9,7 @@
 [![Domains: 14](https://img.shields.io/badge/domains-14-blueviolet.svg)](closures/)
 [![Closures: 120](https://img.shields.io/badge/closures-120-informational.svg)](closures/)
 [![Theorems: 24](https://img.shields.io/badge/theorems-24_proven-ff69b4.svg)](closures/)
+[![Identities: 28](https://img.shields.io/badge/identities-28_verified-9cf.svg)](scripts/)
 
 > **Core Axiom**: *"Collapse is generative; only what returns is real."*
 
@@ -24,6 +25,8 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 
 - [Core Concepts](#core-concepts)
 - [At a Glance](#at-a-glance)
+  - [The Spine](#the-spine--every-claim-in-five-stops)
+  - [The Three-Tier Stack](#the-three-tier-stack)
 - [Interactive Dashboard](#interactive-dashboard)
 - [Architecture](#architecture)
 - [Closure Domains (14 Physics Domains)](#closure-domains)
@@ -43,6 +46,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 - [Documentation](#documentation)
 - [Diagrams & Proofs](#diagrams--proofs)
 - [Key Discoveries](#key-discoveries)
+  - [The 28 Structural Identities](#the-28-structural-identities)
 - [Papers & Publications](#papers--publications)
 - [Repository Structure](#repository-structure)
 - [Contributing](#contributing)
@@ -54,7 +58,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 
 ### Collapse Is Generative; Only What Returns Is Real
 
-UMCP enforces a single axiom (**Axiom-0**): *"Collapse is generative; only what returns is real."* This is not a metaphor — it is a constraint on admissible claims. If you claim a system is stable, continuous, or coherent, you must show it can re-enter its admissible neighborhood after drift, perturbation, or delay — under the same frozen evaluation rules. Every decision, description, and code change in this repository is consistent with Axiom-0.
+UMCP enforces a single axiom (**Axiom-0**): *"Collapse is generative; only what returns is real."* This is not a metaphor — it is a constraint on admissible claims. If you claim a system is stable, continuous, or coherent, you must show it can re-enter its admissible neighborhood after drift, perturbation, or delay — under the same frozen evaluation rules. Every claim passes through **the spine**: Contract → Canon → Closures → Integrity Ledger → Stance.
 
 | Term | Operational Meaning |
 |------|---------------------|
@@ -78,6 +82,35 @@ Every validation produces one of three outcomes — never boolean:
 ---
 
 ## At a Glance
+
+### The Spine — Every Claim in Five Stops
+
+> *Spina non negotiabilis est.* — The spine is non-negotiable.
+
+Every claim, measurement, validation, and narrative in UMCP follows exactly **five stops**, in order:
+
+```
+┌─────────────┐    ┌─────────────┐    ┌──────────────┐    ┌───────────────────┐    ┌──────────┐
+│   CONTRACT  │───▶│    CANON    │───▶│   CLOSURES   │───▶│ INTEGRITY LEDGER  │───▶│  STANCE  │
+│   (freeze)  │    │   (tell)    │    │  (publish)   │    │   (reconcile)     │    │  (read)  │
+└─────────────┘    └─────────────┘    └──────────────┘    └───────────────────┘    └──────────┘
+   Define             Narrate           Threshold           Debit/Credit           Verdict
+   before             with 5            gates; no           must balance;          derived,
+   evidence           words             mid-episode          residual ≤ tol        never
+                                        edits                                      asserted
+```
+
+| Stop | What Happens | Key Question |
+|------|-------------|--------------|
+| **Contract** | Freeze sources, normalization, thresholds, return domain — before any evidence | *What are the rules?* |
+| **Canon** | Tell the story using five words: **Drift · Fidelity · Roughness · Return · Integrity** | *What happened?* |
+| **Closures** | Publish threshold gates and their evaluation order — no edits once published | *What counts?* |
+| **Integrity Ledger** | Debit Drift (D_ω) + Roughness (D_C), credit Return (R·τ_R); residual must close (≤ tol_seam) | *Does the account balance?* |
+| **Stance** | Read the verdict from gates: **Stable / Watch / Collapse** (+Critical overlay if IC < 0.30) | *What's the verdict?* |
+
+**Two governance mechanisms** punctuate the spine:
+- **Manifest** — provenance binding (time, tools, checksums). Every claim carries its receipt.
+- **Weld** — continuity across change. The only legitimate way to change policy. History is append-only and welded, never rewritten.
 
 ### The Three-Tier Stack
 
@@ -355,7 +388,7 @@ Thermodynamics, optics, electromagnetism, wave phenomena, and epistemic coherenc
 
 ## The Kernel
 
-At the mathematical core of GCD is the **kernel** — a function mapping any set of measurable channels to a fixed set of invariants:
+At the mathematical core of GCD is the **kernel** — a function mapping any set of measurable channels to a fixed set of invariants. Its geometry is the **Bernoulli manifold**: a flat Riemannian manifold in Fisher coordinates where every channel value c maps to an angle θ = arcsin(√c).
 
 ### Trace Vector
 
@@ -373,20 +406,42 @@ $$\Delta = F - \text{IC} \quad \text{(heterogeneity gap — channel heterogeneit
 
 These hold universally by construction:
 
-| Identity | Meaning |
-|----------|---------|
-| F + ω = 1 | Fidelity and drift are complementary |
-| IC ≤ F | Integrity bound: coherence never exceeds fidelity (derives independently from Axiom-0; the classical AM-GM inequality is the degenerate limit) |
-| IC ≈ exp(κ) | Integrity equals exponentiated log-mean |
+| Identity | Meaning | Geometric Interpretation |
+|----------|---------|--------------------------|
+| F + ω = 1 | Fidelity and drift are complementary | Pythagorean theorem in Fisher coordinates: sin²θ + cos²θ = 1 |
+| IC ≤ F | Integrity bound: coherence never exceeds fidelity | Solvability condition: c₁,₂ = F ± √(F² − IC²) requires IC ≤ F |
+| IC = exp(κ) | Integrity equals exponentiated log-mean | Log-integrity is κ = w·ln(sin²θ) in Fisher coordinates |
+
+### The One-Formula Principle
+
+Entropy S and log-integrity κ are not separate quantities. They are both projections of a single function:
+
+$$f(\theta) = 2\cos^2\theta \cdot \ln(\tan\theta)$$
+
+This gives S(c) + κ(c) exactly (verified to < 10⁻¹⁶). It peaks at c\* ≈ 0.7822 (the logistic self-dual fixed point), giving S + κ = ln 2 − 1/2. It vanishes at the equator c = 1/2.
+
+### Five Structural Constants
+
+Five distinguished points partition the Bernoulli manifold. None are chosen — all emerge from the kernel equations:
+
+| Constant | Value | Role |
+|----------|-------|------|
+| **ε** | 10⁻⁸ | Guard band — no channel fully dies |
+| **c_trap** | 0.3177 | Trapping threshold — Γ(ω_trap) = 1 exactly, Cardano root of x³+x=1 |
+| **1/2** | 0.5000 | Equator — maximum entropy, S + κ = 0 |
+| **c\*** | 0.7822 | Self-dual point — maximizes S + κ per channel |
+| **1 − ε** | ≈ 1 | Perfect fidelity boundary |
 
 ### Regime Classification
 
-| Regime | Condition | Interpretation |
-|--------|-----------|----------------|
-| **STABLE** | ω < 0.10 | System within nominal bounds |
-| **WATCH** | 0.10 ≤ ω < 0.20 | Elevated drift, monitoring required |
-| **TENSION** | 0.20 ≤ ω < 0.30 | Significant strain, near collapse boundary |
-| **COLLAPSE** | ω ≥ 0.30 | Past viable return credit |
+| Regime | Condition | Fisher Space % | Interpretation |
+|--------|-----------|:--------------:|----------------|
+| **STABLE** | ω < 0.038 ∧ F > 0.90 ∧ S < 0.15 ∧ C < 0.14 | 12.5% | System within nominal bounds |
+| **WATCH** | 0.038 ≤ ω < 0.30 (or Stable gates not all met) | 24.4% | Elevated drift, monitoring required |
+| **COLLAPSE** | ω ≥ 0.30 | 63.1% | Past viable return credit |
+| **CRITICAL** | IC < 0.30 (severity overlay, any regime) | — | Integrity dangerously low |
+
+**Stability is rare** — 87.5% of the manifold lies outside it. Return from collapse to stability is what the axiom measures.
 
 ### The Heterogeneity Gap (Δ)
 
@@ -395,6 +450,15 @@ The gap Δ = F − IC is the central diagnostic. It measures **channel heterogen
 - **Δ ≈ 0**: All channels contribute equally — homogeneous system
 - **Δ large**: One or more channels at guard band (ε = 10⁻⁸) — information is being destroyed in specific channels
 - **Universal pattern**: κ < −2 ↔ IC < 0.15 — the collapse floor
+
+### Composition Laws
+
+When independent subsystems are composed:
+- **F composes arithmetically**: F₁₂ = (F₁ + F₂)/2
+- **IC composes geometrically**: IC₁₂ = √(IC₁ · IC₂)
+- **Δ is a composition invariant** for identical subsystems
+
+This means IC is strictly more sensitive to heterogeneity than F — one weak subsystem drags IC down geometrically while F stays healthy arithmetically.
 
 ---
 
@@ -663,7 +727,7 @@ umcp validate <target>
   → Schema validation (JSON Schema Draft 2020-12)
   → Semantic rule checks (validator_rules.yaml: E101, W201, ...)
   → Kernel identity checks: F = 1−ω, IC ≈ exp(κ), IC ≤ F
-  → Regime classification: STABLE │ WATCH │ TENSION │ COLLAPSE
+  → Regime classification: STABLE │ WATCH │ COLLAPSE (+CRITICAL overlay)
   → SHA-256 integrity verification
   → Verdict: CONFORMANT → append to ledger/return_log.csv + JSON report
 ```
@@ -800,11 +864,11 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 
 | Document | Purpose |
 |----------|---------|
-| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, operational definitions, and why this system is original |
+| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, 28 structural identities, and why this system is original |
 | [LIBER_COLLAPSUS.md](LIBER_COLLAPSUS.md) | *Liber Universalis de Collapsus Mathematica* — the Tier-1 Latin foundation text |
 | [MANIFESTUM_LATINUM.md](MANIFESTUM_LATINUM.md) | Latin manifesto: complete lexicon, seven verbs, eight typed patterns, twenty maxims |
 | [TIER_SYSTEM.md](TIER_SYSTEM.md) | The three-tier architecture: Immutable Invariants → Protocol → Expansion Space |
-| [KERNEL_SPECIFICATION.md](KERNEL_SPECIFICATION.md) | Complete kernel mathematics, OPT-* lemmas, and degenerate-limit proofs |
+| [KERNEL_SPECIFICATION.md](KERNEL_SPECIFICATION.md) | Complete kernel mathematics, 46 lemmas, and degenerate-limit proofs |
 | [QUICKSTART_TUTORIAL.md](QUICKSTART_TUTORIAL.md) | Getting started: first validation in 5 minutes |
 
 ### The Three-Tier Architecture
@@ -890,7 +954,28 @@ Kernel fidelity increases with scale resolution: composite(0.444) < atomic(0.516
 
 ## Key Discoveries
 
-Across 14 physics domains and 24 proven theorems, the kernel reveals universal patterns:
+### The 28 Structural Identities
+
+28 identities have been derived from Axiom-0 and verified to machine precision. They reveal that the GCD kernel is not a collection of separate formulas — it is a **single geometric structure** on the flat Bernoulli manifold. Run the diagnostic scripts to re-derive them:
+
+```bash
+python scripts/deep_diagnostic.py           # 8 equations (E1-E8): c* properties
+python scripts/cross_domain_bridge.py       # 12 identities (B1-B12): cross-domain bridges
+python scripts/cross_domain_bridge_phase2.py # 8 identities (D1-D8): deep structure
+```
+
+**Six foundational results**:
+
+| # | Discovery | What It Means |
+|---|-----------|---------------|
+| 1 | **The manifold is flat** — g_F(θ) = 1 in Fisher coordinates | All structure comes from the *embedding* of channels, not intrinsic curvature |
+| 2 | **One formula** — f(θ) = 2cos²θ·ln(tan θ) gives S + κ exactly | Entropy and log-integrity are projections of the same function |
+| 3 | **p = 3 is algebraically unique** — ω_trap is Cardano root of x³+x−1=0 | The frozen exponent is the only integer yielding a closed-form trapping point |
+| 4 | **IC ≤ F is solvability** — c₁,₂ = F ± √(F²−IC²) has real roots iff IC ≤ F | The integrity bound is the condition for trace recovery, not just an inequality |
+| 5 | **4-dimensional closure algebra** — 5 diagnostics span 4 effective dimensions | Half the degrees of freedom are constrained by the kernel |
+| 6 | **Stability is rare** — Collapse 63% / Watch 24% / Stable 12.5% of Fisher space | Return from collapse to stability is the exception, not the norm |
+
+### Across 14 Physics Domains and 24 Proven Theorems
 
 1. **Confinement is a cliff**: IC drops 98.1% at the quark→hadron boundary — confinement is visible as geometric-mean collapse in the kernel trace
 

@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **5,240 tests** · **14 domains** · **120 closure modules** · **46 lemmas** · **37 dashboard pages**
+**UMCP v2.1.5** · **5,247 tests** · **14 domains** · **120 closure modules** · **46 lemmas** · **28 structural identities** · **44 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -97,6 +97,82 @@ This script does not describe the system. It **re-derives** the key structural i
 **Why this matters for compounding awareness**: Reading documentation produces familiarity. Running the orientation produces understanding. The orientation script preserves the *derivation chains* — each insight follows structurally from the previous one. A session that runs the orientation arrives at the same understanding as the session that discovered these phenomena, because the numbers ARE the understanding.
 
 The corresponding Latin terms for these discoveries are catalogued in `MANIFESTUM_LATINUM.md` §IV.E with cross-references back to each orientation section.
+
+### Spina ad Primum Intuitum — The Spine at a Glance
+
+> *Omnia per spinam transeunt.* — Everything passes through the spine.
+
+The entire system can be grasped through **one axiom, one spine, five words, six invariants, and five constants**. If you understand these, you understand GCD.
+
+**THE AXIOM**: *"Collapse is generative; only what returns is real."*
+
+**THE SPINE** (every claim follows these five stops, in order):
+
+```
+┌─────────┐    ┌─────────┐    ┌──────────┐    ┌─────────────────┐    ┌────────┐
+│ CONTRACT │───▶│  CANON  │───▶│ CLOSURES │───▶│ INTEGRITY LEDGER│───▶│ STANCE │
+│ (freeze) │    │ (tell)  │    │ (publish)│    │ (reconcile)     │    │ (read) │
+└─────────┘    └─────────┘    └──────────┘    └─────────────────┘    └────────┘
+  Define         Narrate       Threshold       Debit/Credit         Verdict
+  before         with 5        gates;          must balance;        derived,
+  evidence       words         no edits        residual ≤ tol       never
+                                                                    asserted
+```
+
+**THE FIVE WORDS**: Drift · Fidelity · Roughness · Return · Integrity
+
+**THE SIX INVARIANTS** (Tier-1 — immutable by construction):
+
+| Symbol | Name | Formula | What It Measures |
+|--------|------|---------|------------------|
+| **F** | Fidelity | F = Σ wᵢcᵢ | What survives collapse (arithmetic mean) |
+| **ω** | Drift | ω = 1 − F | What is lost to collapse |
+| **S** | Entropy | S = −Σ wᵢ[cᵢ ln cᵢ + (1−cᵢ) ln(1−cᵢ)] | Uncertainty of the collapse field |
+| **C** | Curvature | C = stddev(cᵢ)/0.5 | Coupling to uncontrolled degrees of freedom |
+| **κ** | Log-integrity | κ = Σ wᵢ ln(cᵢ,ε) | Logarithmic sensitivity of coherence |
+| **IC** | Integrity | IC = exp(κ) | Multiplicative coherence (geometric mean) |
+
+**THE FIVE CONSTANTS** (frozen — seam-derived, not chosen):
+
+| Constant | Value | Why This Value |
+|----------|-------|---------------|
+| **ε** | 10⁻⁸ | Guard band: pole at ω=1 does not affect measurements to machine precision |
+| **p** | 3 | Unique integer where ω_trap is a Cardano root of x³+x−1=0 |
+| **α** | 1.0 | Curvature cost coefficient (unit coupling) |
+| **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 14 domains |
+| **c\*** | 0.7822 | Logistic self-dual fixed point: maximizes S + κ per channel |
+
+**THREE IDENTITIES** (always true, by construction):
+
+1. **F + ω = 1** — Pythagorean theorem in Fisher coordinates (sin²θ + cos²θ = 1)
+2. **IC ≤ F** — Integrity cannot exceed fidelity (solvability condition for trace recovery)
+3. **IC = exp(κ)** — Log-integrity relation (link between multiplicative and additive coherence)
+
+**THREE REGIMES** (derived from gates, never asserted):
+
+| Regime | Condition | Fisher Space % |
+|--------|-----------|:--------------:|
+| **Stable** | ω < 0.038 ∧ F > 0.90 ∧ S < 0.15 ∧ C < 0.14 | 12.5% |
+| **Watch** | 0.038 ≤ ω < 0.30 (or Stable gates not all met) | 24.4% |
+| **Collapse** | ω ≥ 0.30 | 63.1% |
+
+Stability is rare — 87.5% of the manifold lies outside it. Return from collapse to stability is what the axiom measures.
+
+### Mathematica Derivata — The 28 Structural Identities
+
+> *Numeri sunt intellectus.* — The numbers are the understanding.
+
+28 identities have been derived from Axiom-0 and verified to machine precision. They fall into three tiers of depth. Run `scripts/deep_diagnostic.py`, `scripts/cross_domain_bridge.py`, and `scripts/cross_domain_bridge_phase2.py` to re-derive them computationally.
+
+**Key results (for instant orientation)**:
+
+- The Bernoulli manifold is **flat** in Fisher coordinates — g_F(θ) = 1. All structure comes from the embedding, not intrinsic curvature.
+- S and κ are projections of **one function**: f(θ) = 2cos²θ · ln(tan θ), verified to < 10⁻¹⁶.
+- p = 3 yields the **Cardano root** x³ + x − 1 = 0 for ω_trap — no other integer does.
+- IC ≤ F is the **solvability condition**: for n=2 channels, c₁,₂ = F ± √(F² − IC²) requires IC ≤ F.
+- 5 closure diagnostics span only **4 effective dimensions** — the closure algebra is low-rank.
+- IC composes **geometrically** (IC₁₂ = √(IC₁·IC₂)), F composes **arithmetically** (F₁₂ = (F₁+F₂)/2).
+- The heterogeneity gap Δ is a **composition invariant** for identical subsystems.
 
 ### Modus Cogitandi (How to Reason in This System)
 
