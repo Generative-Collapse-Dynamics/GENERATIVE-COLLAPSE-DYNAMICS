@@ -88,7 +88,7 @@ from umcp.dashboard._utils import (
 try:
     from umcp import __version__
 except ImportError:
-    __version__ = "2.1.4"
+    __version__ = "2.1.5"
 
 # ── Page render functions (lazy-imported from submodules) ────────────────────
 from umcp.dashboard.pages_advanced import (
