@@ -70,7 +70,12 @@ CLADE_COLORS = {
 
 def render_evolution_kernel_page() -> None:
     """Render the Evolution Kernel page — 40 organisms, 8 channels."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -417,7 +422,12 @@ def render_evolution_kernel_page() -> None:
 
 def render_brain_kernel_page() -> None:
     """Render the Brain Kernel page — 19 species, 10 channels, development."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -854,7 +864,12 @@ def render_brain_kernel_page() -> None:
 
 def render_awareness_manifold_page() -> None:
     """Render the Awareness Manifold page — emergence, persistence, dissolution."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -1090,7 +1105,12 @@ def render_awareness_manifold_page() -> None:
 
 def render_cognitive_traversal_page() -> None:
     """Render the Cognitive Traversal page — regime distance, convergence rates."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()

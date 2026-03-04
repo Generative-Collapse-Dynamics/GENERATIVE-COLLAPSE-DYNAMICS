@@ -29,7 +29,12 @@ def render_cosmology_page() -> None:
 
     Reference: Nature Communications 15:9295 (2024)
     """
-    if st is None or np is None or pd is None:
+    if st is None:
+        return
+    if np is None or pd is None or go is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     st.title("🌌 WEYL Cosmology")
@@ -351,7 +356,12 @@ def render_cosmology_page() -> None:
 
 def render_astronomy_page() -> None:
     """Render interactive Astronomy domain page with all 6 closures."""
-    if st is None or go is None or pd is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -814,7 +824,12 @@ def render_astronomy_page() -> None:
 
 def render_nuclear_page() -> None:
     """Render interactive Nuclear Physics domain page with all 6 closures."""
-    if st is None or go is None or pd is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -1492,7 +1507,12 @@ def render_nuclear_page() -> None:
 
 def render_quantum_page() -> None:
     """Render interactive Quantum Mechanics domain page with all 6 closures."""
-    if st is None or go is None or pd is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -2002,7 +2022,12 @@ def render_quantum_page() -> None:
 
 def render_finance_page() -> None:
     """Render interactive Finance domain page with professional visualizations."""
-    if st is None or go is None or pd is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     _ensure_closures_path()
@@ -2323,7 +2348,12 @@ def render_finance_page() -> None:
 
 def render_rcft_page() -> None:
     """Render interactive RCFT domain page with 7 closures and professional visualizations."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (plotly, pandas, numpy) are required for this page. Install with: `pip install plotly pandas numpy`"
+        )
         return
 
     _ensure_closures_path()
@@ -3509,7 +3539,12 @@ def render_rcft_page() -> None:
 
 def render_atomic_physics_page() -> None:
     """Render interactive Atomic Physics domain page with 6 closures."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (plotly, pandas, numpy) are required for this page. Install with: `pip install plotly pandas numpy`"
+        )
         return
 
     _ensure_closures_path()
@@ -4473,7 +4508,12 @@ def render_atomic_physics_page() -> None:
 
 def render_standard_model_page() -> None:
     """Render interactive Standard Model comparison page with 5 closures."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (plotly, pandas, numpy) are required for this page. Install with: `pip install plotly pandas numpy`"
+        )
         return
 
     _ensure_closures_path()
@@ -5346,7 +5386,12 @@ def render_standard_model_page() -> None:
 
 def render_materials_science_page() -> None:
     """Render interactive Materials Science domain page with 8 closures + element database."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (plotly, pandas, numpy) are required for this page. Install with: `pip install plotly pandas numpy`"
+        )
         return
 
     _ensure_closures_path()
@@ -6138,7 +6183,12 @@ def render_materials_science_page() -> None:
 
 def render_security_page() -> None:
     """Render interactive Security domain page with trust fidelity, threat classification, and more."""
-    if st is None or go is None or pd is None or np is None:
+    if st is None:
+        return
+    if go is None or pd is None or np is None:
+        st.error(
+            "Dashboard dependencies (plotly, pandas, numpy) are required for this page. Install with: `pip install plotly pandas numpy`"
+        )
         return
 
     _ensure_closures_path()

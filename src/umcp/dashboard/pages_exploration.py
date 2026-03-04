@@ -201,7 +201,10 @@ ROSETTA_EXAMPLES: dict[str, dict[str, Any]] = {
 
 def render_rosetta_page() -> None:
     """Render the Rosetta Translation Engine — interactive cross-domain five-word translation."""
-    if st is None or np is None:
+    if st is None:
+        return
+    if np is None:
+        st.error("Dashboard dependencies (numpy) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("🌐 Rosetta Translation Engine")
@@ -764,7 +767,10 @@ def _render_latin_lexicon() -> None:
 
 def render_orientation_page() -> None:
     """Render the Orientation Protocol — interactive re-derivation through computation."""
-    if st is None or np is None:
+    if st is None:
+        return
+    if np is None:
+        st.error("Dashboard dependencies (numpy) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("🧭 Orientation Protocol")
@@ -1177,7 +1183,10 @@ def render_orientation_page() -> None:
 
 def render_everyday_physics_page() -> None:
     """Render the Everyday Physics domain page — thermodynamics, optics, EM, waves, epistemic."""
-    if st is None or np is None:
+    if st is None:
+        return
+    if np is None:
+        st.error("Dashboard dependencies (numpy) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("🌡️ Everyday Physics")

@@ -24,6 +24,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 
 - [Core Concepts](#core-concepts)
 - [At a Glance](#at-a-glance)
+- [Interactive Dashboard](#interactive-dashboard)
 - [Architecture](#architecture)
 - [Closure Domains (14 Physics Domains)](#closure-domains)
 - [The Kernel](#the-kernel)
@@ -95,6 +96,69 @@ The integrity bound holds universally across 31 Standard Model particles + 118 p
 Every `umcp validate` run is recorded in the append-only ledger. Cumulative runs, kernel invariant evolution, and conformance rate over time. *"Nihil in memoria perit."*
 
 ![Validation Timelapse](images/08_validation_timelapse.png)
+
+---
+
+## Interactive Dashboard
+
+**44 pages · 14 science domains · Real-time kernel exploration**
+
+UMCP ships with a full-featured **Streamlit dashboard** for interactive exploration of every domain, kernel metric, and validation result. No coding required — launch it with one command and explore everything from subatomic particles to neuroscience through the GCD kernel.
+
+### Quick Launch
+
+```bash
+# Install with visualization dependencies
+pip install -e ".[all]"
+
+# Launch the dashboard (opens at http://localhost:8501)
+umcp-dashboard
+```
+
+That's it. The dashboard auto-detects all casepacks, contracts, closures, and ledger data.
+
+### What's Inside
+
+| Category | Pages | Highlights |
+|----------|-------|------------|
+| **Core** | Overview, Domain Overview, Health, Ledger, Metrics | System-wide health monitoring, conformance tracking, kernel metric trends |
+| **Science Domains** | Cosmology, Astronomy, Nuclear, Quantum, Atomic Physics, Standard Model, Materials Science, Finance, RCFT, Security, Everyday Physics | Interactive closure exploration for all 14 domains with live kernel computation |
+| **Evolution & Cognition** | Evolution Kernel, Brain Kernel, Awareness Manifold, Cognitive Traversal | 40-organism evolution kernel, 10-channel brain analysis, compositional traversal |
+| **Analysis** | Regime, Time Series, Comparison, Formula Builder, Precision | Regime phase diagrams, cross-domain comparison, custom formula evaluation |
+| **Exploration** | Canon Explorer, Geometry, Rosetta Translation, Orientation, Physics, Kinematics | Cross-domain Rosetta translation, three-layer geometry visualization |
+| **Tools** | Casepacks, Contracts, Closures, Live Runner, Batch Validation, Test Templates | Run validations directly from the browser, inspect casepack structure |
+| **Diagnostics** | τ_R* Diagnostic, Epistemic Classification, Insights Engine | Thermodynamic phase diagrams, epistemic cost tracking, pattern discovery |
+| **Manage** | Exports, Bookmarks, Notifications, API Integration | Export results, bookmark pages, connect to the REST API |
+
+### Features
+
+- **Categorized sidebar navigation** with expandable sections and quick-action buttons
+- **Live validation** — run `umcp validate` on any casepack directly from the browser
+- **Regime visualization** — interactive phase space plots with Stable / Watch / Collapse classification
+- **Kernel computation** — compute F, ω, S, C, κ, IC on custom trace vectors in real time
+- **Cross-domain comparison** — compare kernel outputs across all 14 physics domains
+- **Auto-refresh mode** — continuously monitor validation status
+- **Responsive layout** with compact mode for data-dense views
+
+### Alternative Launch Methods
+
+```bash
+# Direct Streamlit invocation (headless mode for servers)
+streamlit run src/umcp/dashboard/__init__.py --server.port 8501 --server.headless true
+
+# Via helper scripts
+bash scripts/start_dashboard.sh            # Start in background
+bash scripts/stop_dashboard.sh             # Stop background instance
+```
+
+### REST API (Companion)
+
+The dashboard pairs with an optional FastAPI REST server for programmatic access:
+
+```bash
+umcp-api                                   # Starts at http://localhost:8000
+# Interactive docs at http://localhost:8000/docs
+```
 
 ---
 
@@ -441,20 +505,10 @@ umcp integrity                  # Verify SHA-256 checksums
 ### Launch the dashboard
 
 ```bash
-pip install -e ".[all]"                    # Ensure viz dependencies are installed
-umcp-dashboard                             # Start Streamlit dashboard on :8501
+umcp-dashboard                             # Start interactive dashboard on :8501
 ```
 
-Or start manually:
-
-```bash
-streamlit run src/umcp/dashboard/__init__.py --server.port 8501 --server.headless true
-```
-
-The dashboard provides interactive pages across all 14 domains:
-Kernel Explorer, Regime Map, Seam Budget, τ_R* Phase Diagram,
-Astronomy, Nuclear Physics, Quantum Mechanics, Finance, RCFT,
-Atomic Physics, Standard Model, Materials Science, Security, and more.
+See the **[Interactive Dashboard](#interactive-dashboard)** section above for full details, features, and all 44 pages.
 
 ### Use the kernel in Python
 
@@ -528,12 +582,8 @@ cd src/umcp_cpp/build && ctest --output-on-failure && cd ../../..
 # FastAPI REST server (http://localhost:8000)
 umcp-api                                   # Or: uvicorn umcp.api_umcp:app --reload --port 8000
 
-# Streamlit dashboard (http://localhost:8501)
-umcp-dashboard                             # Or: streamlit run src/umcp/dashboard/__init__.py --server.port 8501
-
-# Start/stop dashboard via helper scripts
-bash scripts/start_dashboard.sh
-bash scripts/stop_dashboard.sh
+# Streamlit dashboard (http://localhost:8501) — see Interactive Dashboard section for details
+umcp-dashboard                             # 44 pages, 14 domains, real-time kernel exploration
 ```
 
 ### Development Loop — Edit, Validate, Commit

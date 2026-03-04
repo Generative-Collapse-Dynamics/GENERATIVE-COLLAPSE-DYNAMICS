@@ -461,17 +461,61 @@ def detect_anomalies(series: Any, threshold: float = 2.5) -> Any:
 # Custom CSS injected once via inject_custom_css()
 _CUSTOM_CSS = """
 <style>
-/* ── Global typography and spacing ────────────────────────────── */
-section[data-testid="stSidebar"] > div:first-child {
-    padding-top: 1rem;
-}
-.stMetric label { font-size: 0.82rem !important; }
-.stMetric [data-testid="stMetricValue"] { font-size: 1.3rem !important; }
+/* ══════════════════════════════════════════════════════════════════
+   UMCP Dashboard — Professional Theme
+   Generative Collapse Dynamics · 44 pages · 14 domains
+   ══════════════════════════════════════════════════════════════════ */
 
-/* ── Section cards with subtle borders ────────────────────────── */
+/* ── Global typography and spacing ────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+section[data-testid="stSidebar"] > div:first-child {
+    padding-top: 0.5rem;
+}
+
+/* Main content area */
+.main .block-container {
+    padding-top: 2rem;
+    max-width: 1200px;
+}
+
+.stMetric label {
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280 !important;
+}
+.stMetric [data-testid="stMetricValue"] {
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+}
+
+/* ── Section cards with glass-morphism ────────────────────────── */
 div[data-testid="stExpander"] {
-    border: 1px solid rgba(128, 128, 128, 0.15);
-    border-radius: 8px;
+    border: 1px solid rgba(128, 128, 128, 0.12);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+div[data-testid="stExpander"]:hover {
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.06);
+}
+
+/* ── Tab styling ──────────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.1);
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius: 6px 6px 0 0;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 0.88rem;
+}
+.stTabs [aria-selected="true"] {
+    border-bottom: 2px solid #6366f1 !important;
 }
 
 /* ── Compact mode adjustments ─────────────────────────────────── */
@@ -481,52 +525,203 @@ div[data-testid="stExpander"] {
 /* ── Regime badge pills ───────────────────────────────────────── */
 .regime-badge {
     display: inline-block;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
     font-weight: 600;
     color: white;
+    letter-spacing: 0.03em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
-.regime-stable  { background: #28a745; }
-.regime-watch   { background: #ffc107; color: #333; }
-.regime-collapse { background: #dc3545; }
-.regime-critical { background: #6f42c1; }
+.regime-stable  { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.regime-watch   { background: linear-gradient(135deg, #f59e0b, #d97706); color: #1a1a2e; text-shadow: none; }
+.regime-collapse { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.regime-critical { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
 /* ── Status badges ────────────────────────────────────────────── */
-.status-conformant    { color: #28a745; font-weight: 600; }
-.status-nonconformant { color: #dc3545; font-weight: 600; }
-.status-non-evaluable { color: #6c757d; font-weight: 600; }
+.status-conformant    { color: #16a34a; font-weight: 600; }
+.status-nonconformant { color: #dc2626; font-weight: 600; }
+.status-non-evaluable { color: #6b7280; font-weight: 600; }
 
 /* ── Metric highlight cards ───────────────────────────────────── */
 .metric-card {
-    background: linear-gradient(135deg, rgba(0,123,255,0.05) 0%, rgba(0,123,255,0.02) 100%);
-    border: 1px solid rgba(0,123,255,0.12);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(99,102,241,0.02) 100%);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.metric-card h4 { margin: 0 0 4px 0; font-size: 0.9rem; color: #666; }
-.metric-card .value { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; }
+.metric-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(99,102,241,0.1);
+}
+.metric-card h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.82rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+.metric-card .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e1b4b;
+}
+
+/* ── Kernel metric cards row ──────────────────────────────────── */
+.kernel-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+}
+.kernel-metric {
+    background: linear-gradient(135deg, rgba(15,23,42,0.04) 0%, rgba(15,23,42,0.01) 100%);
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+}
+.kernel-metric .symbol {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #6366f1;
+    font-family: 'JetBrains Mono', monospace;
+}
+.kernel-metric .val {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e1b4b;
+    margin: 4px 0 2px 0;
+}
+.kernel-metric .label {
+    font-size: 0.72rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
 /* ── Info panels ──────────────────────────────────────────────── */
 .info-panel {
-    background: rgba(23, 162, 184, 0.06);
-    border-left: 3px solid #17a2b8;
-    border-radius: 0 6px 6px 0;
-    padding: 12px 16px;
-    margin: 8px 0;
+    background: linear-gradient(135deg, rgba(6,182,212,0.06) 0%, rgba(6,182,212,0.02) 100%);
+    border-left: 3px solid #06b6d4;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ── Domain page headers ──────────────────────────────────────── */
+.domain-header {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(168,85,247,0.04) 100%);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+.domain-header h2 {
+    margin: 0 0 4px 0;
+    font-weight: 700;
+}
+.domain-header .subtitle {
+    color: #6b7280;
     font-size: 0.9rem;
 }
 
 /* ── Navigation category headers ──────────────────────────────── */
 .nav-category {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #888;
-    margin: 12px 0 4px 0;
+    letter-spacing: 0.1em;
+    color: #9ca3af;
+    margin: 14px 0 6px 0;
     padding: 0;
+}
+
+/* ── Sidebar branding ─────────────────────────────────────────── */
+.sidebar-brand {
+    text-align: center;
+    padding: 8px 0 12px 0;
+    border-bottom: 1px solid rgba(128,128,128,0.1);
+    margin-bottom: 8px;
+}
+.sidebar-brand .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.sidebar-brand .version {
+    font-size: 0.72rem;
+    color: #9ca3af;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+}
+
+/* ── Theorem proof badges ─────────────────────────────────────── */
+.proof-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.proof-proven {
+    background: rgba(34,197,94,0.12);
+    color: #16a34a;
+    border: 1px solid rgba(34,197,94,0.2);
+}
+.proof-failed {
+    background: rgba(239,68,68,0.12);
+    color: #dc2626;
+    border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* ── Data tables ──────────────────────────────────────────────── */
+.stDataFrame {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ── Code blocks ──────────────────────────────────────────────── */
+.stCodeBlock {
+    border-radius: 8px;
+}
+
+/* ── Button improvements ──────────────────────────────────────── */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+.stButton > button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ── Scrollbar styling ────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(128,128,128,0.2);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128,128,128,0.35);
 }
 </style>
 """

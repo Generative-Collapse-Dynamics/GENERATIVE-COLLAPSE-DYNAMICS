@@ -386,14 +386,9 @@ def main() -> None:
     # ── Branding ─────────────────────────────────────────────────────────────
     st.sidebar.markdown(
         f"""
-        <div style="text-align:center; padding: 4px 0 8px 0;">
-            <span style="font-size:1.6rem; font-weight:800; letter-spacing:0.04em;">
-                🔬 UMCP
-            </span>
-            <br/>
-            <span style="font-size:0.75rem; color:#888;">
-                v{__version__} · 44 pages · 14 domains
-            </span>
+        <div class="sidebar-brand">
+            <div class="title">🔬 UMCP</div>
+            <div class="version">v{__version__} · 44 pages · 14 domains</div>
         </div>
         """,
         unsafe_allow_html=True,

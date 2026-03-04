@@ -41,7 +41,12 @@ def render_precision_page() -> None:
 
     This page embodies the breakthrough: computationally enforced truth.
     """
-    if st is None or np is None or pd is None:
+    if st is None:
+        return
+    if np is None or pd is None or go is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     st.title("🎯 Precision Verification")
@@ -456,7 +461,12 @@ def render_geometry_page() -> None:
 
     Reference: docs/INFRASTRUCTURE_GEOMETRY.md
     """
-    if st is None or go is None or np is None or pd is None:
+    if st is None:
+        return
+    if go is None or np is None or pd is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     st.title("🔷 Infrastructure Geometry")
@@ -1437,6 +1447,8 @@ def _load_canon_files() -> dict[str, Any]:
     try:
         import yaml
     except ImportError:
+        if st is not None:
+            st.warning("PyYAML is not installed — cannot load canon anchor files. Install with: `pip install pyyaml`")
         return result
     for yf in sorted(canon_dir.glob("*_anchors.yaml")):
         try:
@@ -1461,7 +1473,10 @@ def _load_canon_files() -> dict[str, Any]:
 
 def render_canon_explorer_page() -> None:
     """Render the canon anchor explorer page — browse all domain anchors with professional formatting."""
-    if st is None or pd is None:
+    if st is None:
+        return
+    if pd is None:
+        st.error("Dashboard dependencies (pandas) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("📖 Canon Explorer")
@@ -1870,7 +1885,10 @@ def _extract_symbols(data: dict[str, Any]) -> list[dict[str, Any]]:
 
 def render_domain_overview_page() -> None:
     """Render cross-domain summary page showing all 9 domains."""
-    if st is None or px is None or pd is None:
+    if st is None:
+        return
+    if px is None or pd is None:
+        st.error("Dashboard dependencies (plotly, pandas) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("🗺️ Domain Overview")

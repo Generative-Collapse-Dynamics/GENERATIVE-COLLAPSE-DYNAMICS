@@ -40,7 +40,12 @@ def render_tau_r_star_page() -> None:
     - Trapping threshold analysis
     - R_critical and R_min computation
     """
-    if st is None or go is None or np is None or pd is None:
+    if st is None:
+        return
+    if go is None or np is None or pd is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     st.title("🌡️ τ_R* Thermodynamic Diagnostic")
@@ -572,7 +577,12 @@ def render_epistemic_page() -> None:
     - Epistemic trace metadata viewer
     - Cross-regime epistemic landscape
     """
-    if st is None or go is None or np is None or pd is None:
+    if st is None:
+        return
+    if go is None or np is None or pd is None:
+        st.error(
+            "Dashboard dependencies (numpy, pandas, plotly) could not be loaded. Install with: `pip install umcp[viz]`"
+        )
         return
 
     st.title("🔮 Epistemic Classification")
@@ -917,7 +927,10 @@ def render_insights_page() -> None:
     - Live pattern discovery from canon data
     - Rotating insight spotlight
     """
-    if st is None or pd is None or np is None:
+    if st is None:
+        return
+    if pd is None or np is None:
+        st.error("Dashboard dependencies (numpy, pandas) could not be loaded. Install with: `pip install umcp[viz]`")
         return
 
     st.title("💡 Insights & Pattern Discovery")
