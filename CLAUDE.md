@@ -64,14 +64,14 @@ mappings.
 
 ```bash
 python scripts/update_integrity.py          # Mandatory if any tracked file changed
-python scripts/pre_commit_protocol.py       # Full 9-step protocol, must exit 0
+python scripts/pre_commit_protocol.py       # Full 11-step protocol, must exit 0
 ```
 
 ## Project Structure
 
 - **Tier-1** (Immutable): F+ω=1, IC≤F, IC≈exp(κ) — structural identities
 - **Tier-0** (Protocol): `src/umcp/` — validation, kernel, seam, contracts
-- **Tier-2** (Expansion): `closures/` — 15 domain closures validated through Tier-0
+- **Tier-2** (Expansion): `closures/` — 16 domain closures validated through Tier-0
 
 Key files: `src/umcp/frozen_contract.py` (constants), `src/umcp/kernel_optimized.py`
 (kernel), `src/umcp/validator.py` (validation), `src/umcp/epistemic_weld.py`
@@ -100,7 +100,8 @@ Key files: `src/umcp/frozen_contract.py` (constants), `src/umcp/kernel_optimized
 Full specification: `.github/copilot-instructions.md`
 
 Key references: `scripts/orientation.py` (re-derivation),
-`MANIFESTUM_LATINUM.md` (Latin terms → computation chains)
+`MANIFESTUM_LATINUM.md` (Latin terms → computation chains),
+`SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence)
 
 ## The Spine (Instant Orientation)
 

@@ -43,14 +43,15 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Validation | `src/umcp/validator.py` |
 | Seam budget | `src/umcp/seam_optimized.py` |
 | Epistemic weld | `src/umcp/epistemic_weld.py` |
-| Closures (15 domains) | `closures/` |
+| Closures (16 domains) | `closures/` |
 | Contracts | `contracts/*.yaml` |
-| Tests (5,326) | `tests/` |
+| Tests (5,413) | `tests/` |
 | Orientation script | `scripts/orientation.py` |
 | Deep diagnostic | `scripts/deep_diagnostic.py` |
 | Cross-domain bridge | `scripts/cross_domain_bridge.py` |
 | Cross-domain phase 2 | `scripts/cross_domain_bridge_phase2.py` |
 | Latin manifesto | `MANIFESTUM_LATINUM.md` |
+| Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` |
 | Full AI instructions | `.github/copilot-instructions.md` |
 
 ## The Spine (Every Claim Follows This)

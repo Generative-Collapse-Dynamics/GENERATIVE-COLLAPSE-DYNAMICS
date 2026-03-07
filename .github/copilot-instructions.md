@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **5,326 tests** · **15 domains** · **121 closure modules** · **46 lemmas** · **28 structural identities** · **45 dashboard pages**
+**UMCP v2.1.5** · **5,413 tests** · **16 domains** · **122 closure modules** · **46 lemmas** · **28 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -139,7 +139,7 @@ The entire system can be grasped through **one axiom, one spine, five words, six
 | **ε** | 10⁻⁸ | Guard band: pole at ω=1 does not affect measurements to machine precision |
 | **p** | 3 | Unique integer where ω_trap is a Cardano root of x³+x−1=0 |
 | **α** | 1.0 | Curvature cost coefficient (unit coupling) |
-| **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 15 domains |
+| **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 16 domains |
 | **c\*** | 0.7822 | Logistic self-dual fixed point: maximizes S + κ per channel |
 
 **THREE IDENTITIES** (always true, by construction):
@@ -253,7 +253,7 @@ The UMCP tier system has exactly three tiers. No half-tiers. No confusion. Every
 
 ### Frozen Parameters (from `frozen_contract.py` — Seam-Derived, Not Prescribed)
 
-These values are the unique constants where seams close consistently across all 15 domains. They are discovered by the mathematics, not chosen by convention. All code **must** reference these from `frozen_contract.py`, never hardcode alternatives.
+These values are the unique constants where seams close consistently across all 16 domains. They are discovered by the mathematics, not chosen by convention. All code **must** reference these from `frozen_contract.py`, never hardcode alternatives.
 
 | Parameter | Value | Symbol | Role | Source |
 |-----------|-------|--------|------|--------|
@@ -331,7 +331,7 @@ src/umcp/
 ├── finance_dashboard.py      # Finance Streamlit dashboard
 ├── universal_calculator.py   # Universal kernel calculator CLI
 ├── umcp_extensions.py        # Protocol-based plugin system
-├── dashboard/                # [Optional] Modular Streamlit dashboard (37 pages)
+├── dashboard/                # [Optional] Modular Streamlit dashboard (50 pages)
 │   ├── __init__.py           # Main dashboard entry point
 │   ├── _deps.py              # Dashboard dependency management
 │   ├── _utils.py             # Shared dashboard utilities
@@ -342,7 +342,8 @@ src/umcp/
 │   ├── pages_interactive.py  # Test Templates, Batch Validation, Live Runner
 │   ├── pages_management.py   # Notifications, Bookmarks, API Integration
 │   ├── pages_diagnostic.py   # τ_R* Diagnostic, Epistemic Classification, Insights Engine
-│   └── pages_advanced.py     # Precision, Geometry, Canon Explorer, Domain Overview
+│   ├── pages_exploration.py  # Canon Explorer, Rosetta Translation (9 lenses incl. Semiotics), Orientation
+│   └── pages_advanced.py     # Precision, Geometry, Domain Overview
 ├── fleet/                    # Distributed fleet-scale validation
 │   ├── __init__.py           # Fleet public API
 │   ├── scheduler.py          # Job scheduler (submit, route, track)
@@ -368,7 +369,7 @@ If not built, all operations fall back to NumPy transparently. Same formulas, sa
 parameters — Tier-0 Protocol only (no Tier-1 symbols redefined). Build:
 `cd src/umcp_cpp && mkdir build && cd build && cmake .. && make`
 
-**Closure domains** (15 total, each in `closures/<domain>/`):
+**Closure domains** (16 total, each in `closures/<domain>/`):
 
 ```
 closures/
@@ -385,7 +386,8 @@ closures/
 ├── materials_science/        # Element database (118 elements, 18 fields)
 ├── everyday_physics/         # Thermodynamics, optics, electromagnetism, wave phenomena
 ├── evolution/                # 40 organisms, 10-channel brain kernel, 20 species comparative neuroscience
-├── dynamic_semiotics/        # 30 sign systems, 8-channel semiotic kernel
+├── dynamic_semiotics/        # 30 sign systems, 8-channel semiotic kernel (see SEMIOTIC_CONVERGENCE.md)
+├── continuity_theory/        # Continuity law closures
 └── standard_model/           # Subatomic kernel (31 particles), 10 proven theorems
 ```
 
@@ -423,8 +425,8 @@ closures/
 - `closures/registry.yaml` — central registry; must list every closure used in a run
 - `casepacks/*/manifest.json` — 15 casepack manifests referencing contract, closures, expected outputs
 - `schemas/*.schema.json` — 14 JSON Schema Draft 2020-12 files validating all artifacts
-- `canon/*.yaml` — 12 canonical anchor files (domain-specific reference points)
-- `integrity/sha256.txt` — SHA-256 checksums for 145 tracked files
+- `canon/*.yaml` — 14 canonical anchor files (domain-specific reference points)
+- `integrity/sha256.txt` — SHA-256 checksums for 151 tracked files
 - `ledger/return_log.csv` — append-only validation log
 
 ## Standard Model Formalism (10 Theorems)
@@ -492,11 +494,11 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 5,326 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 5,413 tests (pytest --collect-only | grep "::" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
-umcp integrity                              # Verify SHA-256 checksums (145 tracked files)
+umcp integrity                              # Verify SHA-256 checksums (151 tracked files)
 ```
 
 **⚠️ `python scripts/update_integrity.py` is mandatory** after modifying any `src/umcp/*.py`, `contracts/*.yaml`, `closures/**`, `schemas/**`, or `scripts/*.py` file. It regenerates SHA256 checksums in `integrity/sha256.txt`. CI will fail on mismatch.
@@ -512,14 +514,18 @@ python scripts/pre_commit_protocol.py       # Auto-fix + validate (default)
 python scripts/pre_commit_protocol.py --check  # Dry-run: report only
 ```
 
-This script mirrors CI exactly and must exit 0 before committing. It:
-1. Runs `ruff format` (auto-fixes formatting)
-2. Runs `ruff check --fix` (auto-fixes lint issues)
-3. Runs `mypy src/umcp` (reports, non-blocking)
-4. Stages all changes (`git add -A`)
-5. Regenerates integrity checksums
-6. Runs full pytest suite
-7. Runs `umcp validate .` (must be CONFORMANT)
+This script mirrors CI exactly and must exit 0 before committing. It runs 11 steps:
+1. Manifold bounds — fast identity gate (~3s)
+2. `ruff format` — auto-fix code style
+3. `ruff check --fix` — auto-fix lint issues
+4. `mypy src/umcp` — type checking (non-blocking)
+5. `git add -A` — stage all changes
+6. Repository health check — drift detection, version sync, freeze verification
+7. Update test count in documentation
+8. Regenerate SHA-256 integrity checksums (151 tracked files)
+9. Pytest bounds — collect tests and verify count within bounds (1000–6000)
+10. `umcp validate .` — contract validation (must be CONFORMANT)
+11. Axiom-0 conformance — terminology, symbol capture, frozen params check
 
 See `COMMIT_PROTOCOL.md` for the full specification. **Never skip this step.** Every commit that reaches GitHub must pass all CI checks.
 
@@ -554,12 +560,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**5,326 test cases** across **107 test files** in `tests/` (106 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_241_*`). Single `tests/conftest.py` provides:
+**5,413 test cases** across **108 test files** in `tests/` (107 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_241_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 5,326 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 5,413 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -591,7 +597,7 @@ umcp validate <target>
 | `test_240–241` | Evolution kernel, brain kernel | 120 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
-| **TOTAL** | | **5,326** |
+| **TOTAL** | | **5,413** |
 
 ## Extension System
 
@@ -612,7 +618,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | C++ kernel/seam/SHA-256 | `src/umcp_cpp/` (headers, pybind11 bindings, Catch2 tests) |
 | Accelerator benchmark | `scripts/benchmark_cpp.py` (correctness + performance) |
 | Fleet architecture | `src/umcp/fleet/` (Scheduler, Worker, Queue, Cache, Tenant) |
-| Dashboard pages | `src/umcp/dashboard/` (37 modular pages) |
+| Dashboard pages | `src/umcp/dashboard/` (50 modular pages) |
 | Subatomic particles | `closures/standard_model/subatomic_kernel.py` (31 particles, 8-channel trace) |
 | SM 10 theorems | `closures/standard_model/particle_physics_formalism.py` (74/74 subtests) |
 | CKM mixing | `closures/standard_model/ckm_mixing.py` (Wolfenstein, Jarlskog) |
@@ -629,7 +635,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | Casepack structure | `casepacks/hello_world/` |
 | Contract format | `contracts/UMA.INTSTACK.v1.yaml` |
 | Semantic rules | `validator_rules.yaml` |
-| Canonical anchors | `canon/` (12 domain anchor files) |
+| Canonical anchors | `canon/` (14 domain anchor files) |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence) |
 | Semiotic kernel | `closures/dynamic_semiotics/semiotic_kernel.py` (30 sign systems, 8-channel trace) |
 
@@ -668,7 +674,7 @@ There is no fourth option. No external framework is co-equal with Axiom-0 inside
 
 2. **Classical results are degenerate limits, not sources.** The arrow of derivation runs FROM Axiom-0 TO classical results. Strip the channel semantics from IC ≤ F and you get AM-GM. Strip the collapse field from S and you get Shannon entropy. Strip the cost function from F + ω = 1 and you get unitarity. The classical versions are what remain when degrees of freedom are removed.
 
-3. **Frozen parameters are seam-derived, not prescribed.** Standard frameworks prescribe constants from outside (α = 0.05 by convention, 3σ by tradition, hyperparameters by cross-validation). UMCP's frozen parameters are the unique values where seams close consistently: p = 3 is discovered (not chosen), tol_seam = 0.005 is where IC ≤ F holds at 100% across 15 domains, ε = 10⁻⁸ is where the pole at ω = 1 does not affect any measurement to machine precision.
+3. **Frozen parameters are seam-derived, not prescribed.** Standard frameworks prescribe constants from outside (α = 0.05 by convention, 3σ by tradition, hyperparameters by cross-validation). UMCP's frozen parameters are the unique values where seams close consistently: p = 3 is discovered (not chosen), tol_seam = 0.005 is where IC ≤ F holds at 100% across 16 domains, ε = 10⁻⁸ is where the pole at ω = 1 does not affect any measurement to machine precision.
 
 4. **Three-valued verdicts, not boolean.** CONFORMANT / NONCONFORMANT / NON_EVALUABLE. There is always a third state. *Tertia via semper patet.*
 
