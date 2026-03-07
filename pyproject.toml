@@ -295,6 +295,7 @@ module = [
   "numpy.*",
   "scipy.*",
   "psutil.*",
+  "closures.*",
 ]
 ignore_missing_imports = true
 

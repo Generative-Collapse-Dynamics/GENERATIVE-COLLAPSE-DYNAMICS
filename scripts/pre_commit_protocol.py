@@ -387,8 +387,8 @@ def step_mypy(ctx: RepoContext) -> StepResult:
     """Step 3: mypy — type checking (non-blocking, matches CI continue-on-error)."""
     t0 = time.monotonic()
     result = _run(
-        ["mypy", str(ctx.umcp_pkg), f"--config-file={ctx.pyproject}"],
-        cwd=ctx.root,
+        ["mypy", "umcp", f"--config-file={ctx.pyproject}"],
+        cwd=ctx.src_dir,
         timeout=120,
     )
 
