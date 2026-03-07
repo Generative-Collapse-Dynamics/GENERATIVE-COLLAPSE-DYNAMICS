@@ -170,6 +170,10 @@ def pytest_terminal_summary(
     failed = len(terminalreporter.stats.get("failed", []))
     errors = len(terminalreporter.stats.get("error", []))
 
+    # Collection-only mode (--co): no tests executed, defer to default summary
+    if passed == 0 and n_validated == 0 and failed == 0 and errors == 0:
+        return
+
     # Validated tests count as passed — they are individual tests within
     # a validation group that all passed via the manifold bound surface.
     total_passed = passed + n_validated

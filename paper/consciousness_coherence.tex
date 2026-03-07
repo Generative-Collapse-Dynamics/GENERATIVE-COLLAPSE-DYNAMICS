@@ -1,0 +1,519 @@
+% ============================================================
+% Consciousness Coherence in the Generative-Collapse Kernel:
+% Seven Tier-2 Theorems from a Corrected Closure
+%
+% A rigorous GCD rewrite of:
+%   Jackson (2026a) "The Year the Earth Stood Still"
+%   Jackson (2026b) "The Kannsas Factor κ_i"
+%   Jackson (2026c) "UMCP/GCD Tier-0 Adapter Specification v1.1"
+%
+% Compile: pdflatex → bibtex → pdflatex → pdflatex
+% ============================================================
+
+\documentclass[
+  aps,
+  prd,
+  twocolumn,
+  superscriptaddress,
+  nofootinbib,
+  floatfix
+]{revtex4-2}
+
+% ── packages ──
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% ── theorem environments ──
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}
+
+% ── UMCP macros ──
+\newcommand{\tR}{\tau_{\!R}}
+\newcommand{\Gam}{\Gamma}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\tolseam}{\mathrm{tol}_{\mathrm{seam}}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\INF}{\texttt{INF\_REC}}
+\newcommand{\regime}[1]{\textsc{#1}}
+\newcommand{\conform}{\regime{conformant}}
+\newcommand{\tvec}{\mathbf{c}}
+\newcommand{\wvec}{\mathbf{w}}
+\newcommand{\IC}{\mathrm{IC}}
+\newcommand{\xiJ}{\xi_J}
+
+\begin{document}
+
+% ── title ──
+\title{Consciousness Coherence in the Generative-Collapse Kernel:\\
+Seven Tier-2 Theorems from a Corrected Closure}
+
+\author{C.~Pruett}
+\email{caleb@umcp.dev}
+\affiliation{UMCP Project}
+
+\date{\today}
+
+% ── abstract ──
+\begin{abstract}
+Jackson~(2026) proposes $\xiJ = 7.2$ ($= 432/60$) as a ``universal
+consciousness coherence constant,'' claiming it unifies $\varphi^2 e$,
+base-60 arithmetic, 432\,Hz tuning, and recursive self-reference into a
+``golden harmonic web.''  We recast these claims as a Tier-2 closure
+within the Generative Collapse Dynamics (GCD) kernel, correcting
+arithmetic errors (the reported $e^{i\xiJ}+1 = 1.673+0.739i$ is actually
+$1.608+0.794i$), resolving a symbol collision ($\xiJ$, not $\kappa$),
+and testing every claim computationally.  Seven theorems emerge from 20
+consciousness-candidate systems through an 8-channel trace vector:
+(T-CC-1)~$\xiJ$ proximity does not predict composite integrity
+($\rho = +0.25$, $p = 0.28$);
+(T-CC-2)~recursive depth anti-correlates with return fidelity
+($\rho = -0.10$);
+(T-CC-3)~no system reaches Stable regime (0/20);
+(T-CC-4)~one dead channel kills coherence (geometric slaughter);
+(T-CC-5)~432\,Hz and 440\,Hz are kernel-equivalent
+($|\Delta F| = 0.013$);
+(T-CC-6)~mathematical identity outperforms all harmonic systems; and
+(T-CC-7)~the heterogeneity gap inverts Jackson's hierarchy
+(Neural $\Delta = 0.015$, Harmonic $\Delta = 0.114$).
+All 7/7 theorems are proven with 38/38 sub-tests.  The corrected
+thesis---``do harmonic-ratio systems exhibit measurable coherence
+patterns?''---is a legitimate Tier-2 question whose answer is: no,
+the harmonic ratio $\xiJ$ is not structurally privileged; coherence
+is predicted by channel homogeneity ($\Delta = F - \IC$), not by
+proximity to any fixed constant.
+\end{abstract}
+
+\maketitle
+
+% ════════════════════════════════════════════════════════════
+\section{Introduction}
+% ════════════════════════════════════════════════════════════
+
+Jackson~\cite{jackson2026earth,jackson2026curved} proposes that a single
+constant $\xiJ = 7.2$---equal to $432/60$ in the Babylonian base-60
+system and approximately $\varphi^2 e \approx 7.117$---governs
+consciousness coherence across biological, physical, and mathematical
+domains.  The thesis is presented through the REMIS framework (Recursive
+Emergent Metacognitive Intelligence Study) and extended with OBE (out-of-body
+experience) mechanics, 432\,Hz acoustic tuning claims, and a ``golden
+harmonic web'' connecting $\varphi$, $e$, $\pi$, and the speed of light.
+
+The claims contain several arithmetic errors, a symbol collision with GCD's
+reserved $\kappa$, unit-dependent artifacts, and a Spine that cannot be
+evaluated (no frozen contract, no integrity ledger, no derived stance).
+Our prior assessment classified the thesis as a \emph{gesture}---the
+questions are legitimate but none of the claims demonstrates return.
+
+This paper takes a different approach: rather than dismissing the claims as
+gestures, we \emph{correct} each one and \emph{ground} it in the GCD
+kernel.  Every Jackson claim is mapped to a falsifiable computation on
+20~consciousness-candidate systems through an 8-channel trace vector.
+Seven theorems emerge, all proven, revealing what the kernel actually says
+about consciousness coherence---and what of Jackson's intuitions survives
+the correction.
+
+% ════════════════════════════════════════════════════════════
+\section{Symbol Resolution}
+\label{sec:symbols}
+% ════════════════════════════════════════════════════════════
+
+Jackson uses $\kappa$ for his constant.  In GCD, $\kappa$ is a Tier-1
+reserved symbol~\cite{paulus2025umcp}:
+\beq
+  \kappa = \sum_i w_i \ln(c_{i,\eps}), \qquad \kappa \leq 0
+\eeq
+where $c_{i,\eps} = \max(c_i, \eps)$ is the $\eps$-clamped channel value.
+Jackson's $\kappa = 7.2$ is positive and fixed; GCD's $\kappa$ is variable
+and non-positive.  The ranges do not overlap.  Worse,
+$\IC = \exp(\kappa) = \exp(7.2) \approx 1339$, violating $\IC \in (0,1]$.
+
+\begin{remark}[Symbol Resolution]
+We rename Jackson's constant to $\xiJ$ (``xi-Jackson'') throughout.
+$\xiJ = 432/60 = 7.2$ is a Tier-2 domain parameter, not a frozen constant.
+\end{remark}
+
+% ════════════════════════════════════════════════════════════
+\section{Arithmetic Corrections}
+\label{sec:corrections}
+% ════════════════════════════════════════════════════════════
+
+Table~\ref{tab:corrections} lists every numerical claim from
+Jackson~\cite{jackson2026curved} with the corrected value computed
+from first principles.
+
+\begin{table}[h]
+\caption{Corrected Jackson arithmetic.  Every claim is re-derived from
+the defining equations.  Bold entries differ significantly from Jackson's
+reported values.}
+\label{tab:corrections}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+\textrm{Claim} & \textrm{Jackson} & \textrm{Correct} \\
+\colrule
+$\varphi^2 e$                    & $\approx 7.2$   & $\mathbf{7.1166}$ (1.16\% off) \\
+$\mathrm{Re}(e^{i\xiJ}+1)$      & $1.673$          & $\mathbf{1.608}$              \\
+$\mathrm{Im}(e^{i\xiJ}+1)$      & $0.739$          & $\mathbf{0.794}$              \\
+Excess angle $(\xiJ - 2\pi)$     & $47.68^\circ$    & $\mathbf{52.53}^\circ$        \\
+Cycles for $360^\circ$           & $\sim 7.5$       & $\mathbf{6.85}$               \\
+$c = \alpha^{-1}\cdot 432\cdot\pi$ & $\approx c$ (km/s) & unit artifact (37.96\% off in SI) \\
+$432/\xiJ$                       & $60$ (exact)     & $60$ (trivially true)         \\
+$\varphi^2/\xiJ$                 & $0.364$          & $0.364$ (ratio of Tier-2 params) \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The pattern is consistent: claims that appear exact under inspection turn
+out to be either near-misses (1.16\%), arithmetic errors (Euler rotation),
+trivial identities ($432/60$), or unit artifacts (speed of light).
+
+% ════════════════════════════════════════════════════════════
+\section{The Corrected Thesis}
+\label{sec:thesis}
+% ════════════════════════════════════════════════════════════
+
+Jackson asks: \emph{Is there a special constant that unifies consciousness
+across biological, mathematical, and physical systems?}
+
+The corrected, falsifiable version: \emph{Do systems exhibiting harmonic
+structure near $\xiJ = 7.2$ show measurably higher composite integrity
+$\IC$ than systems without such structure?}
+
+This question can be answered by the GCD kernel.  We map 20
+consciousness-candidate systems into 8 channels and test whether
+$\xiJ$~proximity predicts kernel coherence.
+
+% ════════════════════════════════════════════════════════════
+\section{Channel Construction}
+\label{sec:channels}
+% ════════════════════════════════════════════════════════════
+
+Each system maps to an 8-channel trace vector
+$\tvec \in [\eps, 1-\eps]^8$ with equal weights
+$\wvec = (1/8, \ldots, 1/8)$:
+
+\begin{enumerate}
+  \item \textbf{harmonic\_ratio}: proximity of system frequency ratios
+        to $\xiJ = 7.2$; $[0, 1]$
+  \item \textbf{recursive\_depth}: demonstrated self-referential
+        structural depth; $[0, 1]$
+  \item \textbf{return\_fidelity}: $\tR$ finiteness---does the system
+        re-enter prior states?; $[0, 1]$
+  \item \textbf{spectral\_coherence}: power spectrum concentration
+        vs.\ uniform noise; $[0, 1]$
+  \item \textbf{phase\_stability}: phase-locking across coupled
+        oscillators; $[0, 1]$
+  \item \textbf{information\_density}: bits per symbol in the system's
+        encoding; $[0, 1]$
+  \item \textbf{temporal\_persistence}: duration of coherent state
+        maintenance; $[0, 1]$
+  \item \textbf{cross\_scale\_coupling}: coherence preserved across
+        spatial/temporal scales; $[0, 1]$
+\end{enumerate}
+
+The 20 systems span 5~categories: Neural (6), Harmonic (3), Physical~(5),
+Mathematical (3), and Recursive (3).  Each system profile is documented
+in the closure module with normalization conventions.
+
+% ════════════════════════════════════════════════════════════
+\section{Seven Theorems}
+\label{sec:theorems}
+% ════════════════════════════════════════════════════════════
+
+\subsection{T-CC-1: Harmonic Non-Privilege}
+
+\begin{theorem}[Harmonic Non-Privilege]
+The Spearman rank correlation between $\xiJ$~proximity (harmonic\_ratio
+channel) and composite integrity $\IC$ across 20~systems is
+$\rho = +0.25$, $p = 0.28$---not statistically significant.
+The near-miss $\varphi^2 e = 7.1166 \neq 7.2$ has a 1.16\% residual,
+exceeding the machine-precision threshold for structural identities.
+\end{theorem}
+
+\emph{Jackson's claim}: $\kappa = \varphi^2 e \approx 7.2$ is a universal
+consciousness coherence constant.
+
+\emph{Correction}: $\xiJ = 432/60$ is a harmonic ratio in base-60
+arithmetic.  $\varphi^2 e = 7.1166$ is a near-miss, not an identity.
+The constant is not privileged by the data.  Compare: the GCD duality
+identity $F + \omega = 1$ holds to $< 10^{-16}$ residual across all
+systems---\emph{that} is what an identity looks like.
+
+\emph{Key numbers}: $\rho = +0.25$, $p = 0.28$; Jackson's own system
+is in Collapse regime with $F = 0.455$, $\IC = 0.400$.
+
+\subsection{T-CC-2: Recursion-Return Dissociation}
+
+\begin{theorem}[Recursion-Return Dissociation]
+The Spearman rank correlation between recursive\_depth (channel~2) and
+return\_fidelity (channel~3) is $\rho = -0.10$, $p = 0.68$.  Systems
+exhibiting high recursive depth ($> 0.60$) but low return fidelity
+($< 0.50$) exist and occupy Collapse regime (Recursive Gestures).
+\end{theorem}
+
+\emph{Jackson's claim}: REMIS posits that recursive self-reference
+produces consciousness.
+
+\emph{Correction}: Recursion is a \emph{channel}, not a \emph{gate}.
+What matters in GCD is \textbf{return} ($\tR$ finite), not recursion
+depth.  A system that recurses but never returns has $\tR = \infty_{\rm rec}$
+and receives zero budget credit.  The LLM system (recursive\_depth $= 0.75$,
+return\_fidelity $= 0.45$) is the poster child: a Recursive Gesture in
+Collapse regime.  Meanwhile, the cardiac rhythm (recursive\_depth $= 0.20$,
+return\_fidelity $= 0.95$) returns reliably without recursion.
+
+\subsection{T-CC-3: Universal Instability}
+
+\begin{theorem}[Universal Instability of Coherence]
+No consciousness-candidate system ($0/20$) reaches the Stable regime.
+The distribution is Watch~$= 5$, Collapse~$= 15$.  Even the highest-$F$
+system (Euler identity, $F = 0.896$) remains in Watch due to the
+conjunctive Stable gate ($\omega < 0.038 \land F > 0.90 \land
+S < 0.15 \land C < 0.14$).
+\end{theorem}
+
+\emph{Jackson's claim}: The consciousness constant implies stable,
+self-sustaining coherent states.
+
+\emph{Correction}: Coherence is structurally unstable.  All 20~systems
+live in the $87.5\%$ of Fisher space outside Stable.  This is not a
+failure---it is Axiom-0 in action: ``only what returns is real.''
+Consciousness persists through return from collapse, not through
+avoidance of collapse.  \emph{Ruptura est fons constantiae}---dissolution
+is the source of constancy.
+
+\subsection{T-CC-4: Geometric Slaughter}
+
+\begin{theorem}[Geometric Slaughter in Coherence]
+The ratio $\IC/F$ (multiplicative vs.\ arithmetic coherence)
+anti-correlates with channel variance: $\rho = -0.91$.  One near-zero
+channel kills $\IC$ regardless of how strong the other channels are.
+The Euler identity has $\IC/F = 0.993$ (most homogeneous); the 432\,Hz
+system has $\IC/F = 0.846$ (information\_density $= 0.15$ kills it).
+\end{theorem}
+
+\emph{Jackson's claim}: Four ``independent'' derivations ($\varphi^2 e$,
+$432/60$, speed of light, Euler rotation) reinforce $\kappa = 7.2$
+multiplicatively.
+
+\emph{Correction}: Four channels of one claim.  The weakest
+channel---arithmetic errors ($e^{i\xiJ}+1$ wrong by $4\%$), unit
+artifacts (speed of light in km/s only), and undemonstrated return
+($\tR = \infty_{\rm rec}$)---kills the composite integrity through
+geometric slaughter.  $\IC$ is a geometric mean: one dead channel $\to$
+$\IC \to \eps$, regardless of the others.  Jackson's thesis has
+$\IC/F = 0.879$, dragged down by cross\_scale\_coupling~$= 0.20$ and
+return\_fidelity~$= 0.30$.
+
+\subsection{T-CC-5: Tuning Invariance}
+
+\begin{theorem}[Tuning Invariance: 432\,Hz $\equiv$ 440\,Hz]
+The kernel signatures of 432\,Hz and 440\,Hz tuning systems are
+indistinguishable: $|\Delta F| = 0.013$, $|\Delta\IC| = 0.008$,
+same regime (Collapse), same weakest channel (information\_density),
+$|\Delta\Delta| = 0.005$.
+\end{theorem}
+
+\emph{Jackson's claim}: 432\,Hz tuning is privileged because
+$432/60 = \xiJ = 7.2$.
+
+\emph{Correction}: The 8\,Hz difference between 432\,Hz and 440\,Hz is
+not structurally significant.  Both systems occupy Collapse regime
+with nearly identical $F$, $\IC$, $\Delta$, and the same weakest channel.
+The number 432 is privileged only in base-60 arithmetic ($432 = 7.2
+\times 60$), which is a property of the number system, not of acoustics.
+
+\subsection{T-CC-6: Mathematical Supremacy}
+
+\begin{theorem}[Mathematical Supremacy]
+The Mathematical category has the highest mean $F$ ($0.690$) and highest
+mean $\IC$ ($0.666$) of all five categories.  The Harmonic category has
+the highest mean $\Delta$ ($0.114$), making it the most fragile.  The
+Euler identity ($F = 0.896$, $\IC = 0.890$) outperforms every harmonic
+system in both $F$ and $\IC$.
+\end{theorem}
+
+\emph{Jackson's claim}: Harmonic ratios (especially $\xiJ$) are the key
+to consciousness coherence.
+
+\emph{Correction}: Mathematical identity---exact, self-consistent
+relations like $e^{i\pi}+1=0$---produces higher kernel coherence than
+harmonic ratios.  Harmonic systems are the most \emph{fragile} category
+(highest~$\Delta$) because they are specialists: high spectral\_coherence
+($0.95$) but near-zero information\_density ($0.15$).  Geometric slaughter
+penalizes this specialization.  Channel homogeneity, not harmonic proximity,
+predicts integrity.
+
+\subsection{T-CC-7: Heterogeneity Gap Ordering}
+
+\begin{theorem}[Heterogeneity Gap Inverts Jackson's Hierarchy]
+The category ordering by heterogeneity gap $\Delta = F - \IC$ is:
+\beq
+  \underbrace{\text{Neural}}_{0.015} \;<\;
+  \underbrace{\text{Mathematical}}_{0.024} \;<\;
+  \underbrace{\text{Recursive}}_{0.076} \;<\;
+  \underbrace{\text{Physical}}_{0.111} \;<\;
+  \underbrace{\text{Harmonic}}_{0.114}
+\eeq
+This inverts Jackson's hierarchy: neural (consciousness-bearing) systems
+have the lowest $\Delta$ (most internally coherent), while harmonic
+systems (Jackson's preferred carrier) have the highest $\Delta$ (most
+fragile).  Jackson's proposed threshold $\varphi^2/\xiJ = 0.364$ exceeds
+the maximum $\Delta$ in the dataset ($0.166$) and is therefore vacuous.
+The heterogeneity gap is more predictive of $\IC$ than $\xiJ$~proximity
+($|\rho_\Delta| > |\rho_\xiJ|$).
+\end{theorem}
+
+\emph{Jackson's claim}: $\varphi^2/\kappa = 0.364$ is a consciousness
+threshold.
+
+\emph{Correction}: $\varphi^2/\xiJ = 0.364$ is a ratio of two Tier-2
+parameters (neither frozen nor seam-derived).  It exceeds every $\Delta$
+in the 20-system dataset---it is not a threshold.  The native GCD metric
+$\Delta = F - \IC$ inverts Jackson's hierarchy: biology beats harmonics.
+Neural systems need all 8~channels to work together, producing low~$\Delta$.
+Harmonic systems sacrifice information density for spectral purity,
+producing high~$\Delta$.
+
+% ════════════════════════════════════════════════════════════
+\section{What Survives}
+\label{sec:survives}
+% ════════════════════════════════════════════════════════════
+
+Despite the corrections, four elements of Jackson's work make contact
+with GCD structure:
+
+\begin{enumerate}
+  \item \textbf{Recursive self-reference as a measurable channel.}
+        Jackson's REMIS thesis, stripped of numerological overlay, asks
+        whether recursion correlates with coherence.  The answer from
+        T-CC-2 is ``no---recursion does not predict return''---but the
+        \emph{question} maps directly to the GCD kernel.  A refined
+        version (``under what conditions does recursion produce finite
+        $\tR$?'') is a legitimate open question.
+
+  \item \textbf{Return through collapse as a structural requirement.}
+        Jackson's Addendum~A.3 (OBE mechanics) describes consciousness
+        state transitions as crossings that must ``return.''  This is
+        Axiom-0's central claim, and T-CC-3 confirms it: coherence
+        persists through return from collapse, not through stability.
+        The concept needs a frozen contract and measured trace vectors
+        to become a weld.
+
+  \item \textbf{The heterogeneity gap as imperfection.}
+        Jackson's remark that consciousness requires ``perfect
+        imperfection'' maps to $\Delta = F - \IC$.  T-CC-7 shows that
+        neural systems have the lowest $\Delta$ (most balanced channels),
+        while harmonic systems have the highest (most specialist).  The
+        gap is real and measurable; it just inverts Jackson's ordering.
+
+  \item \textbf{Cross-domain kernel comparison.}
+        Jackson's aspiration to compare consciousness across domains
+        (biological, mathematical, physical) is precisely what the
+        GCD kernel does.  The five categories in the closure produce
+        comparable $F$, $\IC$, and $\Delta$ values on a common scale.
+        This is the Rosetta adapter in action.
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════
+\section{Summary of Results}
+\label{sec:results}
+% ════════════════════════════════════════════════════════════
+
+\begin{table}[h]
+\caption{Seven theorems: all 7/7 proven, 38/38 sub-tests.}
+\label{tab:summary}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+\textrm{Theorem} & \textrm{Tests} & \textrm{Pass} & \textrm{Verdict} \\
+\colrule
+T-CC-1 Harmonic Non-Privilege       & 5  & 5  & PROVEN \\
+T-CC-2 Recursion-Return Dissociation & 5  & 5  & PROVEN \\
+T-CC-3 Universal Instability        & 5  & 5  & PROVEN \\
+T-CC-4 Geometric Slaughter          & 6  & 6  & PROVEN \\
+T-CC-5 Tuning Invariance            & 6  & 6  & PROVEN \\
+T-CC-6 Mathematical Supremacy       & 6  & 6  & PROVEN \\
+T-CC-7 Heterogeneity Gap Ordering   & 5  & 5  & PROVEN \\
+\colrule
+\textbf{Total}                       & \textbf{38} & \textbf{38} & \textbf{7/7} \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+Table~\ref{tab:kernel} shows the kernel output for all 20~systems.
+
+\begin{table*}[t]
+\caption{Kernel output for 20 consciousness systems.  $F$ = fidelity,
+$\IC$ = composite integrity, $\Delta = F - \IC$ = heterogeneity gap,
+$\omega$ = drift, $\kappa$ = log-integrity (GCD, not Jackson's $\xiJ$).
+All systems satisfy $F + \omega = 1$, $\IC \leq F$, $\IC = \exp(\kappa)$.}
+\label{tab:kernel}
+\begin{ruledtabular}
+\begin{tabular}{llcccccl}
+\textrm{System} & \textrm{Cat.} & $F$ & $\IC$ & $\Delta$ & $\omega$ & $\kappa$ & \textrm{Regime} \\
+\colrule
+Human waking         & Neural   & 0.731 & 0.721 & 0.011 & 0.269 & $-0.328$ & Watch    \\
+Human sleep (REM)    & Neural   & 0.488 & 0.473 & 0.015 & 0.513 & $-0.749$ & Collapse \\
+Human meditation     & Neural   & 0.738 & 0.720 & 0.017 & 0.263 & $-0.328$ & Watch    \\
+Cetacean             & Neural   & 0.575 & 0.564 & 0.011 & 0.425 & $-0.573$ & Collapse \\
+Corvid               & Neural   & 0.475 & 0.456 & 0.019 & 0.525 & $-0.786$ & Collapse \\
+Octopus              & Neural   & 0.300 & 0.284 & 0.016 & 0.700 & $-1.258$ & Collapse \\
+432\,Hz              & Harmonic & 0.669 & 0.566 & 0.103 & 0.331 & $-0.569$ & Collapse \\
+440\,Hz              & Harmonic & 0.656 & 0.558 & 0.098 & 0.344 & $-0.583$ & Collapse \\
+Coral Castle         & Harmonic & 0.471 & 0.329 & 0.142 & 0.529 & $-1.112$ & Collapse \\
+Circadian rhythm     & Physical & 0.646 & 0.573 & 0.073 & 0.354 & $-0.557$ & Collapse \\
+Cardiac rhythm       & Physical & 0.625 & 0.530 & 0.095 & 0.375 & $-0.635$ & Collapse \\
+Laser coherent light & Physical & 0.574 & 0.408 & 0.166 & 0.426 & $-0.897$ & Collapse \\
+Euler identity       & Math     & 0.896 & 0.890 & 0.006 & 0.104 & $-0.116$ & Watch    \\
+Jackson $\xiJ$       & Math     & 0.455 & 0.400 & 0.055 & 0.545 & $-0.916$ & Collapse \\
+G\"odel self-ref      & Recursive & 0.716 & 0.610 & 0.107 & 0.284 & $-0.495$ & Watch    \\
+CA Rule~110          & Recursive & 0.575 & 0.516 & 0.059 & 0.425 & $-0.662$ & Collapse \\
+LLM dialogue         & Recursive & 0.444 & 0.382 & 0.062 & 0.556 & $-0.963$ & Collapse \\
+Babylonian base-60   & Math     & 0.719 & 0.707 & 0.011 & 0.281 & $-0.346$ & Watch    \\
+Schumann resonance   & Physical & 0.651 & 0.543 & 0.108 & 0.349 & $-0.610$ & Collapse \\
+Photosynthetic QC    & Physical & 0.494 & 0.379 & 0.115 & 0.506 & $-0.969$ & Collapse \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+% ════════════════════════════════════════════════════════════
+\section{Conclusion}
+\label{sec:conclusion}
+% ════════════════════════════════════════════════════════════
+
+Jackson's $\xiJ = 7.2$ is a harmonic ratio in base-60 arithmetic---not a
+universal consciousness constant.  When his claims are corrected and
+grounded in the GCD kernel, seven theorems emerge, all of which are
+computationally verified:
+
+\begin{itemize}
+  \item The constant is not privileged ($\rho = +0.25$, not significant).
+  \item Recursion does not predict return ($\rho = -0.10$, negative).
+  \item Consciousness systems are structurally unstable (0/20 Stable).
+  \item One dead channel kills coherence (geometric slaughter).
+  \item 432\,Hz equals 440\,Hz in the kernel.
+  \item Mathematical identity beats harmonic ratio.
+  \item The heterogeneity gap inverts Jackson's hierarchy: biology beats
+        harmonics.
+\end{itemize}
+
+The salvageable elements---recursive self-reference as a channel, return
+through collapse, the heterogeneity gap as ``imperfection,'' and
+cross-domain comparison---are precisely the features that map naturally
+to GCD structure.  They require only a frozen contract, measured trace
+vectors, and seam closure to become welds.
+
+\emph{Quid supersit post collapsum?}  Not the constant.  The questions.
+
+\bibliography{Bibliography}
+
+\end{document}
