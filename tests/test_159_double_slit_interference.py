@@ -26,7 +26,7 @@ _WORKSPACE = Path(__file__).resolve().parents[1]
 if str(_WORKSPACE) not in sys.path:
     sys.path.insert(0, str(_WORKSPACE))
 
-from closures.quantum_mechanics.double_slit_interference import (  # noqa: E402
+from closures.quantum_mechanics.double_slit_interference import (
     CHANNEL_NAMES,
     EPSILON,
     N_CHANNELS,

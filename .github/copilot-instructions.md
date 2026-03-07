@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **6,306 tests** · **17 domains** · **126 closure modules** · **46 lemmas** · **28 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **6,408 tests** · **17 domains** · **126 closure modules** · **46 lemmas** · **28 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -495,7 +495,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 6,306 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 6,408 tests (pytest --collect-only | grep "::" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -561,12 +561,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**6,306 test cases** across **112 test files** in `tests/` (111 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_245_*`). Single `tests/conftest.py` provides:
+**6,408 test cases** across **113 test files** in `tests/` (112 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_246_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 6,306 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 6,408 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -599,9 +599,10 @@ umcp validate <target>
 | `test_243` | Quantum dimer model (Yan et al. 2022) | 315 |
 | `test_244` | Consciousness theorems (T-CC-1 through T-CC-7) | 54 |
 | `test_245` | FQHE bilayer graphene (Kim et al. 2026) | 349 |
+| `test_246` | Particle matter map (cross-scale kernel) | 102 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
-| **TOTAL** | | **6,306** |
+| **TOTAL** | | **6,408** |
 
 ## Extension System
 

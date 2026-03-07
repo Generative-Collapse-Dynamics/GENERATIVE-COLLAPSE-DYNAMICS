@@ -5,7 +5,7 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.1.5](https://img.shields.io/badge/UMCP-v2.1.5-orange.svg)](pyproject.toml)
-[![Tests: 6,306](https://img.shields.io/badge/tests-6%2C306-brightgreen.svg)](tests/)
+[![Tests: 6,408](https://img.shields.io/badge/tests-6%2C408-brightgreen.svg)](tests/)
 [![Domains: 17](https://img.shields.io/badge/domains-17-blueviolet.svg)](closures/)
 [![Closures: 126](https://img.shields.io/badge/closures-126-informational.svg)](closures/)
 [![Theorems: 38](https://img.shields.io/badge/theorems-38_proven-ff69b4.svg)](closures/)
@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **17 domains**, **126 closure modules**, **38 proven theorems**, and **6,306 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **17 domains**, **126 closure modules**, **38 proven theorems**, and **6,408 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -567,7 +567,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                           # All 5,957 tests
+pytest                           # All 6,408 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -631,7 +631,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 6,306 tests
+pytest -v --tb=short                       # 6,408 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -749,7 +749,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (6,306 tests, 112 test files)
+2. **Test** — Full pytest suite (6,408 tests, 113 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -768,7 +768,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**6,306 tests** across **112 test files**, organized by tier and domain:
+**6,408 tests** across **113 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -799,6 +799,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_243` | Quantum dimer model (Yan et al. 2022) | 315 |
 | `test_244` | Consciousness theorems (T-CC-1 through T-CC-7) | 54 |
 | `test_245` | FQHE bilayer graphene (Kim et al. 2026) | 349 |
+| `test_246` | Particle matter map (cross-scale kernel) | 102 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
 
@@ -880,7 +881,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 14 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
 ├── casepacks/                 # 15 reproducible validation bundles
-├── tests/                     # 112 test files, 6,306 tests
+├── tests/                     # 113 test files, 6,408 tests
 ├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log

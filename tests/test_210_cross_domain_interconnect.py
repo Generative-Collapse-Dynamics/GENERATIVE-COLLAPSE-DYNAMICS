@@ -49,25 +49,25 @@ _WORKSPACE = Path(__file__).resolve().parents[1]
 if str(_WORKSPACE) not in sys.path:
     sys.path.insert(0, str(_WORKSPACE))
 
-from closures.atomic_physics.cross_scale_kernel import (  # noqa: E402
+from closures.atomic_physics.cross_scale_kernel import (
     MAGIC_NUMBERS as ATOMIC_MAGIC_NUMBERS,
 )
-from closures.atomic_physics.cross_scale_kernel import (  # noqa: E402
+from closures.atomic_physics.cross_scale_kernel import (
     binding_energy_per_nucleon,
     compute_all_enhanced,
     compute_enhanced_kernel,
     magic_proximity,
     normalize_element_enhanced,
 )
-from closures.atomic_physics.periodic_kernel import (  # noqa: E402
+from closures.atomic_physics.periodic_kernel import (
     batch_compute_all as compute_periodic_all,
 )
 
 # Domain imports — each represents a domain boundary being crossed
-from closures.materials_science.element_database import ELEMENTS  # noqa: E402
-from closures.security.trust_fidelity import compute_trust_fidelity  # noqa: E402
-from closures.security.trust_integrity import compute_trust_integrity  # noqa: E402
-from closures.standard_model.particle_physics_formalism import (  # noqa: E402
+from closures.materials_science.element_database import ELEMENTS
+from closures.security.trust_fidelity import compute_trust_fidelity
+from closures.security.trust_integrity import compute_trust_integrity
+from closures.standard_model.particle_physics_formalism import (
     theorem_T1_spin_statistics,
     theorem_T2_generation_monotonicity,
     theorem_T3_confinement_IC_collapse,
@@ -79,12 +79,12 @@ from closures.standard_model.particle_physics_formalism import (  # noqa: E402
     theorem_T9_running_coupling_flow,
     theorem_T10_nuclear_binding_curve,
 )
-from closures.standard_model.subatomic_kernel import (  # noqa: E402
+from closures.standard_model.subatomic_kernel import (
     compute_all_composite,
     compute_all_fundamental,
 )
-from umcp.kernel_optimized import compute_kernel_outputs  # noqa: E402
-from umcp.seam_optimized import SeamChainAccumulator  # noqa: E402
+from umcp.kernel_optimized import compute_kernel_outputs
+from umcp.seam_optimized import SeamChainAccumulator
 
 # Frozen constants
 EPSILON = 1e-8

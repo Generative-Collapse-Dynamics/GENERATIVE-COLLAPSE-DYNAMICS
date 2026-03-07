@@ -28,7 +28,7 @@ _WORKSPACE = Path(__file__).resolve().parents[1]
 if str(_WORKSPACE) not in sys.path:
     sys.path.insert(0, str(_WORKSPACE))
 
-from closures.standard_model.neutrino_oscillation import (  # noqa: E402
+from closures.standard_model.neutrino_oscillation import (
     DUNE_BASELINE_KM,
     DUNE_PEAK_ENERGY_GEV,
     EPSILON,
@@ -47,7 +47,7 @@ from closures.standard_model.neutrino_oscillation import (  # noqa: E402
     theorem_T11_neutrino_oscillation_drift,
     theorem_T12_matter_enhanced_mixing,
 )
-from closures.standard_model.pmns_mixing import (  # noqa: E402
+from closures.standard_model.pmns_mixing import (
     DM2_32,
 )
 

@@ -23,7 +23,7 @@ _WORKSPACE = Path(__file__).resolve().parents[1]
 if str(_WORKSPACE) not in sys.path:
     sys.path.insert(0, str(_WORKSPACE))
 
-from closures.gcd.universal_regime_calibration import (  # noqa: E402
+from closures.gcd.universal_regime_calibration import (
     CHANNEL_NAMES,
     EPSILON,
     N_CHANNELS,
