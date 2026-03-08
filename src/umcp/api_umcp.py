@@ -94,20 +94,27 @@ except ImportError:
 # Configuration
 # ============================================================================
 
-API_VERSION = "2.0.0"
+API_VERSION = "3.0.0"
 API_TITLE = "UMCP REST API"
 API_DESCRIPTION = """
-**Universal Measurement Contract Protocol** — REST API v2.0.0
+**Universal Measurement Contract Protocol** — REST API v3.0.0
 
 *"Collapse is generative; only what returns is real."* — Axiom-0
 
-Provides HTTP endpoints for kernel computation, validation, ledger analysis,
-and domain-specific closure computations across **17 domains** from particle
-physics to consciousness coherence.
+**100+ endpoints** across kernel computation, validation, ledger analysis,
+thermodynamic diagnostics, epistemic cost tracking, insight discovery,
+cross-domain Rosetta translation, live orientation, and domain-specific
+closure computations across **17 domains** from particle physics to
+consciousness coherence.
 
 **The Spine**: CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
 
 **Kernel**: K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC)
+
+**Engines**: Seam Chain · τ_R* Diagnostic · Epistemic Weld · Insight Engine · Rosetta
+
+**Standard Model**: Particles · Theorems · CKM · Couplings · Cross Sections · Higgs ·
+Neutrino Oscillation · Matter Genesis (99 entities) · Matter Map (485 entities, 6 scales)
 
 **Domains**: GCD · KIN · RCFT · WEYL · Security · ASTRO · NUC · QM · FIN ·
 Atomic · Materials · Everyday · Evolution · Semiotics · Consciousness ·
@@ -334,8 +341,11 @@ app = FastAPI(
         {"name": "Ledger", "description": "Append-only validation ledger"},
         {"name": "Analysis", "description": "Statistical and time-series analysis"},
         {"name": "Domains", "description": "17 domain closures and canon anchors"},
-        {"name": "Standard Model", "description": "31 particles, 10 proven theorems"},
-        {"name": "Atomic", "description": "118-element periodic kernel"},
+        {
+            "name": "Standard Model",
+            "description": "31 particles, 10 proven theorems, CKM, couplings, Higgs, neutrino, matter genesis, matter map",
+        },
+        {"name": "Atomic", "description": "118-element periodic kernel + 12-channel cross-scale"},
         {"name": "Evolution", "description": "40 organisms, 10-channel brain kernel"},
         {"name": "Conversion", "description": "Measurement conversion and embedding"},
         {"name": "Calculator", "description": "Universal kernel calculator"},
@@ -348,8 +358,25 @@ app = FastAPI(
         {"name": "QM", "description": "Quantum mechanics closures"},
         {"name": "FIN", "description": "Finance closures"},
         {"name": "WEYL", "description": "WEYL cosmology closures"},
+        {"name": "Seam", "description": "Seam chain accumulation and budget accounting"},
+        {"name": "Thermodynamic", "description": "τ_R* thermodynamic diagnostic and phase classification"},
+        {"name": "Epistemic", "description": "Epistemic cost tracking — Theorem T9"},
+        {"name": "Insights", "description": "Pattern discovery and insight engine"},
+        {"name": "Semiotics", "description": "Dynamic semiotics — 30 sign systems, 8-channel kernel"},
+        {"name": "Consciousness", "description": "Consciousness coherence — 20 systems, 7 theorems"},
+        {"name": "Materials", "description": "Materials science — 118 elements × 18 fields"},
+        {"name": "Rosetta", "description": "Cross-domain Rosetta translation (6 lenses)"},
+        {"name": "Orientation", "description": "Live orientation computation — 7 sections"},
     ],
 )
+
+# ── Include Extended Routes (v2) ──
+try:
+    from .api_routes_v2 import router as _v2_router
+
+    app.include_router(_v2_router)
+except ImportError:
+    pass  # Routes module not available — graceful degradation
 
 # CORS middleware for browser access
 app.add_middleware(
@@ -579,13 +606,50 @@ async def root() -> HTMLResponse:
     <ul class="endpoints">
       <li><span class="method get">GET</span><a href="/sm/particles">/sm/particles</a> Standard Model &mdash; 31 particles, 8-channel trace</li>
       <li><span class="method get">GET</span><a href="/sm/theorems">/sm/theorems</a> Standard Model &mdash; 10 proven theorems</li>
+      <li><span class="method get">GET</span><a href="/sm/ckm">/sm/ckm</a> CKM quark mixing (Wolfenstein)</li>
+      <li><span class="method get">GET</span><a href="/sm/coupling?Q_GeV=91.2">/sm/coupling</a> Running couplings &alpha;_s, &alpha;_em</li>
+      <li><span class="method get">GET</span><a href="/sm/cross-section?sqrt_s_GeV=91.2">/sm/cross-section</a> e&plus;e&minus;&rarr;hadrons cross section</li>
+      <li><span class="method get">GET</span><a href="/sm/higgs">/sm/higgs</a> Higgs mechanism / EWSB</li>
+      <li><span class="method get">GET</span><a href="/sm/neutrino/probability?alpha=1&beta=0&L_km=1285&E_GeV=2.5">/sm/neutrino/*</a> Neutrino oscillation &amp; DUNE</li>
+      <li><span class="method get">GET</span><a href="/sm/matter-genesis">/sm/matter-genesis</a> Matter genesis &mdash; 99 entities, 7 acts</li>
+      <li><span class="method get">GET</span><a href="/sm/matter-map">/sm/matter-map</a> 6-scale matter map &mdash; ~485 entities</li>
       <li><span class="method get">GET</span><a href="/atomic/elements">/atomic/elements</a> Atomic physics &mdash; 118 elements</li>
+      <li><span class="method get">GET</span><a href="/atomic/cross-scale">/atomic/cross-scale</a> 12-channel cross-scale kernel</li>
       <li><span class="method get">GET</span><a href="/evolution/organisms">/evolution/organisms</a> Evolution &mdash; 40 organisms</li>
+      <li><span class="method get">GET</span><a href="/semiotics/systems">/semiotics/systems</a> Semiotics &mdash; 30 sign systems</li>
+      <li><span class="method get">GET</span><a href="/consciousness/systems">/consciousness/systems</a> Consciousness &mdash; 20 systems</li>
+      <li><span class="method get">GET</span><a href="/materials/elements">/materials/elements</a> Materials &mdash; 118 elements &times; 18 fields</li>
       <li><span class="method post">POST</span><a href="/docs#/ASTRO">/astro/*</a> Astronomy (6 endpoints)</li>
       <li><span class="method post">POST</span><a href="/docs#/NUC">/nuclear/*</a> Nuclear physics (6 endpoints)</li>
       <li><span class="method post">POST</span><a href="/docs#/QM">/qm/*</a> Quantum mechanics (6 endpoints)</li>
       <li><span class="method post">POST</span><a href="/docs#/FIN">/finance/embed</a> Finance embedding</li>
       <li><span class="method get">GET</span><a href="/docs#/WEYL">/weyl/*</a> WEYL cosmology (4 endpoints)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Engines &amp; Diagnostics</h2>
+    <ul class="endpoints">
+      <li><span class="method post">POST</span><a href="/docs#/Seam/compute_seam_seam_compute_post">/seam/compute</a> Seam chain accumulation</li>
+      <li><span class="method get">GET</span><a href="/seam/metrics">/seam/metrics</a> Seam chain metrics</li>
+      <li><span class="method post">POST</span><a href="/docs#/Thermodynamic">/tau-r-star/compute</a> &tau;_R* thermodynamic diagnostic</li>
+      <li><span class="method get">GET</span><a href="/tau-r-star/trapping-threshold">/tau-r-star/trapping-threshold</a> Trapping threshold (Cardano root)</li>
+      <li><span class="method post">POST</span><a href="/docs#/Epistemic">/epistemic/classify</a> Epistemic act classification (T9)</li>
+      <li><span class="method post">POST</span><a href="/docs#/Epistemic">/epistemic/positional-illusion</a> Positional illusion</li>
+      <li><span class="method get">GET</span><a href="/insights/summary">/insights/summary</a> Insight engine summary</li>
+      <li><span class="method get">GET</span><a href="/insights/random">/insights/random</a> Random insight</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Cross-Domain &amp; Orientation</h2>
+    <ul class="endpoints">
+      <li><span class="method post">POST</span><a href="/docs#/Rosetta">/rosetta/translate</a> Rosetta lens translation (6 lenses)</li>
+      <li><span class="method get">GET</span><a href="/rosetta/lenses">/rosetta/lenses</a> List all Rosetta lenses</li>
+      <li><span class="method get">GET</span><a href="/orientation">/orientation</a> Live orientation (7 sections)</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compare_traces_kernel_compare_post">/kernel/compare</a> Compare multiple traces</li>
+      <li><span class="method get">GET</span><a href="/frozen-contract">/frozen-contract</a> Frozen parameter values</li>
+      <li><span class="method get">GET</span><a href="/integrity">/integrity</a> SHA-256 integrity check</li>
     </ul>
   </div>
 
@@ -599,7 +663,7 @@ async def root() -> HTMLResponse:
     </ul>
   </div>
 
-  <p class="foot">UMCP &mdash; Universal Measurement Contract Protocol &middot; 17 Domains &middot; Axiom-0: <em>Collapse is generative; only what returns is real.</em></p>
+  <p class="foot">UMCP &mdash; Universal Measurement Contract Protocol &middot; 100+ endpoints &middot; 17 Domains &middot; Axiom-0: <em>Collapse is generative; only what returns is real.</em></p>
 </div>
 </body>
 </html>
