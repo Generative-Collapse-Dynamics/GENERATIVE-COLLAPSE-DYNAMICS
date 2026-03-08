@@ -242,7 +242,8 @@ def _compute_kernel(c: np.ndarray, w: np.ndarray | None = None) -> dict[str, Any
     """Compute kernel outputs from trace vector."""
     c_clipped = np.clip(c, EPSILON, 1 - EPSILON)
     if w is None:
-        w = np.ones(len(c_clipped)) / len(c_clipped)
+        n = len(c_clipped)
+        w = np.full(n, 1.0 / n)
     return compute_kernel_outputs(c_clipped, w, EPSILON)
 
 

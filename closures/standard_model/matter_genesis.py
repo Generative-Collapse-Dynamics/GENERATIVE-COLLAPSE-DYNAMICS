@@ -222,7 +222,8 @@ def _clip(x: float) -> float:
 
 def _compute_kernel(c: np.ndarray) -> dict[str, Any]:
     """Compute kernel with uniform weights."""
-    w = np.ones(len(c)) / len(c)
+    n = len(c)
+    w = np.full(n, 1.0 / n)
     return compute_kernel_outputs(c, w, epsilon=EPSILON)
 
 
