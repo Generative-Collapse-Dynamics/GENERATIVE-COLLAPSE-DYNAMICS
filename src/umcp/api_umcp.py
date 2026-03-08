@@ -1,38 +1,49 @@
 """
-UMCP REST API - FastAPI Communication Extension (v2.0.0)
+UMCP REST API — FastAPI Communication Extension (v2.1.5)
 
-Provides HTTP endpoints for remote validation, ledger access, system health,
-and domain-specific closure computations across all 9 UMCP domains.
+Provides HTTP endpoints for remote validation, kernel computation,
+ledger access, cross-domain analysis, and domain-specific closure
+computations across all 17 UMCP domains.
+
+The Spine governs every response:
+  CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
 
 Core Endpoints:
-  GET  /health           - System health check
-  GET  /version          - API and validator version info
-  POST /validate         - Validate a casepack or repository
-  GET  /casepacks        - List available casepacks
-  GET  /casepacks/{id}   - Get casepack details
-  POST /casepacks/{id}/run - Run a casepack
-  GET  /ledger           - Query the return log ledger
-  GET  /contracts        - List available contracts
-  GET  /closures         - List available closures
+  GET  /health              - System health + metrics
+  GET  /version             - API and validator version info
+  GET  /metrics             - Operational metrics and request stats
+  POST /validate            - Validate a casepack or repository
+  GET  /casepacks           - List available casepacks
+  GET  /casepacks/{id}      - Get casepack details
+  POST /casepacks/{id}/run  - Run a casepack
+  GET  /ledger              - Query the return log ledger
 
-Domain Endpoints:
-  GET  /domains          - List all 9 UMCP domains
-  GET  /canon            - List canon anchor files
-  GET  /canon/{domain}   - Get full canon data for a domain
-  POST /astro/*          - Astronomy closures (6 endpoints)
-  POST /nuclear/*        - Nuclear physics closures (6 endpoints)
-  POST /qm/*             - Quantum mechanics closures (6 endpoints)
-  POST /finance/embed    - Finance embedding
-  GET  /weyl/*           - WEYL cosmology endpoints (4 endpoints)
+Kernel Endpoints:
+  POST /kernel/compute      - Compute kernel invariants (F, ω, S, C, κ, IC)
+  POST /kernel/batch        - Batch kernel computation (multiple traces)
+  POST /kernel/budget       - Verify seam budget identity
+  POST /kernel/spine        - Full spine evaluation (Contract → Stance)
+
+Domain Endpoints (17 domains):
+  GET  /domains             - List all 17 UMCP domains with metadata
+  POST /astro/*             - Astronomy closures (6 endpoints)
+  POST /nuclear/*           - Nuclear physics closures (6 endpoints)
+  POST /qm/*                - Quantum mechanics closures (6 endpoints)
+  POST /finance/embed       - Finance embedding
+  GET  /weyl/*              - WEYL cosmology endpoints (4 endpoints)
+  GET  /sm/particles        - Standard Model particle catalog
+  GET  /sm/theorems         - Standard Model 10 proven theorems
+  GET  /evolution/organisms - Evolution kernel organisms
+  GET  /atomic/elements     - Periodic table kernel data
 
 Usage:
   uvicorn umcp.api_umcp:app --reload --host 0.0.0.0 --port 8000
 
 Cross-references:
-  - docs/EXTENSION_INTEGRATION.md (extension architecture)
-  - src/umcp/cli.py (CLI commands this mirrors)
+  - src/umcp/frozen_contract.py (frozen parameters — seam-derived)
+  - src/umcp/kernel_optimized.py (kernel computation)
   - src/umcp/validator.py (validation engine)
-  - src/umcp/preflight.py (preflight validation)
+  - src/umcp/seam_optimized.py (seam budget calculus)
 """
 
 from __future__ import annotations
@@ -44,11 +55,13 @@ import json
 import os
 import subprocess
 import sys
+import time
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal, cast
 
-from fastapi import FastAPI, HTTPException, Query, Security
+from fastapi import FastAPI, HTTPException, Query, Request, Response, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import APIKeyHeader
@@ -57,30 +70,69 @@ from pydantic import BaseModel, Field
 # Import UMCP core modules
 try:
     from . import __version__
-    from .frozen_contract import EPSILON
+    from .frozen_contract import (
+        ALPHA,
+        DEFAULT_THRESHOLDS,
+        EPSILON,
+        P_EXPONENT,
+        TOL_SEAM,
+        Regime,
+    )
+    from .frozen_contract import classify_regime as _fc_classify_regime
 except ImportError:
     # Fallback for direct execution
-    __version__ = "2.0.0"
+    __version__ = "2.1.5"
     EPSILON = 1e-8
+    P_EXPONENT = 3
+    ALPHA = 1.0
+    TOL_SEAM = 0.005
+    DEFAULT_THRESHOLDS = None  # type: ignore[assignment]
+    Regime = None  # type: ignore[assignment, misc]
+    _fc_classify_regime = None  # type: ignore[assignment]
 
 # ============================================================================
 # Configuration
 # ============================================================================
 
-API_VERSION = "1.0.0"
+API_VERSION = "2.0.0"
 API_TITLE = "UMCP REST API"
 API_DESCRIPTION = """
-Universal Measurement Contract Protocol REST API (v2.0.0)
+**Universal Measurement Contract Protocol** — REST API v2.0.0
 
-Provides HTTP endpoints for validating computational workflows,
-querying the ledger, managing casepacks, and running domain-specific
-closure computations across all 9 UMCP domains.
+*"Collapse is generative; only what returns is real."* — Axiom-0
 
-**Domains**: GCD, KIN, RCFT, WEYL, Security, ASTRO, NUC, QM, FIN
+Provides HTTP endpoints for kernel computation, validation, ledger analysis,
+and domain-specific closure computations across **17 domains** from particle
+physics to consciousness coherence.
 
-**Authentication**: API key required via `X-API-Key` header.
-Set `UMCP_DEV_MODE=1` to disable for local development.
+**The Spine**: CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
+
+**Kernel**: K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC)
+
+**Domains**: GCD · KIN · RCFT · WEYL · Security · ASTRO · NUC · QM · FIN ·
+Atomic · Materials · Everyday · Evolution · Semiotics · Consciousness ·
+Continuity · Standard Model
+
+**Authentication**: API key via `X-API-Key` header.
+Set `UMCP_DEV_MODE=1` for local development.
+
+**Three-valued verdicts**: CONFORMANT / NONCONFORMANT / NON_EVALUABLE — never boolean.
 """
+
+# ============================================================================
+# Metrics Tracking
+# ============================================================================
+
+_METRICS: dict[str, Any] = {
+    "start_time": time.monotonic(),
+    "start_utc": datetime.now(UTC).isoformat(),
+    "total_requests": 0,
+    "total_errors": 0,
+    "kernel_computations": 0,
+    "batch_computations": 0,
+    "validations": 0,
+    "endpoints_hit": {},
+}
 
 # API key from environment (production should use secrets management)
 API_KEY = os.environ.get("UMCP_API_KEY", "umcp-dev-key")
@@ -274,6 +326,29 @@ app = FastAPI(
     version=API_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
+    openapi_tags=[
+        {"name": "System", "description": "Health, version, and operational metrics"},
+        {"name": "Kernel", "description": "Core kernel computation: K → (F, ω, S, C, κ, IC)"},
+        {"name": "Validation", "description": "Casepack and repository validation"},
+        {"name": "Casepacks", "description": "Casepack management and execution"},
+        {"name": "Ledger", "description": "Append-only validation ledger"},
+        {"name": "Analysis", "description": "Statistical and time-series analysis"},
+        {"name": "Domains", "description": "17 domain closures and canon anchors"},
+        {"name": "Standard Model", "description": "31 particles, 10 proven theorems"},
+        {"name": "Atomic", "description": "118-element periodic kernel"},
+        {"name": "Evolution", "description": "40 organisms, 10-channel brain kernel"},
+        {"name": "Conversion", "description": "Measurement conversion and embedding"},
+        {"name": "Calculator", "description": "Universal kernel calculator"},
+        {"name": "Uncertainty", "description": "Uncertainty propagation through kernel"},
+        {"name": "Outputs", "description": "Badges, reports, diagrams, and exports"},
+        {"name": "Contracts", "description": "Contract management"},
+        {"name": "Closures", "description": "Closure registry"},
+        {"name": "ASTRO", "description": "Astronomy closures"},
+        {"name": "NUC", "description": "Nuclear physics closures"},
+        {"name": "QM", "description": "Quantum mechanics closures"},
+        {"name": "FIN", "description": "Finance closures"},
+        {"name": "WEYL", "description": "WEYL cosmology closures"},
+    ],
 )
 
 # CORS middleware for browser access
@@ -284,6 +359,34 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ── Request ID and Timing Middleware ──
+
+
+@app.middleware("http")
+async def request_tracking_middleware(request: Request, call_next: Any) -> Response:
+    """Add request ID, timing, and metrics tracking to every response."""
+    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+    start = time.monotonic()
+
+    # Track metrics
+    _METRICS["total_requests"] += 1
+    path = request.url.path
+    _METRICS["endpoints_hit"][path] = _METRICS["endpoints_hit"].get(path, 0) + 1
+
+    response: Response = await call_next(request)
+
+    elapsed_ms = (time.monotonic() - start) * 1000
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Response-Time-Ms"] = f"{elapsed_ms:.1f}"
+    response.headers["X-UMCP-Version"] = str(__version__)
+    response.headers["X-API-Version"] = API_VERSION
+
+    if response.status_code >= 400:
+        _METRICS["total_errors"] += 1
+
+    return response
 
 
 # ============================================================================
@@ -298,34 +401,38 @@ def get_current_time() -> str:
 
 def classify_regime(omega: float, F: float, S: float, C: float) -> str:
     """
-    Classify the computational regime based on kernel invariants.
+    Classify the computational regime using frozen contract thresholds.
 
-    Regimes (from KERNEL_SPECIFICATION.md):
-      - STABLE: ω ∈ [0.3, 0.7], |s| ≤ 0.005
-      - WATCH: ω ∈ [0.1, 0.3) ∪ (0.7, 0.9], |s| ≤ 0.01
-      - COLLAPSE: ω < 0.1 or ω > 0.9
-      - CRITICAL: |s| > 0.01
+    Uses the authoritative classify_regime from frozen_contract.py with
+    the four-gate criterion from RegimeThresholds:
+      Stable:   ω < 0.038 AND F > 0.90 AND S < 0.15 AND C < 0.14
+      Watch:    0.038 ≤ ω < 0.30
+      Collapse: ω ≥ 0.30
+      Critical: IC < 0.30 (overlay)
 
     Args:
-        omega: Overlap fraction ω
-        F: Freshness F = 1 - ω
-        S: Seam residual (budget deviation)
-        C: Curvature κ
+        omega: Drift ω = 1 - F
+        F: Fidelity (weighted mean)
+        S: Bernoulli field entropy
+        C: Curvature (normalized std)
 
     Returns:
         Regime classification string
     """
-    # Seam-based critical overlay
-    if abs(S) > 0.01:
-        return "CRITICAL"
-
-    # Omega-based primary classification
-    if omega < 0.1 or omega > 0.9:
+    if _fc_classify_regime is not None:
+        # Compute IC approximation for Critical overlay check
+        # Use IC ≈ exp(log(max(1-omega, EPSILON))) as rough proxy
+        ic_approx = max(1 - omega, EPSILON) if omega < 0.99 else EPSILON
+        regime = _fc_classify_regime(omega, F, S, C, ic_approx)
+        return regime.value
+    # Fallback if frozen_contract not available
+    if omega >= 0.30:
         return "COLLAPSE"
-    elif 0.3 <= omega <= 0.7:
-        return "STABLE"
-    else:
+    if omega >= 0.038:
         return "WATCH"
+    if F > 0.90 and S < 0.15 and C < 0.14:
+        return "STABLE"
+    return "WATCH"
 
 
 def _load_yaml_safe(path: Path) -> dict[str, Any] | None:
@@ -450,23 +557,30 @@ async def root() -> HTMLResponse:
       <li><span class="method get">GET</span><a href="/contracts">/contracts</a> List contracts</li>
       <li><span class="method get">GET</span><a href="/closures">/closures</a> List closures</li>
       <li><span class="method get">GET</span><a href="/ledger">/ledger</a> Query the return log</li>
-      <li><span class="method get">GET</span><a href="/domains">/domains</a> List all domains</li>
+      <li><span class="method get">GET</span><a href="/domains">/domains</a> List all 17 domains</li>
+      <li><span class="method get">GET</span><a href="/metrics">/metrics</a> Operational metrics &amp; stats</li>
     </ul>
   </div>
 
   <div class="section">
-    <h2>Kernel &amp; Analysis</h2>
+    <h2>Kernel &amp; Spine</h2>
     <ul class="endpoints">
-      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_kernel_kernel_compute_post">/kernel/compute</a> Compute kernel invariants</li>
-      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_budget_kernel_budget_post">/kernel/budget</a> Compute seam budget</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_kernel_kernel_compute_post">/kernel/compute</a> Compute kernel invariants (F, &omega;, S, C, &kappa;, IC)</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_kernel_batch_kernel_batch_post">/kernel/batch</a> Batch compute (up to 1000 traces)</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/evaluate_spine_kernel_spine_post">/kernel/spine</a> Full spine: Contract &rarr; Canon &rarr; Closures &rarr; Ledger &rarr; Stance</li>
+      <li><span class="method post">POST</span><a href="/docs#/Kernel/compute_budget_kernel_budget_post">/kernel/budget</a> Compute seam budget (&Gamma;, D_C, &Delta;&kappa;)</li>
       <li><span class="method post">POST</span><a href="/docs#/Calculator/calculate_calculate_post">/calculate</a> Universal calculator</li>
       <li><span class="method post">POST</span><a href="/docs#/Analysis">/analysis/*</a> Time series, statistics, correlation</li>
     </ul>
   </div>
 
   <div class="section">
-    <h2>Domain Closures</h2>
+    <h2>Domain Closures (17 Domains)</h2>
     <ul class="endpoints">
+      <li><span class="method get">GET</span><a href="/sm/particles">/sm/particles</a> Standard Model &mdash; 31 particles, 8-channel trace</li>
+      <li><span class="method get">GET</span><a href="/sm/theorems">/sm/theorems</a> Standard Model &mdash; 10 proven theorems</li>
+      <li><span class="method get">GET</span><a href="/atomic/elements">/atomic/elements</a> Atomic physics &mdash; 118 elements</li>
+      <li><span class="method get">GET</span><a href="/evolution/organisms">/evolution/organisms</a> Evolution &mdash; 40 organisms</li>
       <li><span class="method post">POST</span><a href="/docs#/ASTRO">/astro/*</a> Astronomy (6 endpoints)</li>
       <li><span class="method post">POST</span><a href="/docs#/NUC">/nuclear/*</a> Nuclear physics (6 endpoints)</li>
       <li><span class="method post">POST</span><a href="/docs#/QM">/qm/*</a> Quantum mechanics (6 endpoints)</li>
@@ -485,7 +599,7 @@ async def root() -> HTMLResponse:
     </ul>
   </div>
 
-  <p class="foot">UMCP &mdash; Universal Measurement Contract Protocol</p>
+  <p class="foot">UMCP &mdash; Universal Measurement Contract Protocol &middot; 17 Domains &middot; Axiom-0: <em>Collapse is generative; only what returns is real.</em></p>
 </div>
 </body>
 </html>
@@ -1658,6 +1772,589 @@ async def compute_kernel(
 
 
 # ============================================================================
+# Batch Kernel Computation
+# ============================================================================
+
+
+class BatchTraceItem(BaseModel):
+    """A single trace for batch computation."""
+
+    label: str = Field("", description="Optional label for this trace")
+    coordinates: list[float] = Field(..., description="Coordinate values in [ε, 1-ε]")
+    weights: list[float] | None = Field(None, description="Weights (uniform if not specified)")
+
+
+class BatchKernelRequest(BaseModel):
+    """Request for batch kernel computation."""
+
+    traces: list[BatchTraceItem] = Field(..., description="List of traces to compute", min_length=1, max_length=1000)
+    epsilon: float = Field(1e-8, description="Clipping tolerance")
+
+
+class BatchKernelResultItem(BaseModel):
+    """Result for a single trace in a batch."""
+
+    label: str
+    F: float
+    omega: float
+    S: float
+    C: float
+    kappa: float
+    IC: float
+    heterogeneity_gap: float
+    regime: str
+
+
+class BatchKernelResponse(BaseModel):
+    """Response with batch kernel results."""
+
+    count: int
+    results: list[BatchKernelResultItem]
+    summary: dict[str, Any] = Field(default_factory=dict)
+    computation_time_ms: float
+
+
+@app.post("/kernel/batch", response_model=BatchKernelResponse, tags=["Kernel"])
+async def compute_kernel_batch(
+    request: BatchKernelRequest,
+    api_key: str = Security(validate_api_key),
+) -> BatchKernelResponse:
+    """
+    Compute kernel invariants for multiple traces in a single request.
+
+    Returns individual results plus summary statistics across all traces.
+    """
+    import numpy as np
+
+    from .kernel_optimized import OptimizedKernelComputer
+
+    _METRICS["batch_computations"] += 1
+    start = time.monotonic()
+    kernel = OptimizedKernelComputer(epsilon=request.epsilon)
+    results: list[BatchKernelResultItem] = []
+
+    for trace in request.traces:
+        c = np.clip(np.array(trace.coordinates), request.epsilon, 1 - request.epsilon)
+        n = len(c)
+        w = np.ones(n) / n if trace.weights is None else np.array(trace.weights)
+        outputs = kernel.compute(c, w)
+        results.append(
+            BatchKernelResultItem(
+                label=trace.label,
+                F=float(outputs.F),
+                omega=float(outputs.omega),
+                S=float(outputs.S),
+                C=float(outputs.C),
+                kappa=float(outputs.kappa),
+                IC=float(outputs.IC),
+                heterogeneity_gap=float(outputs.heterogeneity_gap),
+                regime=outputs.regime,
+            )
+        )
+
+    elapsed = (time.monotonic() - start) * 1000
+
+    # Summary statistics
+    f_vals = [r.F for r in results]
+    ic_vals = [r.IC for r in results]
+    regimes = [r.regime for r in results]
+    regime_counts = {}
+    for rg in regimes:
+        regime_counts[rg] = regime_counts.get(rg, 0) + 1
+
+    summary = {
+        "mean_F": float(np.mean(f_vals)),
+        "mean_IC": float(np.mean(ic_vals)),
+        "mean_gap": float(np.mean(f_vals) - np.mean(ic_vals)),
+        "ic_le_f_violations": sum(1 for f, ic in zip(f_vals, ic_vals, strict=True) if ic > f + 1e-10),
+        "regime_distribution": regime_counts,
+    }
+
+    return BatchKernelResponse(
+        count=len(results),
+        results=results,
+        summary=summary,
+        computation_time_ms=elapsed,
+    )
+
+
+# ============================================================================
+# Spine Evaluation (Contract → Canon → Closures → Ledger → Stance)
+# ============================================================================
+
+
+class SpineRequest(BaseModel):
+    """Request for full spine evaluation."""
+
+    coordinates: list[float] = Field(..., description="Coordinate values in [ε, 1-ε]")
+    weights: list[float] | None = Field(None, description="Weights (uniform if not specified)")
+    epsilon: float = Field(1e-8, description="Guard band ε")
+    R_credit: float = Field(0.1, description="Return credit R")
+    tau_R: float | None = Field(None, description="Return time (∞ if not specified)")
+    label: str = Field("spine_eval", description="Label for this evaluation")
+
+
+class SpineResponse(BaseModel):
+    """Full spine evaluation response."""
+
+    label: str
+
+    # Stop 1: Contract (frozen parameters)
+    contract: dict[str, Any]
+
+    # Stop 2: Canon (kernel invariants — the five words)
+    canon: dict[str, Any]
+
+    # Stop 3: Closures (regime gates)
+    closures: dict[str, Any]
+
+    # Stop 4: Integrity Ledger (budget)
+    ledger: dict[str, Any]
+
+    # Stop 5: Stance (verdict)
+    stance: dict[str, Any]
+
+    computation_time_ms: float
+
+
+@app.post("/kernel/spine", response_model=SpineResponse, tags=["Kernel"])
+async def evaluate_spine(
+    request: SpineRequest,
+    api_key: str = Security(validate_api_key),
+) -> SpineResponse:
+    """
+    Full spine evaluation: Contract → Canon → Closures → Integrity Ledger → Stance.
+
+    This is the canonical GCD pipeline in a single endpoint. Every claim
+    passes through exactly five stops, in order.
+    """
+    import math
+
+    import numpy as np
+
+    from .kernel_optimized import OptimizedKernelComputer
+
+    start = time.monotonic()
+    eps = request.epsilon
+
+    c = np.clip(np.array(request.coordinates), eps, 1 - eps)
+    n = len(c)
+    w = np.ones(n) / n if request.weights is None else np.array(request.weights)
+
+    # Stop 1: Contract — freeze parameters
+    contract = {
+        "epsilon": eps,
+        "p_exponent": P_EXPONENT,
+        "alpha": ALPHA,
+        "tol_seam": TOL_SEAM,
+        "n_channels": n,
+        "weight_sum": float(np.sum(w)),
+    }
+
+    # Stop 2: Canon — compute kernel (the five words emerge here)
+    kernel = OptimizedKernelComputer(epsilon=eps)
+    outputs = kernel.compute(c, w)
+    canon = {
+        "fidelity": {"F": float(outputs.F), "narrative": "What persisted through collapse"},
+        "drift": {"omega": float(outputs.omega), "narrative": "What moved — ω = 1 − F"},
+        "roughness": {"C": float(outputs.C), "S": float(outputs.S), "narrative": "Where/why it was bumpy"},
+        "return": {
+            "IC": float(outputs.IC),
+            "kappa": float(outputs.kappa),
+            "narrative": "Multiplicative coherence — exp(κ)",
+        },
+        "integrity": {
+            "heterogeneity_gap": float(outputs.heterogeneity_gap),
+            "ic_le_f": float(outputs.IC) <= float(outputs.F) + 1e-10,
+            "f_plus_omega": float(outputs.F) + float(outputs.omega),
+            "narrative": "Derived from the reconciled ledger, never asserted",
+        },
+    }
+
+    # Stop 3: Closures — regime gates
+    regime = classify_regime(float(outputs.omega), float(outputs.F), float(outputs.S), float(outputs.C))
+    closures = {
+        "regime": regime,
+        "gates": {
+            "omega_threshold": 0.038,
+            "F_threshold": 0.90,
+            "S_threshold": 0.15,
+            "C_threshold": 0.14,
+            "collapse_threshold": 0.30,
+        },
+        "gate_results": {
+            "omega_below_stable": float(outputs.omega) < 0.038,
+            "F_above_stable": float(outputs.F) > 0.90,
+            "S_below_stable": float(outputs.S) < 0.15,
+            "C_below_stable": float(outputs.C) < 0.14,
+            "omega_below_collapse": float(outputs.omega) < 0.30,
+        },
+    }
+
+    # Stop 4: Integrity Ledger — debit/credit budget
+    tau_r = request.tau_R if request.tau_R is not None else float("inf")
+    R = request.R_credit
+    omega_val = float(outputs.omega)
+    c_val = float(outputs.C)
+
+    # Compute Γ(ω) = ω^p / (1 - ω + ε)
+    gamma = omega_val**P_EXPONENT / (1 - omega_val + eps)
+    D_omega = gamma  # Drift debit
+    D_C = ALPHA * c_val  # Curvature debit
+
+    # Budget: Δκ = R·τ_R − (D_ω + D_C)
+    if math.isinf(tau_r):
+        lhs = 0.0  # No return → no credit
+        tau_r_display = "INF_REC"
+    else:
+        lhs = R * tau_r
+        tau_r_display = str(tau_r)
+
+    rhs = D_omega + D_C
+    delta_kappa = lhs - rhs
+    residual = abs(delta_kappa)
+
+    ledger_data = {
+        "debits": {"D_omega": D_omega, "D_C": D_C, "total_debit": rhs},
+        "credits": {"R": R, "tau_R": tau_r_display, "R_times_tau_R": lhs},
+        "delta_kappa": delta_kappa,
+        "residual": residual,
+        "residual_within_tol": residual <= TOL_SEAM,
+    }
+
+    # Stop 5: Stance — derived verdict
+    if residual <= TOL_SEAM:
+        verdict = "CONFORMANT"
+    elif math.isinf(tau_r):
+        verdict = "NON_EVALUABLE"
+    else:
+        verdict = "NONCONFORMANT"
+
+    stance = {
+        "verdict": verdict,
+        "regime": regime,
+        "critical_overlay": float(outputs.IC) < 0.30,
+        "identities_verified": {
+            "F_plus_omega_eq_1": abs(float(outputs.F) + float(outputs.omega) - 1.0) < 1e-12,
+            "IC_le_F": float(outputs.IC) <= float(outputs.F) + 1e-10,
+        },
+    }
+
+    elapsed = (time.monotonic() - start) * 1000
+
+    return SpineResponse(
+        label=request.label,
+        contract=contract,
+        canon=canon,
+        closures=closures,
+        ledger=ledger_data,
+        stance=stance,
+        computation_time_ms=elapsed,
+    )
+
+
+# ============================================================================
+# Metrics Endpoint
+# ============================================================================
+
+
+@app.get("/metrics", tags=["System"])
+async def get_metrics() -> dict[str, Any]:
+    """
+    Operational metrics and request statistics.
+
+    Includes uptime, request counts, endpoint hit distribution, and
+    kernel computation stats.
+    """
+    uptime_s = time.monotonic() - _METRICS["start_time"]
+    return {
+        "uptime_seconds": round(uptime_s, 1),
+        "start_utc": _METRICS["start_utc"],
+        "total_requests": _METRICS["total_requests"],
+        "total_errors": _METRICS["total_errors"],
+        "error_rate": (_METRICS["total_errors"] / max(_METRICS["total_requests"], 1)),
+        "kernel_computations": _METRICS["kernel_computations"],
+        "batch_computations": _METRICS["batch_computations"],
+        "validations": _METRICS["validations"],
+        "top_endpoints": dict(sorted(_METRICS["endpoints_hit"].items(), key=lambda x: x[1], reverse=True)[:20]),
+        "frozen_contract": {
+            "epsilon": EPSILON,
+            "p_exponent": P_EXPONENT,
+            "alpha": ALPHA,
+            "tol_seam": TOL_SEAM,
+        },
+        "umcp_version": str(__version__),
+        "api_version": API_VERSION,
+    }
+
+
+# ============================================================================
+# Standard Model Endpoints
+# ============================================================================
+
+
+@app.get("/sm/particles", tags=["Standard Model"])
+async def get_sm_particles(
+    api_key: str = Security(validate_api_key),
+) -> dict[str, Any]:
+    """
+    Get the Standard Model particle catalog with kernel data.
+
+    Returns 31 particles (17 fundamental + 14 composite) with their
+    8-channel trace vectors and kernel invariants (F, ω, S, C, κ, IC).
+    """
+    _METRICS["kernel_computations"] += 1
+    try:
+        import numpy as np
+
+        from closures.standard_model.subatomic_kernel import (
+            COMPOSITE_PARTICLES,
+            PARTICLES,
+            build_trace,
+        )
+
+        from .kernel_optimized import OptimizedKernelComputer
+
+        kernel = OptimizedKernelComputer(epsilon=EPSILON)
+        results = []
+        for name, pdata in {**PARTICLES, **COMPOSITE_PARTICLES}.items():
+            c, w = build_trace(pdata)
+            c_arr = np.clip(np.array(c), EPSILON, 1 - EPSILON)
+            w_arr = np.array(w)
+            out = kernel.compute(c_arr, w_arr)
+            results.append(
+                {
+                    "name": name,
+                    "type": "fundamental" if name in PARTICLES else "composite",
+                    "mass_gev": pdata.get("mass_gev", pdata.get("mass_GeV")),
+                    "spin": pdata.get("spin"),
+                    "charge": pdata.get("charge"),
+                    "F": round(float(out.F), 6),
+                    "omega": round(float(out.omega), 6),
+                    "IC": round(float(out.IC), 6),
+                    "heterogeneity_gap": round(float(out.heterogeneity_gap), 6),
+                    "regime": out.regime,
+                }
+            )
+
+        return {
+            "total_particles": len(results),
+            "fundamental": sum(1 for r in results if r["type"] == "fundamental"),
+            "composite": sum(1 for r in results if r["type"] == "composite"),
+            "particles": results,
+            "channels": [
+                "mass_log",
+                "spin_norm",
+                "charge_norm",
+                "color",
+                "weak_isospin",
+                "lepton_num",
+                "baryon_num",
+                "generation",
+            ],
+        }
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Standard Model closure not available: {e}") from e
+
+
+@app.get("/sm/theorems", tags=["Standard Model"])
+async def get_sm_theorems(
+    api_key: str = Security(validate_api_key),
+) -> dict[str, Any]:
+    """
+    Get the 10 Standard Model theorems with verification status.
+
+    All 10/10 PROVEN with 74/74 subtests. Duality identity F + ω = 1
+    verified to machine precision (0.0e+00).
+    """
+    theorems = [
+        {
+            "id": "T1",
+            "name": "Spin-Statistics Kernel Ordering",
+            "result": "⟨F⟩_fermion(0.615) > ⟨F⟩_boson(0.421), split = 0.194",
+            "subtests": 12,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T2",
+            "name": "Generation Monotonicity",
+            "result": "Gen1(0.576) < Gen2(0.620) < Gen3(0.649)",
+            "subtests": 5,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T3",
+            "name": "Confinement as IC Collapse",
+            "result": "IC drops 98.1% quarks→hadrons; 14/14 below min quark IC",
+            "subtests": 19,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T4",
+            "name": "Mass-Kernel Log Mapping",
+            "result": "13.2 OOM → F∈[0.37,0.73]; Spearman ρ=0.77 for quarks",
+            "subtests": 5,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T5",
+            "name": "Charge Quantization",
+            "result": "IC_neutral/IC_charged = 0.020 (50× suppression)",
+            "subtests": 5,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T6",
+            "name": "Cross-Scale Universality",
+            "result": "composite(0.444) < atom(0.516) < fundamental(0.558)",
+            "subtests": 6,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T7",
+            "name": "Symmetry Breaking Amplification",
+            "result": "EWSB amplifies gen spread 0.046→0.073, ΔF monotonic",
+            "subtests": 5,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T8",
+            "name": "CKM Unitarity",
+            "result": "CKM rows pass Tier-1; V_ub kills row-1 IC; J_CP=3.0e-5",
+            "subtests": 5,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T9",
+            "name": "Running Coupling Flow",
+            "result": "α_s monotone for Q≥10 GeV; confinement→NonPerturbative",
+            "subtests": 6,
+            "status": "PROVEN",
+        },
+        {
+            "id": "T10",
+            "name": "Nuclear Binding Curve",
+            "result": "r(BE/A,Δ)=-0.41; peak at Cr/Fe (Z∈[23,30])",
+            "subtests": 6,
+            "status": "PROVEN",
+        },
+    ]
+    return {
+        "total_theorems": 10,
+        "total_proven": 10,
+        "total_subtests": 74,
+        "duality_residual": "0.0e+00",
+        "theorems": theorems,
+    }
+
+
+# ============================================================================
+# Atomic Physics Endpoints
+# ============================================================================
+
+
+@app.get("/atomic/elements", tags=["Atomic"])
+async def get_atomic_elements(
+    Z_min: int = Query(1, ge=1, le=118, description="Minimum atomic number"),
+    Z_max: int = Query(118, ge=1, le=118, description="Maximum atomic number"),
+    api_key: str = Security(validate_api_key),
+) -> dict[str, Any]:
+    """
+    Get periodic table kernel data for elements Z_min through Z_max.
+
+    Each element is mapped through the GCD kernel with 8 measurable
+    properties. Tier-1 proof: 10,162 tests, 0 failures.
+    """
+    try:
+        import numpy as np
+
+        from closures.atomic_physics.periodic_kernel import ELEMENT_DATA, build_element_trace
+
+        from .kernel_optimized import OptimizedKernelComputer
+
+        kernel = OptimizedKernelComputer(epsilon=EPSILON)
+        elements = []
+        for z in range(Z_min, min(Z_max + 1, 119)):
+            if z not in ELEMENT_DATA:
+                continue
+            edata = ELEMENT_DATA[z]
+            c, w = build_element_trace(edata)
+            c_arr = np.clip(np.array(c), EPSILON, 1 - EPSILON)
+            w_arr = np.array(w)
+            out = kernel.compute(c_arr, w_arr)
+            elements.append(
+                {
+                    "Z": z,
+                    "symbol": edata.get("symbol", f"E{z}"),
+                    "name": edata.get("name", f"Element {z}"),
+                    "F": round(float(out.F), 6),
+                    "omega": round(float(out.omega), 6),
+                    "IC": round(float(out.IC), 6),
+                    "heterogeneity_gap": round(float(out.heterogeneity_gap), 6),
+                    "regime": out.regime,
+                }
+            )
+
+        return {
+            "total_elements": len(elements),
+            "Z_range": [Z_min, min(Z_max, 118)],
+            "elements": elements,
+            "tier1_proof": {"tests": 10162, "failures": 0},
+        }
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Atomic physics closure not available: {e}") from e
+
+
+# ============================================================================
+# Evolution Endpoints
+# ============================================================================
+
+
+@app.get("/evolution/organisms", tags=["Evolution"])
+async def get_evolution_organisms(
+    api_key: str = Security(validate_api_key),
+) -> dict[str, Any]:
+    """
+    Get evolution kernel data for 40 organisms spanning bacteria to mammals.
+
+    Each organism is mapped through a 10-channel brain/neural kernel
+    measuring neural complexity, sensory range, learning capacity, etc.
+    """
+    try:
+        import numpy as np
+
+        from closures.evolution.evolution_kernel import ORGANISMS, build_organism_trace
+
+        from .kernel_optimized import OptimizedKernelComputer
+
+        kernel = OptimizedKernelComputer(epsilon=EPSILON)
+        results = []
+        for name, odata in ORGANISMS.items():
+            c, w = build_organism_trace(odata)
+            c_arr = np.clip(np.array(c), EPSILON, 1 - EPSILON)
+            w_arr = np.array(w)
+            out = kernel.compute(c_arr, w_arr)
+            results.append(
+                {
+                    "name": name,
+                    "kingdom": odata.get("kingdom", "unknown"),
+                    "F": round(float(out.F), 6),
+                    "omega": round(float(out.omega), 6),
+                    "IC": round(float(out.IC), 6),
+                    "heterogeneity_gap": round(float(out.heterogeneity_gap), 6),
+                    "regime": out.regime,
+                }
+            )
+
+        return {
+            "total_organisms": len(results),
+            "organisms": results,
+        }
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"Evolution closure not available: {e}") from e
+
+
+# ============================================================================
 # Universal Calculator Endpoint
 # ============================================================================
 
@@ -1988,16 +2685,8 @@ async def analyze_timeseries(
     else:
         omega_trend = 0.0
 
-    # Regime classification
-    def classify(w: float) -> str:
-        if w < 0.1 or w > 0.9:
-            return "COLLAPSE"
-        elif 0.3 <= w <= 0.7:
-            return "STABLE"
-        else:
-            return "WATCH"
-
-    regimes = [classify(w) for w in omega]
+    # Regime classification (using frozen contract thresholds)
+    regimes = [classify_regime(w, 1.0 - w, 0.0, 0.0) for w in omega]
     regime_counts = {"STABLE": 0, "WATCH": 0, "COLLAPSE": 0}
     for r in regimes:
         regime_counts[r] += 1
@@ -2327,16 +3016,8 @@ async def analyze_ledger(
     else:
         omega_trend = 0.0
 
-    # Regime distribution
-    def classify(w: float) -> str:
-        if w < 0.1 or w > 0.9:
-            return "COLLAPSE"
-        elif 0.3 <= w <= 0.7:
-            return "STABLE"
-        else:
-            return "WATCH"
-
-    regimes = [classify(w) for w in omega_arr]
+    # Regime distribution (using frozen contract thresholds)
+    regimes = [classify_regime(w, 1.0 - w, 0.0, 0.0) for w in omega_arr]
     regime_dist = {
         "STABLE": regimes.count("STABLE") / len(regimes) if regimes else 0,
         "WATCH": regimes.count("WATCH") / len(regimes) if regimes else 0,
@@ -2486,11 +3167,11 @@ class ClosureResult(BaseModel):
 async def list_domains(
     api_key: str = Security(validate_api_key),
 ) -> list[DomainInfo]:
-    """List all 9 UMCP domains with metadata."""
+    """List all 17 UMCP domains with metadata."""
     return [
         DomainInfo(
             name="GCD",
-            description="Generic Collapse Dynamics — foundational kernel",
+            description="Generative Collapse Dynamics — foundational kernel",
             tier="Tier-1",
             closures=5,
             contract="UMA.INTSTACK.v1",
@@ -2499,7 +3180,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="KIN",
-            description="Kinematics — Tier-0 protocol diagnostic",
+            description="Kinematics — motion analysis, phase space",
             tier="Tier-0",
             closures=6,
             contract="KIN.INTSTACK.v1",
@@ -2517,7 +3198,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="WEYL",
-            description="Modified gravity — DES Y3 Σ(z) analysis",
+            description="WEYL cosmology — modified gravity, DES Y3 analysis",
             tier="Tier-2",
             closures=6,
             contract="WEYL.INTSTACK.v1",
@@ -2526,7 +3207,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="Security",
-            description="Security validation and integrity checking",
+            description="Security validation, audit, and integrity checking",
             tier="Tier-2",
             closures=15,
             contract="SECURITY.INTSTACK.v1",
@@ -2535,7 +3216,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="ASTRO",
-            description="Astronomy — stars, orbits, distances, spectra",
+            description="Astronomy — stellar classification, HR diagram, spectral analysis",
             tier="Tier-2",
             closures=6,
             contract="ASTRO.INTSTACK.v1",
@@ -2544,7 +3225,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="NUC",
-            description="Nuclear physics — binding, decay, shells, fissility",
+            description="Nuclear physics — binding energy, decay chains, QGP/RHIC",
             tier="Tier-2",
             closures=6,
             contract="NUC.INTSTACK.v1",
@@ -2553,7 +3234,7 @@ async def list_domains(
         ),
         DomainInfo(
             name="QM",
-            description="Quantum mechanics — Born rule, tunneling, spin",
+            description="Quantum mechanics — wavefunction, entanglement, QDM, FQHE",
             tier="Tier-2",
             closures=6,
             contract="QM.INTSTACK.v1",
@@ -2562,12 +3243,84 @@ async def list_domains(
         ),
         DomainInfo(
             name="FIN",
-            description="Finance — business continuity embedding",
+            description="Finance — portfolio continuity, market coherence",
             tier="Tier-2",
             closures=1,
             contract="FINANCE.INTSTACK.v1",
             canon="—",
             casepack="finance_continuity",
+        ),
+        DomainInfo(
+            name="SM",
+            description="Standard Model — 31 particles, 10 proven theorems, 74/74 subtests",
+            tier="Tier-2",
+            closures=11,
+            contract="SM.INTSTACK.v1",
+            canon="sm_anchors.yaml",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="ATOM",
+            description="Atomic physics — 118 elements, periodic kernel, cross-scale analysis",
+            tier="Tier-2",
+            closures=10,
+            contract="ATOM.INTSTACK.v1",
+            canon="atom_anchors.yaml",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="MATL",
+            description="Materials science — element database (118 elements, 18 fields)",
+            tier="Tier-2",
+            closures=4,
+            contract="MATL.INTSTACK.v1",
+            canon="matl_anchors.yaml",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="EVERY",
+            description="Everyday physics — thermodynamics, optics, electromagnetism",
+            tier="Tier-2",
+            closures=4,
+            contract="EVERY.INTSTACK.v1",
+            canon="—",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="EVO",
+            description="Evolution — 40 organisms, 10-channel brain kernel, comparative neuroscience",
+            tier="Tier-2",
+            closures=3,
+            contract="EVO.INTSTACK.v1",
+            canon="evo_anchors.yaml",
+            casepack="evolution_kernel",
+        ),
+        DomainInfo(
+            name="SEM",
+            description="Dynamic semiotics — 30 sign systems, 8-channel semiotic kernel",
+            tier="Tier-2",
+            closures=3,
+            contract="SEM.INTSTACK.v1",
+            canon="semiotics_anchors.yaml",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="CONSC",
+            description="Consciousness coherence — 20 systems, 7 theorems (T-CC-1 to T-CC-7)",
+            tier="Tier-2",
+            closures=3,
+            contract="CONSC.INTSTACK.v1",
+            canon="—",
+            casepack="—",
+        ),
+        DomainInfo(
+            name="CT",
+            description="Continuity theory — continuity law closures",
+            tier="Tier-2",
+            closures=2,
+            contract="CT.INTSTACK.v1",
+            canon="ct_anchors.yaml",
+            casepack="—",
         ),
     ]
 

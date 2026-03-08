@@ -45,32 +45,32 @@ def test_get_repo_root():
 
 
 def test_classify_regime_stable():
-    """Test classify_regime returns STABLE for middle omega values."""
-    # omega in [0.3, 0.7] with small seam = STABLE
-    assert api_umcp.classify_regime(0.5, 0.5, 0.001, 1.0) == "STABLE"
-    assert api_umcp.classify_regime(0.3, 0.7, 0.0, 1.0) == "STABLE"
-    assert api_umcp.classify_regime(0.7, 0.3, 0.005, 1.0) == "STABLE"
+    """Test classify_regime returns STABLE for low omega + high F + low S + low C."""
+    # Frozen contract: ω < 0.038 AND F > 0.90 AND S < 0.15 AND C < 0.14
+    assert api_umcp.classify_regime(0.02, 0.98, 0.01, 0.05) == "STABLE"
+    assert api_umcp.classify_regime(0.03, 0.97, 0.10, 0.10) == "STABLE"
 
 
 def test_classify_regime_watch():
-    """Test classify_regime returns WATCH for edge omega values."""
-    # omega in [0.1, 0.3) or (0.7, 0.9] = WATCH
-    assert api_umcp.classify_regime(0.2, 0.8, 0.001, 1.0) == "WATCH"
-    assert api_umcp.classify_regime(0.8, 0.2, 0.001, 1.0) == "WATCH"
+    """Test classify_regime returns WATCH for intermediate omega values."""
+    # 0.038 ≤ ω < 0.30 → WATCH
+    assert api_umcp.classify_regime(0.10, 0.90, 0.01, 0.05) == "WATCH"
+    assert api_umcp.classify_regime(0.20, 0.80, 0.01, 0.05) == "WATCH"
 
 
 def test_classify_regime_collapse():
-    """Test classify_regime returns COLLAPSE for extreme omega values."""
-    # omega < 0.1 or omega > 0.9 = COLLAPSE
-    assert api_umcp.classify_regime(0.05, 0.95, 0.001, 1.0) == "COLLAPSE"
-    assert api_umcp.classify_regime(0.95, 0.05, 0.001, 1.0) == "COLLAPSE"
+    """Test classify_regime returns COLLAPSE for high omega values."""
+    # ω ≥ 0.30 → COLLAPSE (when IC is not critically low)
+    assert api_umcp.classify_regime(0.50, 0.50, 0.01, 0.05) == "COLLAPSE"
+    # ω = 0.60 still has ic_approx ≈ 0.40 > 0.30 → COLLAPSE (not CRITICAL)
+    assert api_umcp.classify_regime(0.60, 0.40, 0.01, 0.05) == "COLLAPSE"
 
 
 def test_classify_regime_critical():
-    """Test classify_regime returns CRITICAL for large seam residuals."""
-    # |S| > 0.01 = CRITICAL (overrides omega-based)
-    assert api_umcp.classify_regime(0.5, 0.5, 0.02, 1.0) == "CRITICAL"
-    assert api_umcp.classify_regime(0.5, 0.5, -0.02, 1.0) == "CRITICAL"
+    """Test classify_regime returns CRITICAL for very high omega (low IC)."""
+    # ω = 0.95 → ic_approx ≈ 0.05 < 0.30 → CRITICAL overlay takes precedence
+    result = api_umcp.classify_regime(0.95, 0.05, 0.01, 0.05)
+    assert result == "CRITICAL"
 
 
 def test_get_current_time():
@@ -382,8 +382,8 @@ def test_timeseries_analysis(client, auth_headers):
     assert "omega_mean" in data
     assert "regime_counts" in data
     assert "stability_score" in data
-    # All values in STABLE regime
-    assert data["regime_counts"]["STABLE"] == 8
+    # With frozen contract thresholds, ω ≈ 0.5 → COLLAPSE regime
+    assert data["regime_counts"]["COLLAPSE"] == 8
 
 
 def test_timeseries_regime_transitions(client, auth_headers):
@@ -391,7 +391,8 @@ def test_timeseries_regime_transitions(client, auth_headers):
     response = client.post(
         "/analysis/timeseries",
         json={
-            "omega_series": [0.5, 0.6, 0.75, 0.85, 0.5],  # STABLE -> WATCH -> WATCH -> STABLE
+            # ω: 0.01 (STABLE) → 0.10 (WATCH) → 0.35 (COLLAPSE) → 0.10 (WATCH) → 0.01 (STABLE)
+            "omega_series": [0.01, 0.10, 0.35, 0.10, 0.01],
         },
         headers=auth_headers,
     )
@@ -445,3 +446,209 @@ def test_ledger_analysis_endpoint(client, auth_headers):
     assert "conformant_rate" in data
     assert "regime_distribution" in data
     assert "stability_index" in data
+
+
+# ============================================================================
+# Metrics Endpoint Tests
+# ============================================================================
+
+
+def test_metrics_endpoint(client):
+    """Test metrics endpoint returns operational stats."""
+    response = client.get("/metrics")
+    assert response.status_code == 200
+    data = response.json()
+    assert "uptime_seconds" in data
+    assert "total_requests" in data
+    assert "total_errors" in data
+    assert "frozen_contract" in data
+    assert data["frozen_contract"]["epsilon"] == 1e-8
+    assert data["frozen_contract"]["p_exponent"] == 3
+    assert data["frozen_contract"]["alpha"] == 1.0
+    assert data["frozen_contract"]["tol_seam"] == 0.005
+
+
+# ============================================================================
+# Batch Kernel Computation Tests
+# ============================================================================
+
+
+def test_kernel_batch_single_trace(client, auth_headers):
+    """Test batch kernel computation with a single trace."""
+    response = client.post(
+        "/kernel/batch",
+        json={
+            "traces": [{"label": "test_uniform", "coordinates": [0.5, 0.5, 0.5, 0.5]}],
+        },
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 1
+    assert len(data["results"]) == 1
+    r = data["results"][0]
+    assert r["label"] == "test_uniform"
+    assert r["F"] == 0.5
+    assert r["omega"] == 0.5
+    assert "computation_time_ms" in data
+
+
+def test_kernel_batch_multiple_traces(client, auth_headers):
+    """Test batch kernel computation with multiple traces."""
+    response = client.post(
+        "/kernel/batch",
+        json={
+            "traces": [
+                {"label": "high_fidelity", "coordinates": [0.95, 0.90, 0.92, 0.88]},
+                {"label": "mid_fidelity", "coordinates": [0.5, 0.5, 0.5, 0.5]},
+                {"label": "low_fidelity", "coordinates": [0.1, 0.2, 0.15, 0.05]},
+            ],
+        },
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 3
+    assert "summary" in data
+    assert "mean_F" in data["summary"]
+    assert "regime_distribution" in data["summary"]
+    assert data["summary"]["ic_le_f_violations"] == 0  # Integrity bound holds
+
+
+def test_kernel_batch_summary_stats(client, auth_headers):
+    """Test batch summary statistics are correct."""
+    response = client.post(
+        "/kernel/batch",
+        json={
+            "traces": [
+                {"coordinates": [0.9, 0.9, 0.9, 0.9]},
+                {"coordinates": [0.1, 0.1, 0.1, 0.1]},
+            ],
+        },
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    # Mean F should be average of 0.9 and 0.1 = 0.5
+    assert abs(data["summary"]["mean_F"] - 0.5) < 1e-6
+
+
+# ============================================================================
+# Spine Evaluation Tests
+# ============================================================================
+
+
+def test_spine_evaluation_basic(client, auth_headers):
+    """Test full spine evaluation returns all five stops."""
+    response = client.post(
+        "/kernel/spine",
+        json={
+            "coordinates": [0.9, 0.85, 0.88, 0.92],
+            "label": "test_spine",
+        },
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["label"] == "test_spine"
+
+    # Verify all five spine stops
+    assert "contract" in data
+    assert "canon" in data
+    assert "closures" in data
+    assert "ledger" in data
+    assert "stance" in data
+
+    # Contract has frozen params
+    assert data["contract"]["epsilon"] == 1e-8
+    assert data["contract"]["p_exponent"] == 3
+
+    # Canon has the five words
+    assert "fidelity" in data["canon"]
+    assert "drift" in data["canon"]
+    assert "roughness" in data["canon"]
+    assert "return" in data["canon"]
+    assert "integrity" in data["canon"]
+
+    # Closures has regime
+    assert data["closures"]["regime"] in ("STABLE", "WATCH", "COLLAPSE", "CRITICAL")
+
+    # Ledger has budget
+    assert "debits" in data["ledger"]
+    assert "credits" in data["ledger"]
+    assert "delta_kappa" in data["ledger"]
+
+    # Stance has verdict
+    assert data["stance"]["verdict"] in ("CONFORMANT", "NONCONFORMANT", "NON_EVALUABLE")
+
+
+def test_spine_identities_verified(client, auth_headers):
+    """Test spine verifies Tier-1 identities."""
+    response = client.post(
+        "/kernel/spine",
+        json={"coordinates": [0.5, 0.5, 0.5, 0.5]},
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    # F + ω = 1 must always hold
+    assert data["stance"]["identities_verified"]["F_plus_omega_eq_1"] is True
+    # IC ≤ F must always hold
+    assert data["stance"]["identities_verified"]["IC_le_F"] is True
+
+
+# ============================================================================
+# Domain List Tests
+# ============================================================================
+
+
+def test_domains_list_all_17(client, auth_headers):
+    """Test domains endpoint returns all 17 domains."""
+    response = client.get("/domains", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 17
+    names = {d["name"] for d in data}
+    # Verify key domains are present
+    for expected in ("GCD", "SM", "ATOM", "EVO", "SEM", "CONSC", "CT", "MATL", "EVERY"):
+        assert expected in names, f"Domain {expected} missing"
+
+
+# ============================================================================
+# Standard Model Endpoint Tests
+# ============================================================================
+
+
+def test_sm_theorems_endpoint(client, auth_headers):
+    """Test Standard Model theorems endpoint."""
+    response = client.get("/sm/theorems", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_theorems"] == 10
+    assert data["total_proven"] == 10
+    assert data["total_subtests"] == 74
+    assert len(data["theorems"]) == 10
+    # All theorems proven
+    for t in data["theorems"]:
+        assert t["status"] == "PROVEN"
+
+
+# ============================================================================
+# Request Tracking Middleware Tests
+# ============================================================================
+
+
+def test_response_headers_present(client):
+    """Test middleware adds tracking headers."""
+    response = client.get("/health")
+    assert "x-request-id" in response.headers
+    assert "x-response-time-ms" in response.headers
+    # Response time should be a valid float
+    float(response.headers["x-response-time-ms"])
+
+
+def test_custom_request_id_propagated(client):
+    """Test custom X-Request-ID is propagated."""
+    custom_id = "test-request-12345"
+    response = client.get("/health", headers={"X-Request-ID": custom_id})
+    assert response.headers["x-request-id"] == custom_id
