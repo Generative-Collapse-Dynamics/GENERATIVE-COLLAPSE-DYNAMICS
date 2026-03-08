@@ -385,6 +385,7 @@ The following connections identify where classical results emerge as **degenerat
 
 - **Entropy**: The Bernoulli field entropy S = −Σ wᵢ[cᵢ ln(cᵢ) + (1−cᵢ)ln(1−cᵢ)] is the unique entropy of the collapse field. Shannon entropy is the degenerate limit when cᵢ ∈ {0,1} only. Thermodynamic entropy emerges when the field is further restricted to equilibrium.
 - **Free Energy**: The generative potential Φ_gen is derived independently from the collapse field. Classical free energy is the degenerate limit when the cost function Γ(ω) is linearized.
+- **Fluctuation-Dissipation**: The duality identity F + ω = 1 holds algebraically for all trace vectors. Kubo's fluctuation-dissipation theorem (1966) emerges as the degenerate limit when the system is restricted to linear response near thermal equilibrium described by correlation functions. The kernel version is unconditional — valid far from equilibrium and for nonlinear systems.
 
 #### General Relativity (Degenerate Limit)
 

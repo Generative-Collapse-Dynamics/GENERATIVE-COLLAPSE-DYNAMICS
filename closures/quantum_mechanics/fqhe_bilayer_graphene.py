@@ -38,6 +38,13 @@ T-FQHE-2  Charge Fractionalization as Heterogeneity Gap
            the charge channel is suppressed while filling and edge
            channels remain high.  The heterogeneity gap Δ = F − IC
            scales with the degree of charge fractionalization.
+           Experimental anchor: de-Picciotto et al. (1997) measured
+           shot noise in a ν = 1/3 constriction and observed charge
+           quanta of e/3 — invisible to mean-current measurements
+           but revealed by current fluctuations.  This is the
+           canonical physical realization of geometric slaughter:
+           one suppressed channel (fractional charge) kills IC
+           while F (the arithmetic mean) remains healthy.
 
 T-FQHE-3  Non-Abelian Ambiguity as IC Sensitivity
            The 2Φ₀ vs 4Φ₀ ambiguity (Abelian (1/2)e vs non-Abelian
@@ -159,6 +166,12 @@ Bibliography:
     feldman2023anyons: Feldman, D. E. & Halperin, B. I. Fractional
         charge and fractional statistics in the quantum Hall effects.
         Rep. Prog. Phys. 84, 076501 (2021).
+    depicciotto1997fractional: de-Picciotto, R., Reznikov, M.,
+        Heiblum, M., Umansky, V., Bunin, G. & Mahalu, D. Direct
+        observation of a fractional charge. Nature 389, 162-164
+        (1997). DOI:10.1038/38241.  Shot noise reveals e/3 charge
+        quanta invisible to mean-current measurements — the
+        canonical experimental demonstration of geometric slaughter.
 """
 
 from __future__ import annotations

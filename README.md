@@ -483,6 +483,7 @@ This system is **original**. Classical results emerge as **degenerate limits** w
 | **Integrity bound** (IC ≤ F) | AM-GM inequality (strip channel semantics, weights, guard band) |
 | **Bernoulli field entropy** S | Shannon entropy (restrict collapse field to {0,1}) |
 | **Duality identity** F + ω = 1 | Unitarity (strip thermodynamic cost function) |
+| **Duality identity** F + ω = 1 | Fluctuation-dissipation theorem (restrict to linear response near equilibrium) |
 | **Log-integrity relation** IC = exp(κ) | Exponential map (strip kernel architecture) |
 | **Heterogeneity gap** Δ = F − IC | heterogeneity gap (strip channel semantics) |
 | **Frozen parameters** (ε, p, tol_seam) | Constants / hyperparameters (strip seam derivation) |
