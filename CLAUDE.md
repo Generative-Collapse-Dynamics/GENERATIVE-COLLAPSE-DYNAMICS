@@ -72,8 +72,9 @@ python scripts/pre_commit_protocol.py       # Full 11-step protocol, must exit 0
 ## Project Structure
 
 - **Tier-1** (The Kernel): K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) — the mathematical
-  function plus its identities (F+ω=1, IC≤F, IC=exp(κ)), 46 lemmas, 28 structural
-  identities, and structural constants (c*=0.7822, c_trap=0.3178)
+  function plus its identities (F+ω=1, IC≤F, IC=exp(κ), S≈f(F,C)), 46 lemmas, 29
+  structural identities, and structural constants (c*=0.7822, c_trap=0.3178).
+  3 effective degrees of freedom (F, κ, C) — S is asymptotically determined by F and C.
 - **Tier-0** (Protocol): `src/umcp/` — code implementing the kernel + embedding,
   regime gates, seam calculus, validation, contracts. The code is Tier-0;
   what it computes is Tier-1.
@@ -125,7 +126,7 @@ CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
 - **Integrity Ledger**: Debit Drift + Roughness, credit Return; residual must close
 - **Stance**: Derived verdict: Stable / Watch / Collapse — never asserted
 
-## The 28 Identities (Key Results)
+## The 29 Identities (Key Results)
 
 Run `scripts/deep_diagnostic.py`, `scripts/cross_domain_bridge.py`, and
 `scripts/cross_domain_bridge_phase2.py` to re-derive these computationally.

@@ -64,7 +64,7 @@ CONTRACT → CANON → CLOSURES → INTEGRITY LEDGER → STANCE
 Five words narrate the Canon: **Drift · Fidelity · Roughness · Return · Integrity**.
 The Ledger debits Drift + Roughness, credits Return. Stance is derived, never asserted.
 
-## The 28 Structural Identities (Key Results)
+## The 29 Structural Identities (Key Results)
 
 Run the three diagnostic scripts to re-derive computationally:
 

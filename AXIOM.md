@@ -72,9 +72,9 @@ The axiom states that **reality is declared by demonstrating closure after colla
 
 ---
 
-## The Mathematics of Return: 28 Verified Identities
+## The Mathematics of Return: 29 Verified Identities
 
-The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **28 structural identities** have been derived and verified to machine precision across all 15 domains. Every identity below traces back to Axiom-0 without importing external structure.
+The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **29 structural identities** have been derived and verified to machine precision across all 17 domains. Every identity below traces back to Axiom-0 without importing external structure.
 
 ### The Geometry: Fisher Coordinates
 

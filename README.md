@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **17 domains**, **148 closure modules**, **76 proven theorems**, and **7,194 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **17 domains**, **148 closure modules**, **76 proven theorems**, and **7,442 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -46,7 +46,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 - [Documentation](#documentation)
 - [Diagrams & Proofs](#diagrams--proofs)
 - [Key Discoveries](#key-discoveries)
-  - [The 28 Structural Identities](#the-28-structural-identities)
+  - [The 29 Structural Identities](#the-29-structural-identities)
 - [Papers & Publications](#papers--publications)
 - [Repository Structure](#repository-structure)
 - [Contributing](#contributing)
@@ -114,7 +114,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (28 structural identities, 46 lemmas, 76 proven theorems) → Tier-0 (7,194 tests, 148 closure modules, C++17 accelerator) → Tier-2 (17 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (29 structural identities, 46 lemmas, 76 proven theorems) → Tier-0 (7,442 tests, 148 closure modules, C++17 accelerator) → Tier-2 (17 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 ![Tier Architecture](images/10_tier_architecture.png)
 
@@ -568,7 +568,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 7,375 tests
+pytest                            # All 7,442 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -632,7 +632,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 7,194 tests
+pytest -v --tb=short                       # 7,442 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -750,7 +750,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (7,194 tests, 117 test files)
+2. **Test** — Full pytest suite (7,442 tests, 120 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -769,7 +769,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**7,194 tests** across **117 test files**, organized by tier and domain:
+**7,442 tests** across **120 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -927,7 +927,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 14 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
 ├── casepacks/                 # 15 reproducible validation bundles
-├── tests/                     # 117 test files, 7,194 tests
+├── tests/                     # 120 test files, 7,442 tests
 ├── paper/                     # 6 LaTeX papers + 1 Markdown paper + Bibliography.bib (93 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
@@ -944,7 +944,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 
 | Document | Purpose |
 |----------|---------|
-| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, 28 structural identities, and why this system is original |
+| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, 29 structural identities, and why this system is original |
 | [LIBER_COLLAPSUS.md](LIBER_COLLAPSUS.md) | *Liber Universalis de Collapsus Mathematica* — the Tier-1 Latin foundation text |
 | [MANIFESTUM_LATINUM.md](MANIFESTUM_LATINUM.md) | Latin manifesto: complete lexicon, seven verbs, eight typed patterns, twenty maxims |
 | [TIER_SYSTEM.md](TIER_SYSTEM.md) | The three-tier architecture: Immutable Invariants → Protocol → Expansion Space |
@@ -1035,9 +1035,9 @@ The matter genesis 6-act ladder traces fidelity from fundamental particles throu
 
 ## Key Discoveries
 
-### The 28 Structural Identities
+### The 29 Structural Identities
 
-28 identities have been derived from Axiom-0 and verified to machine precision. They reveal that the GCD kernel is not a collection of separate formulas — it is a **single geometric structure** on the flat Bernoulli manifold. Run the diagnostic scripts to re-derive them:
+29 identities have been derived from Axiom-0 and verified to machine precision. They reveal that the GCD kernel is not a collection of separate formulas — it is a **single geometric structure** on the flat Bernoulli manifold. Run the diagnostic scripts to re-derive them:
 
 ```bash
 python scripts/deep_diagnostic.py           # 8 equations (E1-E8): c* properties

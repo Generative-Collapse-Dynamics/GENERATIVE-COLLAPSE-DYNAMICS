@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **7,181 tests** · **17 domains** · **130 closure modules** · **76 lemmas** · **28 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **7,442 tests** · **17 domains** · **130 closure modules** · **76 lemmas** · **29 structural identities** · **50 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -142,11 +142,17 @@ The entire system can be grasped through **one axiom, one spine, five words, six
 | **tol_seam** | 0.005 | Width where IC ≤ F holds at 100% across all 16 domains |
 | **c\*** | 0.7822 | Logistic self-dual fixed point: maximizes S + κ per channel |
 
-**THREE IDENTITIES** (always true, by construction):
+**THREE ALGEBRAIC IDENTITIES** (always true, by construction):
 
-1. **F + ω = 1** — Pythagorean theorem in Fisher coordinates (sin²θ + cos²θ = 1)
+1. **F + ω = 1** — Duality identity in Fisher coordinates (sin²θ + cos²θ = 1)
 2. **IC ≤ F** — Integrity cannot exceed fidelity (solvability condition for trace recovery)
 3. **IC = exp(κ)** — Log-integrity relation (link between multiplicative and additive coherence)
+
+**ONE STATISTICAL CONSTRAINT** (tightens with n, exact in the limit):
+
+4. **S ≈ f(F, C)** — Entropy is asymptotically determined by fidelity and curvature (corr(C,S) → −1 as n → ∞)
+
+These four constraints reduce 6 kernel outputs to **3 effective degrees of freedom**: F, κ, C.
 
 **THREE REGIMES** (derived from gates, never asserted):
 
@@ -158,11 +164,11 @@ The entire system can be grasped through **one axiom, one spine, five words, six
 
 Stability is rare — 87.5% of the manifold lies outside it. Return from collapse to stability is what the axiom measures.
 
-### Mathematica Derivata — The 28 Structural Identities
+### Mathematica Derivata — The 29 Structural Identities
 
 > *Numeri sunt intellectus.* — The numbers are the understanding.
 
-28 identities have been derived from Axiom-0 and verified to machine precision. They fall into three tiers of depth. Run `scripts/deep_diagnostic.py`, `scripts/cross_domain_bridge.py`, and `scripts/cross_domain_bridge_phase2.py` to re-derive them computationally.
+29 identities have been derived from Axiom-0 and verified to machine precision. They fall into three tiers of depth. Run `scripts/deep_diagnostic.py`, `scripts/cross_domain_bridge.py`, `scripts/cross_domain_bridge_phase2.py`, and `scripts/unified_geometry.py` to re-derive them computationally.
 
 **Key results (for instant orientation)**:
 
@@ -232,22 +238,22 @@ The UMCP tier system has exactly three tiers. No half-tiers. No confusion. Every
 
 | Tier | Name | Role | Mutable? |
 |------|------|------|----------|
-| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). Four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), their provable identities (F + ω = 1, IC ≤ F, IC = exp(κ)), and the 46 lemmas, 28 structural identities, and 5 structural constants that follow. Domain-independent. | NEVER within a run. Promotion only through seam weld across runs. |
+| **1** | **The Kernel** | The mathematical function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC). Four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), with 3 effective degrees of freedom (F, κ, C) — S is asymptotically determined by F and C. Provable identities (F + ω = 1, IC ≤ F, IC = exp(κ), S ≈ f(F,C)), 46 lemmas, 29 structural identities, and 5 structural constants. Domain-independent. | NEVER within a run. Promotion only through seam weld across runs. |
 | **0** | **Protocol** | Operational machinery: embedding raw data into [0,1]ⁿ, computing the Tier-1 kernel (code implements formulas), regime gates, seam calculus, contracts, schemas, SHA-256, three-valued verdicts. The code is Tier-0; what it computes is Tier-1. | Configuration frozen per run. |
 | **2** | **Expansion Space** | Domain closures that choose which real-world quantities become the trace vector c and weights w. Channel selection, entity catalogs, normalization, domain-specific theorems. Validated through Tier-0 against Tier-1. | Freely extensible; validated before trust. |
 
-**Key distinction**: The kernel has three aspects: (1) the *function* (Tier-1) — four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), plus everything provable about them; (2) the *implementation* (Tier-0) — the code that evaluates those formulas plus the embedding, gates, and seam; (3) the *inputs* (Tier-2) — the choice of which real-world quantities become channels. The identities are not separate objects beside the kernel — they are *theorems about the kernel function*. The derived values (ω, IC) remain Tier-1 — they are outputs of the kernel function and appear in the immutable identities, not Tier-0 diagnostics.
+**Key distinction**: The kernel has three aspects: (1) the *function* (Tier-1) — four primitive equations (F, κ, S, C) and two derived values (ω = 1−F, IC = exp(κ)), with 3 effective degrees of freedom (F, κ, C — S is asymptotically determined by F and C via CLT), plus everything provable about them; (2) the *implementation* (Tier-0) — the code that evaluates those formulas plus the embedding, gates, and seam; (3) the *inputs* (Tier-2) — the choice of which real-world quantities become channels. The identities are not separate objects beside the kernel — they are *theorems about the kernel function*. The derived values (ω, IC) remain Tier-1 — they are outputs of the kernel function and appear in the immutable identities, not Tier-0 diagnostics.
 
 ### Tier-1 Reserved Symbols (IMMUTABLE — The Kernel Function)
 
-The kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) has four primitive equations and two derived values. All six outputs are Tier-1. The identities (F + ω = 1, IC ≤ F) are theorems about this function. The 46 lemmas, 28 identities, and structural constants (c* = 0.7822, c_trap = 0.3178) are further properties of the same mathematical object.
+The kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) has four primitive equations and two derived values, but only **3 effective degrees of freedom** (F, κ, C). S is asymptotically determined by F and C (corr(C,S) → −1 as n → ∞). All six outputs are Tier-1. The 3 algebraic identities (F + ω = 1, IC ≤ F, IC = exp(κ)) and 1 statistical constraint (S ≈ f(F,C)) are theorems about this function. The 46 lemmas, 29 identities, and structural constants (c* = 0.7822, c_trap = 0.3178) are further properties of the same mathematical object.
 
 | Symbol | Name | Formula | Range | Status | Structural Role |
 |--------|------|---------|-------|--------|-----------------|
 | **F** | Fidelity | F = Σ wᵢcᵢ | [0,1] | **Primitive** | How much survives collapse |
 | **κ** | Log-integrity | κ = Σ wᵢ ln(cᵢ,ε) | ≤0 | **Primitive** | Logarithmic fidelity (sensitivity-aware) |
-| **S** | Entropy | S = −Σ wᵢ[cᵢ ln(cᵢ) + (1−cᵢ)ln(1−cᵢ)] | ≥0 | **Primitive** | Bernoulli field entropy (Shannon entropy is the degenerate limit) |
-| **C** | Curvature | C = stddev(cᵢ)/0.5 | [0,1] | **Primitive** | Coupling to uncontrolled degrees of freedom |
+| **S** | Entropy | S = −Σ wᵢ[cᵢ ln(cᵢ) + (1−cᵢ)ln(1−cᵢ)] | ≥0 | **Primitive** (computed, not free) | Bernoulli field entropy — asymptotically determined by F and C |
+| **C** | Curvature | C = stddev(cᵢ)/0.5 | [0,1] | **Primitive** (independent) | Coupling to uncontrolled degrees of freedom |
 | **ω** | Drift | ω = 1 − F | [0,1] | Derived (from F) | How much is lost to collapse |
 | **IC** | Integrity composite | IC = exp(κ) | (0,1] | Derived (from κ) | Multiplicative coherence |
 | **τ_R** | Return time | Re-entry delay to D_θ | ℕ∪{∞_rec} | — | How long until the system returns |
@@ -503,7 +509,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 7,181 tests (pytest --collect-only | grep "::" | wc -l to verify)
+pytest                                       # 7,442 tests (pytest --collect-only | grep "::" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
