@@ -601,17 +601,30 @@ identities = [
         f"Col/Watch/Stable = {theta_c / (np.pi / 2) * 100:.0f}/{(theta_s - theta_c) / (np.pi / 2) * 100:.0f}/{(np.pi / 2 - theta_s) / (np.pi / 2) * 100:.0f}%",
     ),
     ("D8", "Dimension collapse", "8-ch kernel: R⁸ → R⁴"),
+    # From identity_verification.py + identity_deep_probes.py (N-series: new identities)
+    ("N1", "Fisher-entropy integral", "∫₀¹ g_F·S dc = π²/3"),
+    ("N2", "Coupling centroid", "∫₀¹ (S+κ)·c dc = 0"),
+    ("N3", "Rank-2 closed form", "IC = √(F²−C²/4) for n=2"),
+    ("N4", "Equator quintuple", "5 properties converge at c=½"),
+    ("N6", "Triple peak identity", "(1−c*)/c* = exp(−1/c*) = (S+κ)|_{c*}"),
+    ("N8", "Log-integrity correction", "κ = ln(F) − C²/(8F²) + O(C⁴)"),
+    ("N10", "Jensen entropy bound", "S ≤ h(F), = iff homogeneous"),
+    ("N11", "Moment family", "μ_n = [(n+1)H_{n+1}−(n+2)]/[(n+1)²(n+2)]"),
+    ("N12", "Gap composition", "Δ₁₂ = (Δ₁+Δ₂)/2 + (√IC₁−√IC₂)²/2"),
+    ("N16", "Reflection formula", "f(θ)+f(π/2−θ) = 2ln(tanθ)cos(2θ)"),
 ]
 
 theta_c = fisher_theta(0.70)
 theta_s = fisher_theta(0.962)
 
-print(f"  {'ID':>4s}  {'Name':>24s}  {'Identity'}")
-print(f"  {'─' * 4}  {'─' * 24}  {'─' * 40}")
+print(f"  {'ID':>4s}  {'Name':>28s}  {'Identity'}")
+print(f"  {'─' * 4}  {'─' * 28}  {'─' * 44}")
 for bid, name, ident in identities:
-    print(f"  {bid:>4s}  {name:>24s}  {ident}")
+    print(f"  {bid:>4s}  {name:>28s}  {ident}")
 
-print(f"\n  Total: {len(identities)} identities across 3 diagnostic scripts")
+print(f"\n  Total: {len(identities)} identities across 5 scripts")
+print("  E1–E8: deep_diagnostic.py | B1–B12: cross_domain_bridge.py")
+print("  D1–D8: cross_domain_bridge_phase2.py | N-series: identity_verification.py + identity_deep_probes.py")
 print("  All verified to machine precision (≤ 10⁻¹⁰)")
 print("  Zero symbolic assumptions — every identity is computed, not assumed")
 

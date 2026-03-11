@@ -1131,7 +1131,7 @@ The kernel K: [0,1]ⁿ × Δⁿ → ℝ⁶ maps trace vectors (c, w) to six outp
 
 The **effective rank** of a kernel evaluation K(c, w) is the number of _independently varying_ quantities among its 6 outputs, after accounting for all active constraints. The maximum effective rank is 3, attained when F, κ, and C are mutually independent.
 
-**Verification**: PCA on 10,000 random traces, n = 4 to 64, yields rank-at-99%-variance = 3 for all n (Identity #29, TIER_SYSTEM.md §Rank-3 Theorem). Computational proof: `python scripts/unified_geometry.py` §1.
+**Verification**: PCA on 10,000 random traces, n = 4 to 64, yields rank-at-99%-variance = 3 for all n (Identity D8, TIER_SYSTEM.md §Rank-3 Theorem). Computational proof: `python scripts/unified_geometry.py` §1.
 
 ---
 
@@ -1243,7 +1243,7 @@ The three ranks form a strict hierarchy under constraint count:
 
 ### Invariance of Maximum Rank
 
-The maximum effective rank of the kernel is **3**, independent of input dimensionality n. This is the Rank-3 Theorem (Identity #29):
+The maximum effective rank of the kernel is **3**, independent of input dimensionality n. This is the Rank-3 Theorem (Identity D8):
 
 > For all n ≥ 3, PCA on random traces c ∈ [0,1]ⁿ yields rank-at-99%-variance = 3.
 
@@ -1362,6 +1362,27 @@ Each kernel identity is derived from Axiom-0 through the Bernoulli embedding. Th
 **Classical principle**: Error probability is bounded by entropy. One-directional constraint.
 
 **UMCP version**: The ceiling $h(F) = h(1-\omega)$ is tight (0 violations in 50,000 samples). Departure from equality measures how much structural order the system retains beyond what fidelity alone guarantees. Near collapse ($\omega \to 1$), $h(F) \to 0$ and entropy is forcibly suppressed — the system's internal disorder is constrained by its proximity to the pole. Strip the observation-cost structure (epistemic weld) and you recover the classical Fano inequality — a one-directional bound. The kernel version creates a **tight ceiling whose departure is itself a measurement**.
+
+---
+
+### 5.3-N N-Series Identities (Integral, Compositional, and Geometric)
+
+Ten additional structural identities (N-series) complement the E/B/D series. All are Tier-1 — exact mathematical properties of the kernel function, derived from Axiom-0 and verified to machine precision. Computational proofs: `scripts/identity_verification.py` (N1–N10) and `scripts/identity_deep_probes.py` (N11–N16).
+
+| ID | Name | Formula | Proof Type |
+|----|------|---------|------------|
+| N1 | Fisher-Entropy Integral | $\int_0^1 g_F(c) \cdot S(c)\, dc = \pi^2/3$ | Analytical (series for $\zeta(2)$) |
+| N2 | Coupling Centroid | $\int_0^1 (S+\kappa) \cdot c\, dc = 0$ | Analytical ($1/4 - 1/4 = 0$) |
+| N3 | Rank-2 Closed Form | $\text{IC} = \sqrt{F^2 - C^2/4}$ for $n=2$ | Algebraic (extends D4) |
+| N4 | Equator Quintuple | $S = \ln 2$, $S+\kappa = 0$, $h'=0$, $g_F=4$, $\theta=\pi/4$ at $c=1/2$ | Algebraic |
+| N6 | Triple Peak Identity | $(1-c^{\ast})/c^{\ast} = \exp(-1/c^{\ast}) = (S+\kappa)|_{c^{\ast}}$ | Analytical (extends E2/E3) |
+| N8 | Log-Integrity Correction | $\kappa = \ln F - C^2/(8F^2) + O(C^4)$ | Taylor expansion |
+| N10 | Jensen Entropy Bound | $S \leq h(F)$, equality iff $C = 0$ | Concavity of $h$ |
+| N11 | Moment Family | $\mu_n = [(n+1)H_{n+1} - (n+2)] / [(n+1)^2(n+2)]$ | Analytical (generalizes E4) |
+| N12 | Gap Composition | $\Delta_{12} = (\Delta_1+\Delta_2)/2 + (\sqrt{\text{IC}_1} - \sqrt{\text{IC}_2})^2/2$ | Algebraic (extends D6) |
+| N16 | Reflection Formula | $f(\theta) + f(\pi/2-\theta) = 2\ln(\tan\theta)\cos(2\theta)$ | Algebraic |
+
+**Tier justification**: Each N-series identity is a theorem about the kernel function $K$, requiring only the definitions of $F$, $\kappa$, $S$, $C$, $\text{IC}$, and $g_F$ to state and prove. No domain-specific inputs, no Tier-0 protocol choices, and no external structure is imported.
 
 ---
 

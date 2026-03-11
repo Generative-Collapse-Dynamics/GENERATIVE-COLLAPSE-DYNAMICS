@@ -135,7 +135,7 @@ def main() -> None:
         p = pb_list[0]
         print(f"\n  Pb-208 trace: {[round(x, 4) for x in p.trace]}")
         print(f"  Pb-208 channels: {list(p.channel_names)}")
-        kernel_report("Pb-208", "Nuclear Physics", p.trace)
+        kernel_report("Pb-208", "Nuclear Physics", np.array(p.trace))
 
         print(f"\n  >>> IC/F match: {abs(r3['IC_F'] - p.IC / p.F):.6f}")
         print()
@@ -165,7 +165,7 @@ def main() -> None:
     if fe_list:
         fe = fe_list[0]
         print(f"\n  Fe-56 trace: {[round(x, 4) for x in fe.trace]}")
-        kernel_report("Fe-56", "Nuclear Physics", fe.trace)
+        kernel_report("Fe-56", "Nuclear Physics", np.array(fe.trace))
 
         print(f"\n  >>> IC/F match: {abs(r5['IC_F'] - fe.IC / fe.F):.6f}")
         print()

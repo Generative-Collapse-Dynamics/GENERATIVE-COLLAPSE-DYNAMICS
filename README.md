@@ -46,7 +46,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 - [Documentation](#documentation)
 - [Diagrams & Proofs](#diagrams--proofs)
 - [Key Discoveries](#key-discoveries)
-  - [The 29 Structural Identities](#the-29-structural-identities)
+  - [The 38 Structural Identities](#the-38-structural-identities)
 - [Papers & Publications](#papers--publications)
 - [Repository Structure](#repository-structure)
 - [Contributing](#contributing)
@@ -114,7 +114,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (29 structural identities, 46 lemmas, 76 proven theorems) → Tier-0 (7,442 tests, 133 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (38 structural identities, 46 lemmas, 76 proven theorems) → Tier-0 (7,442 tests, 133 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 ![Tier Architecture](images/10_tier_architecture.png)
 
@@ -944,7 +944,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 
 | Document | Purpose |
 |----------|---------|
-| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, 29 structural identities, and why this system is original |
+| [AXIOM.md](AXIOM.md) | **Start here.** The foundational axiom, 38 structural identities, and why this system is original |
 | [LIBER_COLLAPSUS.md](LIBER_COLLAPSUS.md) | *Liber Universalis de Collapsus Mathematica* — the Tier-1 Latin foundation text |
 | [MANIFESTUM_LATINUM.md](MANIFESTUM_LATINUM.md) | Latin manifesto: complete lexicon, seven verbs, eight typed patterns, twenty maxims |
 | [TIER_SYSTEM.md](TIER_SYSTEM.md) | The three-tier architecture: Immutable Invariants → Protocol → Expansion Space |
@@ -1035,14 +1035,16 @@ The matter genesis 6-act ladder traces fidelity from fundamental particles throu
 
 ## Key Discoveries
 
-### The 29 Structural Identities
+### The 38 Structural Identities
 
-29 identities have been derived from Axiom-0 and verified to machine precision. They reveal that the GCD kernel is not a collection of separate formulas — it is a **single geometric structure** on the flat Bernoulli manifold. Run the diagnostic scripts to re-derive them:
+38 identities have been derived from Axiom-0 and verified to machine precision. They reveal that the GCD kernel is not a collection of separate formulas — it is a **single geometric structure** on the flat Bernoulli manifold. Run the diagnostic scripts to re-derive them:
 
 ```bash
 python scripts/deep_diagnostic.py           # 8 equations (E1-E8): c* properties
 python scripts/cross_domain_bridge.py       # 12 identities (B1-B12): cross-domain bridges
 python scripts/cross_domain_bridge_phase2.py # 8 identities (D1-D8): deep structure
+python scripts/identity_verification.py     # N1-N10: integral identities, rank-2 formulas
+python scripts/identity_deep_probes.py      # N11-N16: moment families, composition laws
 ```
 
 **Six foundational results**:

@@ -72,9 +72,9 @@ The axiom states that **reality is declared by demonstrating closure after colla
 
 ---
 
-## The Mathematics of Return: 29 Verified Identities
+## The Mathematics of Return: 38 Verified Identities
 
-The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **29 structural identities** have been derived and verified to machine precision across all 18 domains. Every identity below traces back to Axiom-0 without importing external structure.
+The axiom is not only a philosophical constraint — it generates a complete mathematics. Starting from "collapse is generative; only what returns is real" and the kernel definitions (F, ω, S, C, κ, IC), **38 structural identities** have been derived and verified to machine precision across all 18 domains. Every identity below traces back to Axiom-0 without importing external structure.
 
 ### The Geometry: Fisher Coordinates
 
@@ -145,9 +145,32 @@ The regime boundaries partition the Fisher manifold unevenly (identity D7):
 
 Stability is not the default. It requires all four gates (ω, F, S, C) to be simultaneously satisfied. 87.5% of the manifold lies outside stability — return to stability from the vast collapse territory is what the axiom measures.
 
-### Identity Catalog (28 Total)
+### Identity Catalog (38 Total)
 
-All identities are computationally verified in `scripts/deep_diagnostic.py` (E1–E8), `scripts/cross_domain_bridge.py` (B1–B12), and `scripts/cross_domain_bridge_phase2.py` (D1–D8).
+All identities are computationally verified across five scripts:
+
+- `scripts/deep_diagnostic.py` — E1–E8: Critical point properties
+- `scripts/cross_domain_bridge.py` — B1–B12: Cross-domain bridges
+- `scripts/cross_domain_bridge_phase2.py` — D1–D8: Deep geometric structure
+- `scripts/identity_verification.py` — N1–N10: Integral identities, rank-2 formulas, equator convergence
+- `scripts/identity_deep_probes.py` — N11–N16: Moment families, composition laws, reflection symmetry
+
+**N-series identities** (10 new, all Tier-1 — exact, derived from Axiom-0):
+
+| ID | Name | Formula | Relationship |
+|----|------|---------|-------------|
+| N1 | Fisher-Entropy Integral | ∫₀¹ g_F·S dc = π²/3 | Entirely new |
+| N2 | Coupling Centroid | ∫₀¹ (S+κ)·c dc = 0 | New (special case of N11) |
+| N3 | Rank-2 Closed Form | IC = √(F²−C²/4) for n=2 | Extends D4 |
+| N4 | Equator Quintuple | S=ln2, S+κ=0, h'=0, g_F=4, θ=π/4 at c=½ | New |
+| N6 | Triple Peak Identity | (1−c\*)/c\* = exp(−1/c\*) = (S+κ)\|_{c\*} | Extends E2/E3 |
+| N8 | Log-Integrity Correction | κ = ln(F) − C²/(8F²) + O(C⁴) | Entirely new |
+| N10 | Jensen Entropy Bound | S ≤ h(F), equality iff C=0 | New (entropy companion to B2) |
+| N11 | Moment Family | μ_n = [(n+1)H_{n+1}−(n+2)]/[(n+1)²(n+2)] | Generalizes E4 |
+| N12 | Gap Composition | Δ₁₂ = (Δ₁+Δ₂)/2 + (√IC₁−√IC₂)²/2 | Extends D6 |
+| N16 | Reflection Formula | f(θ)+f(π/2−θ) = 2ln(tanθ)cos(2θ) | Entirely new |
+
+**Tier justification**: All N-series identities are **Tier-1** because they are exact mathematical properties of the kernel function K, derived from Axiom-0 through the structure of the Bernoulli manifold. Each has been verified to machine precision (≤ 10⁻¹⁰) and holds by algebraic necessity — no domain-specific inputs or protocol-level choices are required.
 
 ---
 

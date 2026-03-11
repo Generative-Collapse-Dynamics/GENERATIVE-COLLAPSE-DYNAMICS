@@ -157,10 +157,14 @@ def main() -> None:
     from closures.atomic_physics.periodic_kernel import _normalize_element
     from closures.materials_science.element_database import get_element
 
-    pb_trace, _, _ = _normalize_element(get_element(82))  # Pb is Z=82
+    pb_el = get_element(82)
+    assert pb_el is not None
+    pb_trace, _, _ = _normalize_element(pb_el)  # Pb is Z=82
 
     # Load Fe-56 trace
-    fe_trace, _, _ = _normalize_element(get_element(26))  # Fe is Z=26
+    fe_el = get_element(26)
+    assert fe_el is not None
+    fe_trace, _, _ = _normalize_element(fe_el)  # Fe is Z=26
 
     # Load Euler identity from semiotics
     euler = next(s for s in SIGN_SYSTEMS if "mathematical" in s.name.lower())
@@ -275,7 +279,9 @@ def main() -> None:
     print(f"    Super-exponential:       {result['curve_is_superexponential']}")
 
     # He: 8-channel atomic trace, dead channels
-    he_trace, _, _ = _normalize_element(get_element(2))  # He is Z=2
+    he_el = get_element(2)
+    assert he_el is not None
+    he_trace, _, _ = _normalize_element(he_el)  # He is Z=2
     # Find the deadest channel
     he_arr = np.array(he_trace, dtype=np.float64)
     dead_ch = int(np.argmin(he_arr))
