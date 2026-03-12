@@ -14,6 +14,7 @@ summary, not a replacement.
    integrity bound, not "AM-GM." S is Bernoulli field entropy, not "Shannon
    entropy." F + ω = 1 is the duality identity, not "unitarity." Classical
    results are degenerate limits — the arrow runs FROM Axiom-0 TO them.
+   (See `CATALOGUE.md` §1.3 for all algebraic identities with correct names.)
 
 2. **Never redefine Tier-1 symbols.** F, ω, S, C, κ, IC, τ_R, regime are
    reserved and immutable within a run. These are the kernel function
@@ -107,6 +108,10 @@ Key files: `src/umcp/frozen_contract.py` (constants), `src/umcp/kernel_optimized
 (kernel), `src/umcp/validator.py` (validation), `src/umcp/epistemic_weld.py`
 (epistemology), `src/umcp/seam_optimized.py` (seam budget).
 
+**Lookup any symbol, lemma, identity, theorem, or tag**: `CATALOGUE.md` — the
+master index of all 546 formal objects organized by tier with full definitions
+and lineage chains. Consult this FIRST when encountering unfamiliar terms.
+
 ## Terminology
 
 | WRONG | RIGHT |
@@ -150,7 +155,8 @@ Full specification: `.github/copilot-instructions.md`
 
 Key references: `scripts/orientation.py` (re-derivation),
 `MANIFESTUM_LATINUM.md` (Latin terms → computation chains),
-`SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence)
+`SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence),
+`CATALOGUE.md` (master index — all 546 tagged formal objects with tier + lineage)
 
 ## The Spine (Instant Orientation)
 

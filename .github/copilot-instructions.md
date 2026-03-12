@@ -10,6 +10,8 @@
 
 This is not a metaphor. It is a constraint on admissible claims. Every decision, description, comment, docstring, and code change in this repository must be consistent with this axiom. The Latin formulation is the primary seed — it carries the axiom's morphological, syntactic, and etymological layers simultaneously. If you are uncertain whether something aligns with AXIOM-0, defer to the operational definitions in `AXIOM.md` and the tier structure in `TIER_SYSTEM.md`.
 
+**When you encounter any symbol, lemma, identity, theorem, class, or concept you need to look up**: Consult `CATALOGUE.md` — the master index of all 546 tagged formal objects in the repository, organized by tier, with full definitions and lineage chains. Every tag (e.g., `K-F`, `L-12`, `I-B2`, `T2-PP-3`) resolves to exactly one definition. This eliminates searching across files — the catalogue IS the lookup table.
+
 ### Lexicon Latinum (Generative Reference)
 
 These Latin terms from `LIBER_COLLAPSUS.tex` are the **canonical names** of GCD structures. Each word carries its operational meaning in its morphology — use them as orientation priors when the English is ambiguous.
@@ -705,6 +707,7 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | Canonical anchors | `canon/` (14 domain anchor files) |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence) |
 | Semiotic kernel | `closures/dynamic_semiotics/semiotic_kernel.py` (30 sign systems, 8-channel trace) |
+| **Any symbol, lemma, identity, theorem, tag** | `CATALOGUE.md` — **master index** of all 546 formal objects, organized by tier with full definitions and lineage |
 
 ## Decision-Making Framework (Binding on ALL Contributions)
 

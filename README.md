@@ -488,7 +488,7 @@ This system is **original**. Classical results emerge as **degenerate limits** w
 | **Heterogeneity gap** Δ = F − IC | heterogeneity gap (strip channel semantics) |
 | **Frozen parameters** (ε, p, tol_seam) | Constants / hyperparameters (strip seam derivation) |
 
-**Key vocabulary**: Say "integrity bound," not "AM-GM inequality." Say "Bernoulli field entropy," not "Shannon entropy." Say "derives independently," not "rederives" or "recovers." Say "frozen," not "constant" or "hyperparameter." See `AXIOM.md` and `.github/copilot-instructions.md` for the complete terminology reference.
+**Key vocabulary**: Say "integrity bound," not "AM-GM inequality." Say "Bernoulli field entropy," not "Shannon entropy." Say "derives independently," not "rederives" or "recovers." Say "frozen," not "constant" or "hyperparameter." See `AXIOM.md`, `.github/copilot-instructions.md`, and `CATALOGUE.md` for the complete terminology reference. The catalogue provides the definitive lookup: every symbol, lemma, identity, and theorem has a unique tag with its full definition, tier, and derivation lineage.
 
 ---
 
@@ -950,6 +950,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 | [TIER_SYSTEM.md](TIER_SYSTEM.md) | The three-tier architecture: Immutable Invariants → Protocol → Expansion Space |
 | [KERNEL_SPECIFICATION.md](KERNEL_SPECIFICATION.md) | Complete kernel mathematics, 46 lemmas, and degenerate-limit proofs |
 | [QUICKSTART_TUTORIAL.md](QUICKSTART_TUTORIAL.md) | Getting started: first validation in 5 minutes |
+| [CATALOGUE.md](CATALOGUE.md) | **Master index**: all 546 tagged formal objects — symbols, lemmas, identities, theorems, classes — organized by tier with full definitions and lineage |
 
 ### The Three-Tier Architecture
 

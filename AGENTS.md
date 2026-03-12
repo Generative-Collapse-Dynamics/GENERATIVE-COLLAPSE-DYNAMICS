@@ -16,6 +16,11 @@ The canonical specification is `.github/copilot-instructions.md`.
   field entropy (not Shannon). F + ω = 1 is the duality identity (not unitarity).
 - **INF_REC**: Typed string in data files, `float("inf")` in Python. Never coerced.
 
+## Lookup Protocol — CATALOGUE.md
+
+When you encounter **any** symbol, lemma, identity, theorem, class, or concept:
+→ Consult `CATALOGUE.md` first. Every formal object has a unique tag (e.g., `K-F`, `L-12`, `I-B2`) with its full definition, tier, and derivation lineage. This eliminates multi-file searches.
+
 ## First: Orientation (MANDATORY — Compounding Re-Entry)
 
 > *Intellectus non legitur; computatur.* — Understanding is not read; it is computed.
@@ -87,6 +92,7 @@ python scripts/pre_commit_protocol.py    # Full validation, must exit 0
 | Cross-domain phase 2 | `scripts/cross_domain_bridge_phase2.py` |
 | Latin manifesto | `MANIFESTUM_LATINUM.md` |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` |
+| **Master catalogue (all tags)** | `CATALOGUE.md` — **546 tagged objects**: every symbol, lemma, identity, theorem, class, with tier + lineage |
 | Full AI instructions | `.github/copilot-instructions.md` |
 
 ## The Spine (Every Claim Follows This)
