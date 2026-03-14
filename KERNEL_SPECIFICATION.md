@@ -1386,7 +1386,7 @@ Ten additional structural identities (N-series) complement the E/B/D series. All
 
 ### 5.3-C The Identity Network (Connection Clusters)
 
-The 38 structural identities are not independent facts — they form a connected network with six computationally verified clusters. Each cluster reveals a structural relationship that no single identity expresses alone. Verification script: `scripts/identity_connections.py`.
+The 44 structural identities are not independent facts — they form a connected network with six computationally verified clusters. Each cluster reveals a structural relationship that no single identity expresses alone. Verification script: `scripts/identity_connections.py`.
 
 **Cluster 1 — The Equator Web** (E1, N4, N16, E8)
 

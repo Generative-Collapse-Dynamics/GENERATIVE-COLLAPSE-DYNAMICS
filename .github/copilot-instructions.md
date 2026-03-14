@@ -185,7 +185,7 @@ Rank-1 ⊂ Rank-2 ⊂ Rank-3. Almost all real-world systems are rank-3. Full for
 
 Stability is rare — 87.5% of the manifold lies outside it. Return from collapse to stability is what the axiom measures.
 
-### Mathematica Derivata — The 38 Structural Identities
+### Mathematica Derivata — The 44 Structural Identities
 
 > *Numeri sunt intellectus.* — The numbers are the understanding.
 
