@@ -125,7 +125,7 @@ def theorem_TCN1_consciousness_gradient() -> TheoremResult:
     # Test 4: Spearman correlation between PCI and F > 0.80
     from scipy.stats import spearmanr
 
-    rho, _ = spearmanr(pci_values, f_values)
+    rho = float(spearmanr(pci_values, f_values).correlation)  # type: ignore[union-attr]
     tests.append(rho > 0.80)
 
     # Test 5: All DOC states are Collapse or Critical regime
@@ -140,7 +140,7 @@ def theorem_TCN1_consciousness_gradient() -> TheoremResult:
         n_failed=len(tests) - n_pass,
         verdict="PROVEN" if n_pass == len(tests) else "FALSIFIED",
         details={
-            "spearman_rho": float(rho),
+            "spearman_rho": rho,
             "coma_F": coma_F,
             "lockedin_F": lockedin_F,
             "n_doc_states": len(doc_states),

@@ -103,6 +103,9 @@
 					"-wall", "-n1", "-n3", "-n8", "-n24", "-n36", "-n44"
 				],
 
+				// ── Markdown (fragment-link validation disabled — GFM anchors verified on GitHub) ──
+				"markdown.validate.fragmentLinks.enabled": "ignore",
+
 				// ── Editor ──
 				"editor.rulers": [120],
 				"editor.tabSize": 4,
