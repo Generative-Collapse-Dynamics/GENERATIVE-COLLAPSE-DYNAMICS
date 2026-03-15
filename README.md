@@ -5,10 +5,10 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.1.5](https://img.shields.io/badge/UMCP-v2.1.5-orange.svg)](pyproject.toml)
-[![Tests: 7,442](https://img.shields.io/badge/tests-7%2C442-brightgreen.svg)](tests/)
+[![Tests: 7,875](https://img.shields.io/badge/tests-7%2C875-brightgreen.svg)](tests/)
 [![Domains: 18](https://img.shields.io/badge/domains-18-blueviolet.svg)](closures/)
-[![Closures: 134](https://img.shields.io/badge/closures-134-informational.svg)](closures/)
-[![Theorems: 136](https://img.shields.io/badge/theorems-136_proven-ff69b4.svg)](closures/)
+[![Closures: 135](https://img.shields.io/badge/closures-135-informational.svg)](closures/)
+[![Theorems: 155](https://img.shields.io/badge/theorems-155_proven-ff69b4.svg)](closures/)
 [![Identities: 44](https://img.shields.io/badge/identities-44_verified-9cf.svg)](scripts/)
 
 > **Core Axiom**: *"Collapse is generative; only what returns is real."*
@@ -17,7 +17,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **18 domains**, **134 closure modules**, **136 proven theorems**, and **7,442 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **18 domains**, **135 closure modules**, **155 proven theorems**, and **7,875 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -47,6 +47,7 @@ This is not a simulation. It is a **metrological enforcement engine**: schema co
 - [Diagrams & Proofs](#diagrams--proofs)
 - [Key Discoveries](#key-discoveries)
   - [The 44 Structural Identities](#the-44-structural-identities)
+  - [Recent Closure Syntheses](#recent-closure-syntheses)
 - [Papers & Publications](#papers--publications)
 - [Repository Structure](#repository-structure)
 - [Contributing](#contributing)
@@ -114,7 +115,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (44 structural identities, 46 lemmas, 136 proven theorems) → Tier-0 (7,442 tests, 134 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (44 structural identities, 46 lemmas, 155 proven theorems) → Tier-0 (7,875 tests, 135 closure modules, C++17 accelerator) → Tier-2 (18 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 ![Tier Architecture](images/10_tier_architecture.png)
 
@@ -257,20 +258,20 @@ src/umcp_cpp/                   # Optional C++ accelerator (Tier-0 Protocol)
 | **Schemas** | 17 | `schemas/*.schema.json` | JSON Schema files validating all artifacts |
 | **Canon Anchors** | 14 | `canon/*.yaml` | Domain-specific canonical reference points |
 | **Casepacks** | 17 | `casepacks/` | Reproducible validation bundles |
-| **Closure Domains** | 18 | `closures/*/` | Domain closure packages (134 modules) |
+| **Closure Domains** | 18 | `closures/*/` | Domain closure packages (135 modules) |
 | **Closure Registry** | 1 | `closures/registry.yaml` | Central listing of all closures |
 | **Validator Rules** | 1 | `validator_rules.yaml` | Semantic rule definitions (E101, W201, ...) |
-| **Integrity** | 1 | `integrity/sha256.txt` | SHA-256 checksums for 172 tracked files |
+| **Integrity** | 1 | `integrity/sha256.txt` | SHA-256 checksums for 166 tracked files |
 
 ---
 
 ## Closure Domains
 
-UMCP validates across **18 domains** with **134 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
+UMCP validates across **18 domains** with **135 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
 
-### Standard Model — 9 modules
+### Standard Model — 11 modules
 
-The crown jewel: 31 particles mapped through the GCD kernel with **10 proven theorems** (74/74 subtests at machine precision). Part of a **136-theorem corpus** across 17 formalisms spanning particle physics, quantum mechanics, nuclear physics, materials science, evolution, consciousness, semiotics, awareness-cognition, and active matter.
+The crown jewel: 31 particles mapped through the GCD kernel with **10 proven theorems** (74/74 subtests at machine precision). Part of a **155-theorem corpus** across 20 formalisms spanning particle physics, quantum mechanics, nuclear physics, materials science, evolution, consciousness, semiotics, awareness-cognition, active matter, and blast-wave dynamics.
 
 | Module | What It Encodes |
 |--------|----------------|
@@ -283,6 +284,8 @@ The crown jewel: 31 particles mapped through the GCD kernel with **10 proven the
 | `ckm_mixing.py` | CKM matrix, Wolfenstein parametrization, J_CP |
 | `neutrino_oscillation.py` | Neutrino oscillation and mass mixing |
 | `pmns_mixing.py` | PMNS matrix, leptonic mixing angles |
+| `matter_genesis.py` | 7 acts of matter: 99 entities, 10 genesis theorems (T-MG-1–T-MG-10), 5 phase boundaries |
+| `particle_matter_map.py` | 6-scale cross-scale kernel, 8 matter ladder theorems (T-PM-1–T-PM-8) |
 
 **Key discoveries**: Confinement visible as a 98.1% IC cliff at the quark→hadron boundary. Neutral particles show 50× IC suppression. Generation monotonicity (Gen1 < Gen2 < Gen3) confirmed in both quarks and leptons.
 
@@ -303,14 +306,16 @@ The crown jewel: 31 particles mapped through the GCD kernel with **10 proven the
 | `zeeman_stark.py` | Zeeman and Stark effects |
 | `recursive_instantiation.py` | Recursive instantiation patterns |
 
-### Quantum Mechanics — 10 modules
+### Quantum Mechanics — 12 modules
 
 | Module | What It Encodes |
 |--------|----------------|
-| `double_slit_interference.py` | 8 scenarios, 7 theorems — complementarity cliff discovery |
-| `atom_dot_mi_transition.py` | Atom→quantum dot transition, 7 theorems (120 tests) |
-| `ters_near_field.py` | TERS near-field enhancement, 7 theorems (72 tests) |
-| `muon_laser_decay.py` | Muon-laser decay scenarios, 7 theorems (243 tests) |
+| `double_slit_interference.py` | 8 scenarios, 7 theorems (T-DSE-1–T-DSE-7) — complementarity cliff discovery |
+| `atom_dot_mi_transition.py` | Atom→quantum dot transition, 7 theorems (T-ADOT-1–T-ADOT-7, 120 tests) |
+| `ters_near_field.py` | TERS near-field enhancement, 7 theorems (T-TERS-1–T-TERS-7, 72 tests) |
+| `muon_laser_decay.py` | Muon-laser decay scenarios, 7 theorems (T-MLD-1–T-MLD-7, 243 tests) |
+| `quantum_dimer_model.py` | Yan et al. 2022 QDM, 7 theorems (T-QDM-1–T-QDM-7, 315 tests) |
+| `fqhe_bilayer_graphene.py` | Kim et al. 2026 FQHE bilayer graphene, 7 theorems (T-FQHE-1–T-FQHE-7, 349 tests) |
 | `wavefunction_collapse.py` | Wavefunction collapse dynamics |
 | `entanglement.py` | Entanglement correlations |
 | `tunneling.py` | Quantum tunneling barriers |
@@ -335,14 +340,18 @@ The crown jewel: 31 particles mapped through the GCD kernel with **10 proven the
 | `phase_transition.py` | Phase transition dynamics |
 | `surface_catalysis.py` | Surface catalysis reactions |
 | `gap_capture_ss1m.py` | SS1M gap capture |
+| `bioactive_compounds_database.py` | Bioactive compounds database (181 tests) |
+| `crystal_morphology_database.py` | Crystal and particle detector morphology (88 tests) |
+| `particle_detector_database.py` | Particle detector materials database |
+| `photonic_materials_database.py` | Photonic materials database (200 tests) |
 
-### Nuclear Physics — 9 modules
+### Nuclear Physics — 10 modules
 
-Alpha decay, fission, shell structure, decay chains, Bethe-Weizsäcker binding energy, and **QGP/RHIC closure** (27 entities, 10 theorems, 266 tests — quark-gluon plasma phase structure from RHIC/STAR/PHENIX data).
+Alpha decay, fission, shell structure, decay chains, Bethe-Weizsäcker binding energy, **QGP/RHIC closure** (27 entities, 10 theorems T-QGP-1–T-QGP-10, 266 tests — quark-gluon plasma phase structure from RHIC/STAR/PHENIX data), and **Trinity blast wave closure** (29 entities, 16 theorems T-TB-1–T-TB-16, 433 tests — Taylor-Sedov self-similar expansion).
 
-### RCFT (Recursive Collapse Field Theory) — 9 modules
+### RCFT (Recursive Collapse Field Theory) — 10 modules
 
-Attractor basins, fractal dimension, collapse grammar, information geometry, universality class assignment, active matter dynamics, and RCFT field diagnostics.
+Attractor basins, fractal dimension, collapse grammar, information geometry, universality class assignment, active matter dynamics, RCFT field diagnostics, and **Quincke rollers** (12 experimental states, 8 theorems T-QR-1–T-QR-8, 185 tests — magnetic active matter from Garza et al. 2023).
 
 ### Astronomy — 8 modules
 
@@ -659,7 +668,7 @@ umcp integrity                             # Verify SHA-256 checksums
 umcp validate .                            # Full repo validation → CONFORMANT
 
 # 3. Run the test suite
-pytest -v --tb=short                       # 7,442 tests
+pytest -v --tb=short                       # 7,875 tests
 ```
 
 ### C++ Accelerator — Build & Verify
@@ -777,7 +786,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (7,442 tests, 120 test files)
+2. **Test** — Full pytest suite (7,875 tests, 121 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -796,7 +805,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**7,442 tests** across **120 test files**, organized by tier and domain:
+**7,875 tests** across **121 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -832,96 +841,12 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
 | `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
-| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems) | 67 |
+| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems), kernel diagnostics | 116 |
+| `test_252` | Trinity blast wave (Taylor-Sedov, 16 theorems T-TB-1–T-TB-16, 29 entities) | 433 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
-| Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
+| Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, API, insights | 856 |
 
 All tests pass. All validations return CONFORMANT.
-
----
-
-### Recent Kernel Closure Synthesis: Particle Matter Map
-
-**Unified cross-scale kernel analysis** was added in `closures/standard_model/particle_matter_map.py`, resolving 19 code issues and optimizing channel mapping. The corresponding test suite (`tests/test_246_particle_matter_map.py`) now passes 102/102 tests, confirming:
-
-- **Nuclear coherence and IC trajectory**: The kernel captures phase boundaries and heterogeneity gap (Δ = F − IC) across nuclear, atomic, and subatomic domains.
-- **Structural theorems**: All kernel identities (F + ω = 1, IC ≤ F, IC = exp(κ)) are verified to machine precision.
-- **Phase boundary detection**: Collapse regime transitions are correctly classified, with return and fidelity tracked across all channels.
-- **Integrity manifest**: SHA-256 checksums updated; repository is fully CONFORMANT.
-
-This synthesis demonstrates the generative return principle: collapse is measured, return is validated, and integrity is derived from the reconciled ledger. The new closure and test suite extend the Standard Model kernel, providing a robust cross-scale mapping and audit trail.
-
----
-
-### Recent Kernel Closure Synthesis: Magnetic Quincke Rollers
-
-**Active matter kernel analysis** was added in `closures/rcft/quincke_rollers.py`, mapping 12 experimental states of magnetic Quincke rollers (Garza et al., *Science Advances* 2023) through the GCD 8-channel kernel. The test suite (`tests/test_247_quincke_rollers.py`) passes 185/185 tests, confirming:
-
-- **8 structural theorems proven (T-QR-1 through T-QR-8)**: Covering field-driven activation, collective enhancement, confinement-coherence duality, recovery after field removal, vortex condensation, scale-dependent ordering, symmetry breaking, and energy-coherence coupling.
-- **Regime classification**: Only the VortexCondensate state reaches Watch regime (IC = 0.685); all other states occupy Collapse regime, demonstrating that stability is rare in active matter — consistent with the 12.5% Stable fraction of Fisher space.
-- **Phase boundary detection**: SubThreshold → SingleRoller activation shows the field-driven collapse-to-order transition; collective states show monotonic IC increase with particle count.
-- **8 nanotechnology connections**: Links to nanorobotics, self-assembly, microfluidics, data storage, drug delivery, metamaterials, energy harvesting, and environmental remediation — each with specific IC thresholds for engineering viability.
-- **Scale positioning**: Quincke rollers (1–100 μm) bridge the mesoscopic gap between atomic and everyday physics scales in the GCD scale ladder.
-
-This closure extends RCFT into active matter — systems driven far from equilibrium by external fields — validating that the kernel captures emergent order even in dissipative, non-equilibrium collective dynamics.
-
----
-
-### Recent Kernel Closure Synthesis: Matter Genesis
-
-**A formalized narrative of how particles build atoms and create mass** was added in `closures/standard_model/matter_genesis.py`, tracing the complete six-scale matter ladder through the GCD kernel. The test suite (`tests/test_248_matter_genesis.py`) passes 163/163 tests, confirming:
-
-- **7 Acts of matter**: The Cast (17 fundamental particles) → Confinement (14 composites) → Nuclear Furnace (22 nuclei) → Electronic Shell (15 atoms) → Chemical Bond (15 molecules) → Bulk Emergence (16 materials) → The Mass Question (9 mass origins).
-- **10 genesis theorems proven (T-MG-1 through T-MG-10)**: Higgs mass generation (Yukawa coupling), color confinement cost (4 channels destroyed), binding mass deficit (BE/A), proton-neutron duality (trace separation predicts β-decay), shell closure stability (magic nuclei as IC attractors), electron configuration order (Aufbau → block-dependent IC with d > f > p > s), covalent bond coherence (molecular IC > atomic IC), mass hierarchy bridge (99% of visible mass from nuclear binding), material property ladder (bulk properties trace to atomic IC), and universal Tier-1 (all identities hold at every scale — zero exceptions across 99 entities).
-- **5 phase boundaries**: Confinement, NuclearBinding, ElectronicShell, ChemicalBond, BulkAggregation — each with explicit channels that die, survive, or emerge.
-- **9 mass origin breakdowns**: From single particles (up quark: 99.5% Higgs, 0.5% QCD) to composite systems (proton: 1% Higgs, 99% QCD) to bulk matter (70 kg human: 99.99% nuclear binding energy).
-- **Heterogeneity gap Δ = F − IC**: Tracks exactly how structural information is destroyed and recreated at each phase boundary, confirming that collapse is generative at every stage.
-
-This synthesis demonstrates the full reach of the return axiom: from quarks to bulk matter, every phase transition is a collapse that generates new structure. The kernel captures the entire story with zero Tier-1 violations.
-
----
-
-### Recent Kernel Closure Synthesis: QGP/RHIC
-
-**25 years of RHIC quark-gluon plasma data** was encoded in `closures/nuclear_physics/qgp_rhic.py`, mapping 27 entities across 4 categories (BES energy scan, centrality dependence, QCD evolution stages, reference baselines) through the GCD 8-channel kernel. The test suite (`tests/test_250_qgp_rhic.py`) passes 266/266 tests, confirming:
-
-- **10 QGP theorems proven (T-QGP-1 through T-QGP-10)**: Perfect liquid (IC peaks at mid-centrality, not most-central — v₂≈0 in head-on collisions kills the collectivity channel), centrality ordering (bulk F ordering with ≥6/8 monotone pairs), BES energy hierarchy (F increases monotonically with √s_NN from 7.7 to 200 GeV), Hagedorn temperature (T_H entities in Collapse regime), reconfinement transition (largest Δ jump at crossover→hadron gas boundary), strangeness enhancement (s/u ratio increases from pp to central Au+Au), QGP opacity (R_AA < 1 for all QGP entities — jet quenching), BES critical point search (non-monotonic κ₂ fluctuations at intermediate energies), deconfinement threshold (QGP stage has highest deconfinement channel), and Tier-1 universality (all 27 entities satisfy F+ω=1, IC≤F, IC=exp(κ) exactly).
-- **8-channel trace**: temperature_frac, baryochem_frac, energy_density_norm, collectivity, opacity, strangeness_eq, multiplicity_norm, deconfinement — all derived from RHIC/STAR/PHENIX measurements.
-- **Key kernel insight**: v₂ ≈ 0 in 0-5% centrality (head-on collisions have circular overlap geometry → no spatial asymmetry → no elliptic flow) creates a near-ε collectivity channel that destroys IC while F remains high. The "perfect liquid" lives at mid-centrality where all channels contribute.
-- **Mean F = 0.5793, mean IC = 0.4079, mean Δ = 0.1714**: The QGP manifold spans Watch and Collapse regimes, with the confinement transition producing the largest heterogeneity gap jump.
-
-This closure fills the previously identified gap between cold nuclear matter (binding energy, decay chains) and the early-universe cosmological epoch, demonstrating that the return axiom captures QCD phase structure from deconfined plasma through reconfinement.
-
----
-
-### Recent Kernel Closure Synthesis: Trinity Blast Wave
-
-**The Trinity nuclear test fireball** (July 16, 1945) was encoded in `closures/nuclear_physics/trinity_blast_wave.py`, mapping 29 entities — 24 Mack photograph time-radius measurements, 3 device components (Pu-239 core, U-238 tamper, HE lens), and 2 reference baselines — through the GCD 8-channel kernel. The test suite (`tests/test_252_trinity_blast_wave.py`) passes 406/406 tests, confirming:
-
-- **16 theorems proven (T-TB-1 through T-TB-16)**: Self-similar conformance (ξ ≈ 1 across four decades), yield self-consistency (extracted 20.2 kt vs official 21.0 kt), shock weakening, phase boundary discrimination, Taylor yield validation, velocity monotonicity, fission-fusion bridge, coordinated decay (rank-preserving geometric slaughter), decoherence field (gap expands with blast radius), prediction amplification (ln(c) asymmetry), nuclear irreversibility (two-zone binding/blast structure), sensitivity divergence, radiation coupling (τ_rad ≈ 192 μs), Mach cliff (logarithmic shock death), and three-regime structure.
-- **8-channel trace**: self_similarity, energy_consistency, mach_fidelity, power_law_quality, strong_shock, density_jump, overpressure_norm, binding_fidelity — all derived from Taylor (1950) and Mack photograph data.
-- **Blast radius prediction from material**: Starting from Pu-239 properties alone (A=239, BE/A=7.560 MeV, 6.2 kg, 16.1% efficiency), the kernel predicts A = 578.1 m·s⁻⁰·⁴ vs the fit value A = 583.6 — a **0.93% deviation**. Against all 24 Mack photographs, the mean radius error is 1.5 m (2.2% excluding the earliest point).
-- **Three-regime structure discovered**: (I) Radiation phase (t < 0.25 ms, energy trapped in X-rays, ξ < 1), (II) Self-similar phase (0.5–5 ms, Taylor-Sedov conformance, gap minimum Δ = 0.002), (III) Decay phase (t > 15 ms, Mach cliff drives gap explosion 38×). The gap trajectory is U-shaped, with the minimum at the self-similar sweet spot.
-- **Radiation coupling**: τ_rad ≈ 192 μs governs the transition from radiation-dominated to shock-dominated expansion. At t = 0.10 ms, only ~41% of the blast energy has coupled to the shock (E_eff/E = 0.41). By 3τ_rad ≈ 0.58 ms, 95% has thermalized.
-- **Mach cliff**: Below M ≈ 10, the logarithmic κ penalty from c_mach = M/(M+10) accelerates — this is geometric slaughter in deceleration. The gap explodes from Δ = 0.002 to Δ = 0.074 as M drops from 130 to 3.5.
-
----
-
-### Recent Kernel Closure Synthesis: OPoly26 Polymer ML
-
-**The first ML force-field benchmark mapped through the GCD kernel** was added in `closures/materials_science/opoly26_polymer_dataset.py`, encoding 800+ data points from Dajnowicz et al. (arXiv:2512.23117v2) — the OPoly26 polymer dataset and UMA family of universal ML force fields. A 12-experiment deep analysis suite probed 15 trace vectors across 3 projection types (Energy MAE, Force MAE, OMol25 task MAE) × 5 models. Full analysis in `paper/OPOLY26_INTERCONNECTION_ANALYSIS.md`.
-
-**Key findings from 12 structural experiments**:
-
-- **All 3 algebraic identities hold exactly** (max|F+ω−1| = 0.0e+00, IC≤F violations = 0, max|IC−exp(κ)| = 0.0e+00) — the polymer data lives on the same Bernoulli manifold as particles, atoms, and stars.
-- **Geometric slaughter is universal**: Killing any single channel drops IC by 89.7–90.0%, uniform across channels for balanced models.
-- **Sensitivity ratio of 89,750,542×**: UMA-s-1p1's electrolyte channel has sensitivity 90 million times larger than its other channels — the most extreme ratio seen in any domain closure. A tiny electrolyte improvement would produce orders-of-magnitude IC gain.
-- **Entropy is the binding gate** (60% of traces): The best polymer models aren't limited by fidelity or drift — they're limited by the information-theoretic spread of their error profiles. This changes what "improvement" means for ML force fields.
-- **Regression seam detected**: Adding polymer data alone (OPoly26 without OMol25) causes Δκ = −1.47 (genuine regression), but the combined UMA-s-1p2 recovers with Δκ = +1.54 — the seam calculus detects domain narrowing before diverse training restores generalization.
-- **Composition algebra has a validity domain**: IC geometric composition works within 0.00003 for same-phase subsystems but fails by 0.53 (10,000× worse) across the coherent/fragmented boundary.
-- **Coherence proxy Θ shows 0% agreement** with the full 4-gate regime — confirming that single-number summaries destroy structural information. The kernel is irreducible to a scalar.
-
-This closure extends materials science into the mesoscopic molecular-dynamics scale — previously unprobed — and demonstrates that the return axiom captures ML model quality as a structural phenomenon, not just an error metric.
 
 ---
 
@@ -938,6 +863,8 @@ This closure extends materials science into the mesoscopic molecular-dynamics sc
 | `rcft_second_edition.tex` | RCFT Second Edition: Foundations, Derivations, and Implications | `paper/` |
 | `consciousness_coherence.tex` | Consciousness Coherence: Seven Theorems in the GCD Kernel | `paper/` |
 | `awareness_cognition_kernel.tex` | Awareness-Cognition Kernel: Ten Theorems Across Phylogeny | `paper/` |
+| `cross_scale_matter.tex` | Cross-Scale Matter: From Quarks to Bulk via Five Phase Boundaries | `paper/` |
+| `corpus_structure.tex` | Corpus Structure | `paper/` |
 | `RCFT_FREEZE_WELD.md` | RCFT Freeze–Weld Identity: From Publication to Proven Kernel | `paper/` |
 | `OPOLY26_INTERCONNECTION_ANALYSIS.md` | OPoly26 Polymer ML × GCD: Cross-Domain Interconnection Analysis | `paper/` |
 
@@ -945,7 +872,7 @@ All papers use RevTeX4-2 (LaTeX) or Markdown. Build LaTeX: `pdflatex → bibtex 
 
 ### Zenodo Publications (9 DOIs)
 
-The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (127 entries, including PDG 2024, foundational QFT papers, classical references, RHIC/STAR measurements, active matter, stellar ages cosmology, semiotic theory, consciousness coherence, awareness-cognition, and polymer ML force fields).
+The framework is anchored by peer-reviewed Zenodo publications covering the core theory, physics coherence proofs, casepack specifications, and domain applications. Bibliography: `paper/Bibliography.bib` (140 entries, including PDG 2024, foundational QFT papers, classical references, RHIC/STAR measurements, active matter, stellar ages cosmology, semiotic theory, consciousness coherence, awareness-cognition, polymer ML force fields, and blast-wave dynamics).
 
 ### Key DOIs
 
@@ -967,7 +894,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── epistemic_weld.py      # Epistemic cost tracking
 │   ├── fleet/                 # Distributed validation
 │   └── dashboard/             # Modular Streamlit dashboard
-├── closures/                  # 18 domains, 134 modules
+├── closures/                  # 18 domains, 135 modules
 │   ├── standard_model/        # 31 particles, 10 theorems
 │   ├── atomic_physics/        # 118 elements, Tier-1 proof
 │   ├── quantum_mechanics/     # Double slit, entanglement, tunneling, QDM, FQHE
@@ -989,8 +916,8 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 17 JSON Schema files
 ├── canon/                     # 14 canonical anchor files
 ├── casepacks/                 # 17 reproducible validation bundles
-├── tests/                     # 120 test files, 7,442 tests
-├── paper/                     # 7 LaTeX papers + 2 Markdown papers + Bibliography.bib (127 entries)
+├── tests/                     # 121 test files, 7,875 tests
+├── paper/                     # 9 LaTeX papers + 2 Markdown papers + Bibliography.bib (140 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log
 ├── scripts/                   # Pre-commit protocol, integrity update
@@ -1121,7 +1048,7 @@ python scripts/identity_deep_probes.py      # N11-N16: moment families, composit
 | 5 | **4-dimensional closure algebra** — 5 diagnostics span 4 effective dimensions | Half the degrees of freedom are constrained by the kernel |
 | 6 | **Stability is rare** — Collapse 63% / Watch 24% / Stable 12.5% of Fisher space | Return from collapse to stability is the exception, not the norm |
 
-### Across 18 Domains and 136 Proven Theorems
+### Across 18 Domains and 155 Proven Theorems
 
 1. **Confinement is a cliff**: IC drops 98.1% at the quark→hadron boundary — confinement is visible as geometric-mean collapse in the kernel trace
 
@@ -1162,6 +1089,24 @@ python scripts/identity_deep_probes.py      # N11-N16: moment families, composit
 19. **89.75-million sensitivity ratio — extreme channel pathology**: UMA-s-1p1's electrolyte channel has ∂IC/∂c = 1,088,402, while all other channels sit at ~0.012. The system's integrity hangs on a single thread. This is the most extreme sensitivity ratio observed in any of the 18 domain closures — directly actionable intelligence for ML force-field developers.
 
 20. **Composition algebra validity domain**: IC geometric composition (IC₁₂ = √(IC₁·IC₂)) is exact within 0.00003 for same-phase subsystems but fails by 0.53 when composing across the coherent/fragmented phase boundary. You cannot compose across a phase transition — the algebra has a validity domain tied to structural similarity.
+
+### Recent Closure Syntheses
+
+Six recent domain closures demonstrate Axiom-0 operating across scales — from quark-gluon plasma to ML force fields. Each maps real experimental data through the 8-channel kernel with zero Tier-1 violations.
+
+| Closure | Module | Entities | Theorems | Tests | Key Result |
+|---------|--------|:--------:|----------|------:|------------|
+| **Particle Matter Map** | `standard_model/particle_matter_map.py` | 6 scales | — | 102 | Cross-scale kernel captures phase boundaries and Δ = F − IC across nuclear, atomic, and subatomic domains |
+| **Quincke Rollers** | `rcft/quincke_rollers.py` | 12 states | T-QR-1–8 | 185 | Only VortexCondensate reaches Watch (IC = 0.685); all other states in Collapse — stability is rare in active matter |
+| **Matter Genesis** | `standard_model/matter_genesis.py` | 99 entities | T-MG-1–10 | 163 | 7-act narrative from quarks to bulk; 5 phase boundaries; 99% of visible mass from nuclear binding, not Higgs |
+| **QGP/RHIC** | `nuclear_physics/qgp_rhic.py` | 27 entities | T-QGP-1–10 | 266 | v₂ ≈ 0 in head-on collisions kills collectivity channel; "perfect liquid" lives at mid-centrality |
+| **Trinity Blast Wave** | `nuclear_physics/trinity_blast_wave.py` | 29 entities | T-TB-1–16 | 433 | Pu-239 → blast radius prediction within 0.93%; three-regime structure with U-shaped gap trajectory |
+| **OPoly26 Polymer ML** | `materials_science/opoly26_polymer_dataset.py` | 800+ pts | — | — | Entropy is the binding gate (60% of traces); 89.75M× sensitivity ratio in electrolyte channel; composition algebra has a validity domain |
+
+**Cross-cutting insights**:
+- **Geometric slaughter is universal**: One dead channel kills IC regardless of domain — quarks (IC/F drops 100× at confinement), blast waves (Mach cliff drives Δ explosion 38×), ML models (IC drops 89.7–90.0% per killed channel).
+- **Phase boundaries are detectable**: The heterogeneity gap Δ = F − IC jumps at every phase transition — confinement, reconfinement, radiation-to-shock coupling, coherent-to-fragmented model regimes.
+- **Tier-1 holds everywhere**: F + ω = 1 exactly (0.0e+00), IC ≤ F with zero violations, IC = exp(κ) to machine precision — across all 6 syntheses.
 
 ---
 
