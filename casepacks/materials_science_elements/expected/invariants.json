@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "MATL.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.MATL.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-MATL-ELEMENTS",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.19,
+      "F": 0.81,
+      "S": 0.473,
+      "C": 0.125,
+      "kappa": -0.214,
+      "IC": 0.808,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.206,
+      "F": 0.794,
+      "S": 0.484,
+      "C": 0.176,
+      "kappa": -0.237,
+      "IC": 0.789,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.219,
+      "F": 0.781,
+      "S": 0.467,
+      "C": 0.279,
+      "kappa": -0.264,
+      "IC": 0.768,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

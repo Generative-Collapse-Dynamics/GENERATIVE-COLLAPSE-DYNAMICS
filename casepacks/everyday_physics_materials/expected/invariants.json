@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "EVDAY.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.EVDAY.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-EVDAY-MATERIALS",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.117,
+      "F": 0.883,
+      "S": 0.349,
+      "C": 0.097,
+      "kappa": -0.126,
+      "IC": 0.882,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.455,
+      "F": 0.545,
+      "S": 0.473,
+      "C": 0.621,
+      "kappa": -0.895,
+      "IC": 0.409,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.205,
+      "F": 0.795,
+      "S": 0.238,
+      "C": 0.629,
+      "kappa": -0.442,
+      "IC": 0.643,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

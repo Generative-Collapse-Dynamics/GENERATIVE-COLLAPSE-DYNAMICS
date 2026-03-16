@@ -1,0 +1,4 @@
+system,amplitude_retention,phase_coherence,frequency_stability,energy_conservation,trajectory_regularity
+Stable oscillator,0.95,0.92,0.90,0.88,0.93
+Damped oscillator,0.70,0.65,0.60,0.55,0.75
+Chaotic system,0.30,0.45,0.20,0.55,0.35

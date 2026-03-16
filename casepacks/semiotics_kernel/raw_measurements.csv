@@ -1,0 +1,4 @@
+sign_system,syntactic_stability,semantic_grounding,pragmatic_use,referential_precision,community_use,institutional_support,generative_capacity,interpretive_closure
+Natural language English,0.90,0.85,0.80,0.75,0.88,0.70,0.82,0.65
+Classical Latin dead,0.95,0.40,0.90,0.85,0.30,0.80,0.95,0.10
+Mathematical notation,0.70,0.95,0.92,0.98,0.85,0.95,0.90,0.80

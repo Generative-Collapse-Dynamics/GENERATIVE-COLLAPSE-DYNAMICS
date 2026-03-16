@@ -1,0 +1,160 @@
+# canon/clin_anchors.yaml
+# Clinical Neuroscience Canon Anchors — UMCP.CANON.CLIN.v1
+# Cross-references: contracts/CLIN.INTSTACK.v1.yaml, closures/clinical_neuroscience/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.CLIN.v1"
+version: "1.0.0"
+domain: "Clinical Neuroscience (Neurocognitive States)"
+hierarchy: "GCD > CLIN (Tier-2)"
+description: >
+  Canon anchors for the clinical neuroscience domain closure.
+  Maps 35 neurocognitive states across 7 clinical categories to a 10-channel
+  trace vector (4 cortical + 2 structural + 2 metabolic + 2 systemic).
+  Every channel is grounded in peer-reviewed clinical biomarkers with
+  inline citations. Extends both awareness-cognition (AWC) and consciousness
+  coherence (CONS) closures into clinical measurement territory.
+  10 theorems (T-CN-1 through T-CN-10) proven.
+
+axioms:
+  - id: "AX-CLIN0"
+    name: "Neurocognitive Duality"
+    statement: >
+      Every neurocognitive state partitions its functional budget
+      exhaustively: what the brain retains (F) + what it loses (ω) = 1.
+      Healthy waking has high F; deep coma has high ω.
+      No third reservoir exists.
+    frozen: true
+
+  - id: "AX-CLIN1"
+    name: "Consciousness Gradient (T-CN-1)"
+    statement: >
+      The Perturbational Complexity Index (PCI, channel 0:
+      cortical_complexity) orders fidelity F across disorders of
+      consciousness (DOC): Locked-in > MCS > Vegetative > Coma.
+      This gradient is a measurable clinical signature, not a
+      philosophical claim about consciousness.
+    frozen: true
+
+  - id: "AX-CLIN2"
+    name: "DMN Collapse Signature (T-CN-2)"
+    statement: >
+      The default mode network integrity channel (channel 1:
+      default_mode_integrity) is the dominant IC killer in
+      neurodegenerative conditions. When DMN drops toward ε,
+      geometric slaughter drives IC toward zero regardless of
+      other channels. Alzheimer's disease exemplifies this pattern.
+    frozen: true
+
+  - id: "AX-CLIN3"
+    name: "Entropic Brain Prediction (T-CN-3)"
+    statement: >
+      Psychedelic states produce the highest Bernoulli field entropy S
+      across all 35 states — consistent with the entropic brain
+      hypothesis [Carhart-Harris 2014]. High S + moderate F places
+      psychedelic states in a unique region of the kernel manifold.
+    frozen: true
+
+  - id: "AX-CLIN4"
+    name: "Anesthesia as Collapse (T-CN-4)"
+    statement: >
+      General anesthesia produces a controlled collapse event
+      (ω ≥ 0.30) with guaranteed return (τ_R < ∞_rec). The
+      anesthesiology protocol IS a seam: outbound collapse is
+      induction, return is emergence. Propofol reduces cortical
+      complexity and global integration simultaneously.
+    frozen: true
+
+symbols:
+  - name: "PCI"
+    tier: 2
+    definition: "Perturbational Complexity Index — maps to cortical_complexity channel"
+  - name: "DMN"
+    tier: 2
+    definition: "Default Mode Network integrity — maps to default_mode_integrity channel"
+  - name: "HRV"
+    tier: 2
+    definition: "Heart Rate Variability — maps to autonomic_regulation channel"
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — neurocognitive functional retention"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — multiplicative coherence across 10 channels"
+
+channels:
+  cortical:
+    - cortical_complexity
+    - default_mode_integrity
+    - global_integration
+    - oscillatory_hierarchy
+  structural:
+    - neuroplasticity_capacity
+    - structural_connectivity
+  metabolic:
+    - neurotransmitter_tone
+    - metabolic_efficiency
+  systemic:
+    - autonomic_regulation
+    - neuroimmune_status
+
+anchors:
+  - id: "CLIN-A1"
+    name: "Healthy waking adult"
+    description: "Baseline — highest F across catalog, all channels above 0.7"
+    regime: "Stable"
+
+  - id: "CLIN-A2"
+    name: "Deep coma (GCS 3)"
+    description: "Maximal collapse — cortical_complexity near ε, ω > 0.50"
+    regime: "Collapse"
+
+  - id: "CLIN-A3"
+    name: "Psychedelic state (psilocybin)"
+    description: "Highest entropy S, moderate F — entropic brain signature"
+    regime: "Watch"
+
+  - id: "CLIN-A4"
+    name: "Alzheimer's disease (moderate)"
+    description: "DMN collapse signature — default_mode_integrity kills IC"
+    regime: "Collapse"
+
+  - id: "CLIN-A5"
+    name: "General anesthesia (propofol)"
+    description: "Controlled collapse with guaranteed return — the seam"
+    regime: "Collapse"
+
+  - id: "CLIN-A6"
+    name: "Neonate"
+    description: "Lowest F, highest neuroplasticity — developmental anchor"
+    regime: "Collapse"
+
+categories:
+  - "Healthy baselines (waking, sleep stages)"
+  - "Altered states (meditation, psychedelic, flow)"
+  - "Disorders of consciousness (coma, vegetative, MCS, locked-in)"
+  - "Neurodegeneration (Alzheimer's, Parkinson's, ALS)"
+  - "Psychiatric (depression, schizophrenia, PTSD)"
+  - "Developmental (neonate, infant, adolescent)"
+  - "Acquired brain injury (TBI, stroke)"
+
+theorems:
+  - id: "T-CN-1"
+    name: "Consciousness Gradient"
+  - id: "T-CN-2"
+    name: "DMN Collapse Signature"
+  - id: "T-CN-3"
+    name: "Entropic Brain Prediction"
+  - id: "T-CN-4"
+    name: "Anesthesia as Collapse"
+  - id: "T-CN-5"
+    name: "Formal Tier-1 Compliance"
+  - id: "T-CN-6"
+    name: "Sleep-Wake Regime Cycle"
+  - id: "T-CN-7"
+    name: "Healthy Category Supremacy"
+  - id: "T-CN-8"
+    name: "Psychiatric Channel Dispersion"
+  - id: "T-CN-9"
+    name: "DOC Hierarchy"
+  - id: "T-CN-10"
+    name: "Developmental Plasticity"

@@ -1,0 +1,29 @@
+{
+  "schema": "schemas/manifest.schema.json",
+  "casepack": {
+    "id": "atomic_physics_elements",
+    "version": "1.0.0",
+    "title": "Atomic Physics — 3 Representative Elements (Tier-2)",
+    "description": "Atomic physics domain closure demonstrating GCD kernel applied to 3 elements spanning the periodic table. 8-channel trace with equal weights. Hydrogen (simplest atom, highest fidelity), Iron (d-block, moderate), Uranium (heaviest stable, Collapse). Verifies Tier-1 identities and demonstrates that atomic complexity correlates with drift.",
+    "created_utc": "2026-07-14T00:00:00Z",
+    "timezone": "UTC",
+    "authors": ["Clement Paulus"]
+  },
+  "refs": {
+    "canon_anchors": { "path": "canon/atom_anchors.yaml" },
+    "contract": { "id": "ATOM.INTSTACK.v1", "path": "contracts/ATOM.INTSTACK.v1.yaml" },
+    "closures_registry": { "id": "UMCP.CLOSURES.ATOM.v1", "path": "closures/registry.yaml" }
+  },
+  "artifacts": {
+    "raw_measurements": {
+      "path": "raw_measurements.csv",
+      "format": "csv"
+    },
+    "expected": {
+      "invariants_json": { "path": "expected/invariants.json" }
+    }
+  },
+  "run_intent": {
+    "notes": "Exercises the atomic physics closure with 3 elements: Hydrogen (Z=1 — simplest atom, highest F=0.844, Watch), Iron (Z=26 — d-block, moderate channels, Watch), Uranium (Z=92 — heavy element Collapse, many degraded channels push omega past 0.30). Heterogeneity gap tracks IC closely when curvature is low; Uranium shows structural degradation at high Z. Connects to cross-scale kernel (nuclear->atomic->bulk)."
+  }
+}

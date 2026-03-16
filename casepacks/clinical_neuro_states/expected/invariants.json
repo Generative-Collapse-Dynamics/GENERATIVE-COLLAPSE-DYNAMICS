@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "CLIN.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.CLIN.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-CLIN-STATES",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.182,
+      "F": 0.818,
+      "S": 0.466,
+      "C": 0.098,
+      "kappa": -0.203,
+      "IC": 0.817,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.857,
+      "F": 0.143,
+      "S": 0.384,
+      "C": 0.161,
+      "kappa": -2.112,
+      "IC": 0.121,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": true
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.32,
+      "F": 0.68,
+      "S": 0.602,
+      "C": 0.206,
+      "kappa": -0.398,
+      "IC": 0.672,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

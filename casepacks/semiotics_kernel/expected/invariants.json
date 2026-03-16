@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "SEM.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.SEM.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-SEM-KERNEL",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.206,
+      "F": 0.794,
+      "S": 0.488,
+      "C": 0.164,
+      "kappa": -0.237,
+      "IC": 0.789,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.344,
+      "F": 0.656,
+      "S": 0.407,
+      "C": 0.629,
+      "kappa": -0.627,
+      "IC": 0.534,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.119,
+      "F": 0.881,
+      "S": 0.329,
+      "C": 0.175,
+      "kappa": -0.132,
+      "IC": 0.877,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

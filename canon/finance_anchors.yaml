@@ -1,0 +1,105 @@
+# canon/finance_anchors.yaml
+# Finance Canon Anchors — UMCP.CANON.FINANCE.v1
+# Cross-references: contracts/FINANCE.INTSTACK.v1.yaml, closures/finance/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.FINANCE.v1"
+version: "1.0.0"
+domain: "Finance (Financial Continuity and Coherence)"
+hierarchy: "GCD > FINANCE (Tier-2)"
+description: >
+  Canon anchors for the finance domain closure.
+  Maps financial performance to a 4-channel trace vector with non-equal
+  weights (the only domain with non-uniform weighting). Operates as a
+  streaming closure — no fixed entity catalog. Instead, monthly financial
+  records are embedded against frozen targets (revenue_target, expense_budget,
+  cashflow_target) defined in the Contract before evidence arrives.
+  Financial health IS kernel coherence: revenue is fidelity, expense
+  overrun is drift, margin collapse is geometric slaughter.
+
+axioms:
+  - id: "AX-FIN0"
+    name: "Financial Duality"
+    statement: >
+      Every financial period partitions its performance budget exhaustively:
+      what the entity retains (F) + what it loses (omega) = 1.
+      F measures aggregate target achievement across channels;
+      omega measures aggregate shortfall. No third reservoir.
+    frozen: true
+
+  - id: "AX-FIN1"
+    name: "Non-Equal Weights"
+    statement: >
+      Finance is the only domain with non-uniform channel weights:
+      revenue_performance = 0.30, expense_control = 0.25,
+      gross_margin = 0.25, cashflow_health = 0.20. This reflects
+      business priority — revenue drives the entity. The kernel
+      identities (F + omega = 1, IC <= F, IC = exp(kappa)) hold
+      identically with non-equal weights. The weights are frozen
+      in the contract, not tuned per period.
+    frozen: true
+
+  - id: "AX-FIN2"
+    name: "Streaming Closure"
+    statement: >
+      Unlike fixed-catalog domains (34 organisms, 118 elements, etc.),
+      finance operates on time-series records. Each FinanceRecord maps
+      to a single kernel evaluation. Regime trajectories over time
+      reveal financial health dynamics — a sequence of Stable periods
+      followed by Watch is an early warning signal.
+    frozen: true
+
+  - id: "AX-FIN3"
+    name: "Frozen Targets as Contract"
+    statement: >
+      FinanceTargets (revenue_target, expense_budget, cashflow_target)
+      are frozen BEFORE kernel computation. This is the Contract stop
+      of the spine. Embedding normalizes raw financials against these
+      targets into [epsilon, 1-epsilon]^4. Changing targets requires
+      a Weld — the same governance mechanism as any contract change.
+    frozen: true
+
+symbols:
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — weighted target achievement across 4 channels"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — multiplicative coherence of financial health"
+  - name: "omega"
+    tier: 1
+    definition: "Drift — aggregate target shortfall"
+
+channels:
+  - name: revenue_performance
+    weight: 0.30
+    definition: "revenue / revenue_target"
+  - name: expense_control
+    weight: 0.25
+    definition: "expense_budget / expenses (inverted: underspend = high)"
+  - name: gross_margin
+    weight: 0.25
+    definition: "(revenue - COGS) / revenue"
+  - name: cashflow_health
+    weight: 0.20
+    definition: "cashflow / cashflow_target"
+
+anchors:
+  - id: "FIN-A1"
+    name: "Strong quarter (all targets met)"
+    description: "All 4 channels above 0.90 — high F, low omega, IC near F"
+    regime: "Stable"
+
+  - id: "FIN-A2"
+    name: "Revenue miss, margin hold"
+    description: "revenue_performance < 0.80 but gross_margin > 0.90 — Watch regime, IC drops from revenue channel"
+    regime: "Watch"
+
+  - id: "FIN-A3"
+    name: "Cashflow crisis"
+    description: "cashflow_health near epsilon — geometric slaughter via single channel, IC collapses"
+    regime: "Collapse"
+
+  - id: "FIN-A4"
+    name: "Cost overrun"
+    description: "expense_control drops below 0.50 — drift dominated by expense channel"
+    regime: "Watch"

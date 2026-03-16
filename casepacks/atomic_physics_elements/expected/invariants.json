@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "ATOM.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.ATOM.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-ATOM-ELEMENTS",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.156,
+      "F": 0.844,
+      "S": 0.408,
+      "C": 0.163,
+      "kappa": -0.175,
+      "IC": 0.84,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.19,
+      "F": 0.81,
+      "S": 0.473,
+      "C": 0.125,
+      "kappa": -0.214,
+      "IC": 0.808,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.446,
+      "F": 0.554,
+      "S": 0.669,
+      "C": 0.188,
+      "kappa": -0.606,
+      "IC": 0.545,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

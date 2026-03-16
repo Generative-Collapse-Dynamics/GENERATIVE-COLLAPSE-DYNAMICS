@@ -1,0 +1,130 @@
+# canon/cons_anchors.yaml
+# Consciousness Coherence Canon Anchors — UMCP.CANON.CONS.v1
+# Cross-references: contracts/CONS.INTSTACK.v1.yaml, closures/consciousness_coherence/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.CONS.v1"
+version: "1.0.0"
+domain: "Consciousness Coherence (Collapse-Return in Coherent Systems)"
+hierarchy: "GCD > CONS (Tier-2)"
+description: >
+  Canon anchors for the consciousness coherence domain closure.
+  Maps 20 consciousness-candidate systems across 6 categories to an
+  8-channel trace vector measuring harmonic, recursive, spectral,
+  temporal, and cross-scale properties. Reframes and corrects the
+  Jackson-Jackson consciousness coherence constant thesis (xi_J = 7.2).
+  Jackson's kappa is renamed to xi_J to avoid Tier-1 symbol capture.
+  7 theorems (T-CC-1 through T-CC-7) proven. 0/20 systems reach Stable.
+
+axioms:
+  - id: "AX-CONS0"
+    name: "Coherence Duality"
+    statement: >
+      Every consciousness-candidate system partitions its coherence
+      budget exhaustively: what the system retains (F) + what it
+      loses (omega) = 1. High F means high structural coherence;
+      high omega means signal loss or decoherence.
+    frozen: true
+
+  - id: "AX-CONS1"
+    name: "Harmonic Non-Privilege (T-CC-1)"
+    statement: >
+      Proximity to Jackson's xi_J = 432/60 = 7.2 does NOT predict IC.
+      Systems with harmonic_ratio near 7.2 do not systematically
+      outperform systems far from it. The harmonic ratio is one of
+      8 channels; it carries no special weight in the kernel.
+      phi^2 * e = 7.1166 is a 1.16% near-miss to 7.2, not exact.
+    frozen: true
+
+  - id: "AX-CONS2"
+    name: "Recursion-Return Dissociation (T-CC-2)"
+    statement: >
+      Recursive depth and return fidelity are structurally dissociated.
+      Deep recursion does not guarantee high return fidelity. A system
+      may recurse deeply but fail to return coherently — depth measures
+      nesting, return measures whether the cycle closes.
+    frozen: true
+
+  - id: "AX-CONS3"
+    name: "Universal Instability (T-CC-3)"
+    statement: >
+      0/20 consciousness-candidate systems reach Stable regime.
+      All exist in Watch or Collapse. This mirrors the result from
+      awareness-cognition (T-AW-2: 0/34 Stable) and suggests that
+      consciousness-related systems are structurally heterogeneous —
+      no system has simultaneously high fidelity across all 8 channels.
+    frozen: true
+
+  - id: "AX-CONS4"
+    name: "Mathematical Supremacy (T-CC-6)"
+    statement: >
+      Abstract mathematical identity (the mathematical/abstract category)
+      achieves higher IC than harmonically tuned systems. Ground stability
+      and recursive depth in mathematics outweigh harmonic ratio in
+      the kernel. Structure beats tuning.
+    frozen: true
+
+symbols:
+  - name: "xi_J"
+    tier: 2
+    definition: "Jackson's coherence constant = 432/60 = 7.2 — renamed from kappa to avoid Tier-1 capture"
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — arithmetic mean across 8 coherence channels"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — geometric mean, IC <= F"
+
+channels:
+  - harmonic_ratio
+  - recursive_depth
+  - return_fidelity
+  - spectral_coherence
+  - phase_stability
+  - information_density
+  - temporal_persistence
+  - cross_scale_coupling
+
+anchors:
+  - id: "CONS-A1"
+    name: "Human conscious awareness"
+    description: "Neural/biological category — highest recursive_depth and social channels"
+    regime: "Watch"
+
+  - id: "CONS-A2"
+    name: "Mathematical identity"
+    description: "Abstract category — highest IC among all 20 systems (T-CC-6)"
+    regime: "Watch"
+
+  - id: "CONS-A3"
+    name: "432 Hz tuning fork"
+    description: "Harmonic/acoustic category — high harmonic_ratio near xi_J"
+    regime: "Watch"
+
+  - id: "CONS-A4"
+    name: "Quantum coherent state"
+    description: "Physical oscillatory — high spectral_coherence, low temporal_persistence"
+    regime: "Collapse"
+
+categories:
+  - "Neural/biological"
+  - "Harmonic/acoustic"
+  - "Physical oscillatory"
+  - "Mathematical/abstract"
+  - "Recursive/computational"
+  - "Ancient/historical"
+
+theorems:
+  - id: "T-CC-1"
+    name: "Harmonic Non-Privilege"
+  - id: "T-CC-2"
+    name: "Recursion-Return Dissociation"
+  - id: "T-CC-3"
+    name: "Universal Instability"
+  - id: "T-CC-4"
+    name: "Geometric Slaughter"
+  - id: "T-CC-5"
+    name: "Tuning Invariance"
+  - id: "T-CC-6"
+    name: "Mathematical Supremacy"
+  - id: "T-CC-7"
+    name: "Heterogeneity Gap Ordering"

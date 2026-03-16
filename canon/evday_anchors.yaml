@@ -1,0 +1,108 @@
+# canon/evday_anchors.yaml
+# Everyday Physics Canon Anchors — UMCP.CANON.EVDAY.v1
+# Cross-references: contracts/EVDAY.INTSTACK.v1.yaml, closures/everyday_physics/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.EVDAY.v1"
+version: "1.0.0"
+domain: "Everyday Physics (Macroscopic Material Properties)"
+hierarchy: "GCD > EVDAY (Tier-2)"
+description: >
+  Canon anchors for the everyday physics domain closure.
+  A multi-sub-closure domain with 4 sub-modules: thermodynamics (20 materials,
+  6 channels), optics (21 materials, 6 channels), electromagnetism, and
+  wave phenomena, plus epistemic coherence. Bridges atomic-scale properties
+  from the materials science closure to macroscopic observables that humans
+  interact with daily. Normalization maxima are frozen in the contract.
+
+axioms:
+  - id: "AX-EVDAY0"
+    name: "Macroscopic Duality"
+    statement: >
+      Every material partitions its property budget exhaustively:
+      what the kernel retains (F) + what it loses (omega) = 1.
+      A material with high thermodynamic fidelity retains its
+      measurable properties close to reference values; high drift
+      indicates departure from reference behavior.
+    frozen: true
+
+  - id: "AX-EVDAY1"
+    name: "Sub-Closure Independence"
+    statement: >
+      Thermodynamic channels (Cp, k_th, rho, T_m, T_b, alpha_th) and
+      optical channels (n_refr, V_d, T_vis, R_vis, E_gap, n_g) are
+      computed independently. Each sub-closure produces its own kernel
+      output. Cross-sub-closure comparison uses the same Tier-1
+      identities — the kernel is the equalizer.
+    frozen: true
+
+  - id: "AX-EVDAY2"
+    name: "Cross-Scale Bridge"
+    statement: >
+      Everyday physics properties derive from atomic-scale phenomena
+      measured in the materials science and atomic physics closures.
+      The same element (e.g., copper) appears in materials_science
+      (118-element periodic kernel) and everyday_physics (20 thermal
+      materials). The GCD kernel values are independently computed
+      in each closure — cross-closure consistency is a testable
+      prediction, not an assumption.
+    frozen: true
+
+symbols:
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — property retention relative to reference"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — multiplicative coherence across channels"
+  - name: "omega"
+    tier: 1
+    definition: "Drift — departure from reference property values"
+
+channels:
+  thermodynamics:
+    - Cp
+    - k_th
+    - rho
+    - T_m
+    - T_b
+    - alpha_th
+  optics:
+    - n_refr
+    - V_d
+    - T_vis
+    - R_vis
+    - E_gap
+    - n_g
+
+sub_closures:
+  - thermodynamics
+  - optics
+  - electromagnetism
+  - wave_phenomena
+  - epistemic_coherence
+
+anchors:
+  - id: "EVDAY-A1"
+    name: "Copper (thermodynamic)"
+    description: "High thermal conductivity, well-characterized — high F anchor"
+    regime: "Stable"
+
+  - id: "EVDAY-A2"
+    name: "Diamond (optics)"
+    description: "Extreme refractive index and band gap — high IC across optical channels"
+    regime: "Watch"
+
+  - id: "EVDAY-A3"
+    name: "Water (thermodynamic)"
+    description: "Anomalous properties (high Cp, density maximum at 4C) — unique kernel signature"
+    regime: "Watch"
+
+  - id: "EVDAY-A4"
+    name: "Air (optics)"
+    description: "Near-unity refractive index, zero absorption — minimal channel variance"
+    regime: "Stable"
+
+  - id: "EVDAY-A5"
+    name: "BK7 optical glass"
+    description: "Industry reference glass — balanced optical properties"
+    regime: "Stable"

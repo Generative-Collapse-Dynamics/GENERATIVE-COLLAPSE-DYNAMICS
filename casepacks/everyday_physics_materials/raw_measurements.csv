@@ -1,0 +1,4 @@
+material,thermal_conductivity,specific_heat,melting_point,density,elastic_modulus,thermal_expansion
+Copper,0.85,0.95,0.80,0.90,0.88,0.92
+Water,0.90,0.15,0.60,0.72,0.80,0.10
+Diamond,0.10,0.95,0.90,0.99,0.98,0.85

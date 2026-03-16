@@ -1,0 +1,56 @@
+{
+  "schema": "schemas/invariants.schema.json",
+  "format": "tier1_invariants",
+  "contract_id": "CT.INTSTACK.v1",
+  "closure_registry_id": "UMCP.CLOSURES.CT.v1",
+  "canon": {
+    "pre_doi": "10.5281/zenodo.17756705",
+    "post_doi": "10.5281/zenodo.18072852",
+    "weld_id": "W-2026-07-14-CT-SYSTEMS",
+    "timezone": "UTC"
+  },
+  "rows": [
+    {
+      "t": 0,
+      "omega": 0.084,
+      "F": 0.916,
+      "S": 0.285,
+      "C": 0.048,
+      "kappa": -0.088,
+      "IC": 0.916,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Watch",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 1,
+      "omega": 0.35,
+      "F": 0.65,
+      "S": 0.636,
+      "C": 0.141,
+      "kappa": -0.437,
+      "IC": 0.646,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    },
+    {
+      "t": 2,
+      "omega": 0.63,
+      "F": 0.37,
+      "S": 0.627,
+      "C": 0.242,
+      "kappa": -1.052,
+      "IC": 0.349,
+      "tau_R": "INF_REC",
+      "regime": {
+        "label": "Collapse",
+        "critical_overlay": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "schemas/manifest.schema.json",
+  "casepack": {
+    "id": "awareness_cognition_kernel",
+    "version": "1.0.0",
+    "title": "Awareness-Cognition Kernel — 3 Representative Organisms (Tier-2)",
+    "description": "Awareness-cognition domain closure demonstrating GCD kernel applied to 3 organisms spanning prokaryote to primate. 10-channel trace (5 awareness + 5 aptitude) with equal weights. Verifies Tier-1 identities and regime classification across phylogenetic diversity.",
+    "created_utc": "2026-07-14T00:00:00Z",
+    "timezone": "UTC",
+    "authors": ["Clement Paulus"]
+  },
+  "refs": {
+    "canon_anchors": { "path": "canon/awc_anchors.yaml" },
+    "contract": { "id": "AWC.INTSTACK.v1", "path": "contracts/AWC.INTSTACK.v1.yaml" },
+    "closures_registry": { "id": "UMCP.CLOSURES.AWC.v1", "path": "closures/registry.yaml" }
+  },
+  "artifacts": {
+    "raw_measurements": {
+      "path": "raw_measurements.csv",
+      "format": "csv"
+    },
+    "expected": {
+      "invariants_json": { "path": "expected/invariants.json" }
+    }
+  },
+  "run_intent": {
+    "notes": "Exercises the awareness-cognition closure with 3 organisms: E. coli (prokaryote — near-zero awareness channels demonstrate geometric slaughter), Octopus (invertebrate — moderate awareness/aptitude), Homo sapiens adult (primate — high awareness, moderate aptitude). E. coli enters critical Collapse (IC < 0.30) due to 5 dead awareness channels. All demonstrate F+omega=1, IC<=F, IC=exp(kappa)."
+  }
+}

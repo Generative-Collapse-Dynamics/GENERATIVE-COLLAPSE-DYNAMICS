@@ -1,0 +1,145 @@
+# canon/awc_anchors.yaml
+# Awareness-Cognition Canon Anchors — UMCP.CANON.AWC.v1
+# Cross-references: contracts/AWC.INTSTACK.v1.yaml, closures/awareness_cognition/
+schema: canon.domain_anchors.schema.json
+id: "UMCP.CANON.AWC.v1"
+version: "1.0.0"
+domain: "Awareness-Cognition (Phylogenetic Kernel)"
+hierarchy: "GCD > AWC (Tier-2)"
+description: >
+  Canon anchors for the awareness-cognition domain closure.
+  Maps 34 organisms (E. coli → human developmental stages) to a 10-channel
+  trace vector partitioned into 5 awareness channels and 5 aptitude channels.
+  Demonstrates that awareness and aptitude anti-correlate across phylogeny,
+  that the 5+5 partition yields exact analytic bounds (F = (Aw+Ap)/2,
+  IC = sqrt(Aw*Ap), Δ exact), and that the confinement mechanism from
+  particle physics (T3) is isomorphic to bottleneck collapse in organisms.
+  10 theorems (T-AW-1 through T-AW-10) proven, 0/34 organisms reach Stable.
+
+axioms:
+  - id: "AX-AWC0"
+    name: "Awareness-Aptitude Duality"
+    statement: >
+      Every organism partitions its cognitive-somatic budget exhaustively:
+      what the kernel retains (F) + what it loses (ω) = 1. The 5+5 partition
+      into awareness (mirror_recognition, metacognitive_accuracy,
+      planning_horizon, symbolic_depth, social_cognition) and aptitude
+      (sensory_acuity, motor_precision, environmental_tolerance,
+      reproductive_output, somatic_resilience) channels enables exact
+      analytic computation: F = (Aw + Ap)/2, IC = sqrt(Aw * Ap).
+    frozen: true
+
+  - id: "AX-AWC1"
+    name: "Universal Instability"
+    statement: >
+      No organism in the 34-organism catalog reaches Stable regime.
+      0/34 Stable. All organisms exist in Watch or Collapse. This is
+      not a deficiency — it reflects the fundamental heterogeneity
+      between awareness and aptitude channels across phylogeny.
+      Stability would require high fidelity in ALL 10 channels
+      simultaneously, which no known organism achieves.
+    frozen: true
+
+  - id: "AX-AWC2"
+    name: "Awareness-Aptitude Inversion"
+    statement: >
+      Organisms with high awareness subspace means (Aw) tend to have
+      lower aptitude subspace means (Ap), and vice versa. E. coli has
+      Aw near ε but Ap near 0.7; Homo sapiens adult has Aw near 0.95
+      but pays somatic costs. The heterogeneity gap Δ = F − IC tracks
+      this inversion — larger Aw-Ap divergence produces larger Δ.
+    frozen: true
+
+  - id: "AX-AWC3"
+    name: "Cross-Domain Isomorphism (T-AW-5)"
+    statement: >
+      The geometric slaughter mechanism in awareness-cognition is
+      structurally isomorphic to confinement in particle physics (SM T3).
+      One near-zero channel (e.g., mirror_recognition = ε for bacteria)
+      kills IC via the same geometric mean mechanism that color
+      confinement kills hadron IC. Same kernel, same math, different domain.
+    frozen: true
+
+  - id: "AX-AWC4"
+    name: "Sensitivity Formula (T-AW-4)"
+    statement: >
+      The marginal sensitivity of IC to channel k is exactly
+      dIC/dc_k = IC * w_k / c_k. This means channels near ε dominate
+      the sensitivity landscape — improving a near-zero channel has
+      exponentially more impact than improving a high channel.
+      This is the formal basis for bottleneck analysis in organisms.
+    frozen: true
+
+symbols:
+  - name: "Aw"
+    tier: 2
+    definition: "Awareness subspace mean = weighted mean of channels 0-4"
+  - name: "Ap"
+    tier: 2
+    definition: "Aptitude subspace mean = weighted mean of channels 5-9"
+  - name: "F"
+    tier: 1
+    definition: "Fidelity — arithmetic mean across all 10 channels, F = (Aw+Ap)/2"
+  - name: "IC"
+    tier: 1
+    definition: "Integrity composite — geometric mean, IC = sqrt(Aw*Ap) for 5+5"
+  - name: "omega"
+    tier: 1
+    definition: "Drift — omega = 1 - F"
+
+channels:
+  awareness:
+    - mirror_recognition
+    - metacognitive_accuracy
+    - planning_horizon
+    - symbolic_depth
+    - social_cognition
+  aptitude:
+    - sensory_acuity
+    - motor_precision
+    - environmental_tolerance
+    - reproductive_output
+    - somatic_resilience
+
+anchors:
+  - id: "AWC-A1"
+    name: "E. coli baseline"
+    description: "Minimal awareness (Aw ~ ε), high aptitude — phylogenetic floor"
+    regime: "Collapse"
+
+  - id: "AWC-A2"
+    name: "Homo sapiens adult"
+    description: "Highest awareness across catalog, moderate aptitude costs"
+    regime: "Watch"
+
+  - id: "AWC-A3"
+    name: "Human neonate"
+    description: "Developmental trajectory anchor — low Aw, high plasticity"
+    regime: "Collapse"
+
+  - id: "AWC-A4"
+    name: "Octopus"
+    description: "Convergent intelligence — high planning_horizon without cortex"
+    regime: "Watch"
+
+theorems:
+  - id: "T-AW-1"
+    name: "Awareness-Aptitude Inversion"
+  - id: "T-AW-2"
+    name: "Universal Instability (0/34 Stable)"
+  - id: "T-AW-3"
+    name: "Geometric Slaughter Bottleneck"
+  - id: "T-AW-4"
+    name: "Sensitivity Formula"
+  - id: "T-AW-5"
+    name: "Cross-Domain Isomorphism"
+  - id: "T-AW-6"
+    name: "Cost of Awareness"
+  - id: "T-AW-7"
+    name: "Human Development Trajectory"
+  - id: "T-AW-8"
+    name: "Binding Gate Transition"
+  - id: "T-AW-9"
+    name: "Cross-Domain Bridge"
+  - id: "T-AW-10"
+    name: "Formal Bounds"

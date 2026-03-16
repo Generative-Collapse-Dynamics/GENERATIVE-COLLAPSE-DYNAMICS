@@ -1,0 +1,4 @@
+state,cortical_complexity,cortical_integration,cortical_differentiation,cortical_connectivity,structural_volume,structural_white_matter,metabolic_glucose,metabolic_oxygen,systemic_hrv,systemic_circadian
+Healthy waking,0.90,0.85,0.88,0.82,0.75,0.80,0.78,0.85,0.80,0.75
+Deep coma,0.05,0.10,0.08,0.05,0.15,0.20,0.10,0.15,0.25,0.30
+Psychedelic,0.75,0.60,0.70,0.50,0.65,0.70,0.55,0.80,0.85,0.70
