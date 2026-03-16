@@ -84,22 +84,19 @@ channels:
     definition: "cashflow / cashflow_target"
 
 anchors:
-  - id: "FIN-A1"
+  FIN-A1:
     name: "Strong quarter (all targets met)"
     description: "All 4 channels above 0.90 — high F, low omega, IC near F"
     regime: "Stable"
-
-  - id: "FIN-A2"
+  FIN-A2:
     name: "Revenue miss, margin hold"
     description: "revenue_performance < 0.80 but gross_margin > 0.90 — Watch regime, IC drops from revenue channel"
     regime: "Watch"
-
-  - id: "FIN-A3"
+  FIN-A3:
     name: "Cashflow crisis"
     description: "cashflow_health near epsilon — geometric slaughter via single channel, IC collapses"
     regime: "Collapse"
-
-  - id: "FIN-A4"
+  FIN-A4:
     name: "Cost overrun"
     description: "expense_control drops below 0.50 — drift dominated by expense channel"
     regime: "Watch"

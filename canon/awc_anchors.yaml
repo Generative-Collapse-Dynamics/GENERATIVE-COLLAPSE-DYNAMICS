@@ -102,22 +102,19 @@ channels:
     - somatic_resilience
 
 anchors:
-  - id: "AWC-A1"
+  AWC-A1:
     name: "E. coli baseline"
     description: "Minimal awareness (Aw ~ ε), high aptitude — phylogenetic floor"
     regime: "Collapse"
-
-  - id: "AWC-A2"
+  AWC-A2:
     name: "Homo sapiens adult"
     description: "Highest awareness across catalog, moderate aptitude costs"
     regime: "Watch"
-
-  - id: "AWC-A3"
+  AWC-A3:
     name: "Human neonate"
     description: "Developmental trajectory anchor — low Aw, high plasticity"
     regime: "Collapse"
-
-  - id: "AWC-A4"
+  AWC-A4:
     name: "Octopus"
     description: "Convergent intelligence — high planning_horizon without cortex"
     regime: "Watch"

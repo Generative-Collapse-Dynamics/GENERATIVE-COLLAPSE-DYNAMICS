@@ -82,27 +82,23 @@ sub_closures:
   - epistemic_coherence
 
 anchors:
-  - id: "EVDAY-A1"
+  EVDAY-A1:
     name: "Copper (thermodynamic)"
     description: "High thermal conductivity, well-characterized — high F anchor"
     regime: "Stable"
-
-  - id: "EVDAY-A2"
+  EVDAY-A2:
     name: "Diamond (optics)"
     description: "Extreme refractive index and band gap — high IC across optical channels"
     regime: "Watch"
-
-  - id: "EVDAY-A3"
+  EVDAY-A3:
     name: "Water (thermodynamic)"
     description: "Anomalous properties (high Cp, density maximum at 4C) — unique kernel signature"
     regime: "Watch"
-
-  - id: "EVDAY-A4"
+  EVDAY-A4:
     name: "Air (optics)"
     description: "Near-unity refractive index, zero absorption — minimal channel variance"
     regime: "Stable"
-
-  - id: "EVDAY-A5"
+  EVDAY-A5:
     name: "BK7 optical glass"
     description: "Industry reference glass — balanced optical properties"
     regime: "Stable"

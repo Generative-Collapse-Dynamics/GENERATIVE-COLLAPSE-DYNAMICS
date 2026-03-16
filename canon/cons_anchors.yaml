@@ -85,22 +85,19 @@ channels:
   - cross_scale_coupling
 
 anchors:
-  - id: "CONS-A1"
+  CONS-A1:
     name: "Human conscious awareness"
     description: "Neural/biological category — highest recursive_depth and social channels"
     regime: "Watch"
-
-  - id: "CONS-A2"
+  CONS-A2:
     name: "Mathematical identity"
     description: "Abstract category — highest IC among all 20 systems (T-CC-6)"
     regime: "Watch"
-
-  - id: "CONS-A3"
+  CONS-A3:
     name: "432 Hz tuning fork"
     description: "Harmonic/acoustic category — high harmonic_ratio near xi_J"
     regime: "Watch"
-
-  - id: "CONS-A4"
+  CONS-A4:
     name: "Quantum coherent state"
     description: "Physical oscillatory — high spectral_coherence, low temporal_persistence"
     regime: "Collapse"

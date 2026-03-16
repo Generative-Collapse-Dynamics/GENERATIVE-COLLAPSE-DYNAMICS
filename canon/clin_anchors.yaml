@@ -98,32 +98,27 @@ channels:
     - neuroimmune_status
 
 anchors:
-  - id: "CLIN-A1"
+  CLIN-A1:
     name: "Healthy waking adult"
     description: "Baseline — highest F across catalog, all channels above 0.7"
     regime: "Stable"
-
-  - id: "CLIN-A2"
+  CLIN-A2:
     name: "Deep coma (GCS 3)"
     description: "Maximal collapse — cortical_complexity near ε, ω > 0.50"
     regime: "Collapse"
-
-  - id: "CLIN-A3"
+  CLIN-A3:
     name: "Psychedelic state (psilocybin)"
     description: "Highest entropy S, moderate F — entropic brain signature"
     regime: "Watch"
-
-  - id: "CLIN-A4"
+  CLIN-A4:
     name: "Alzheimer's disease (moderate)"
     description: "DMN collapse signature — default_mode_integrity kills IC"
     regime: "Collapse"
-
-  - id: "CLIN-A5"
+  CLIN-A5:
     name: "General anesthesia (propofol)"
     description: "Controlled collapse with guaranteed return — the seam"
     regime: "Collapse"
-
-  - id: "CLIN-A6"
+  CLIN-A6:
     name: "Neonate"
     description: "Lowest F, highest neuroplasticity — developmental anchor"
     regime: "Collapse"
