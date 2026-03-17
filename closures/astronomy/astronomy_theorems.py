@@ -170,7 +170,7 @@ def theorem_AS3_present_fidelity_peak() -> TheoremResult:
     # Test: Present has highest gap
     tests_total += 1
     max_gap = max(e.gap for e in epochs)
-    present_highest_gap = present and abs(present[0].gap - max_gap) < 1e-10
+    present_highest_gap = abs(present[0].gap - max_gap) < 1e-10 if present else False
     tests_passed += int(present_highest_gap)
 
     return TheoremResult(
@@ -216,7 +216,7 @@ def theorem_AS4_inflation_ic_floor() -> TheoremResult:
     # Test: Inflation exit has highest curvature
     tests_total += 1
     max_c = max(e.C for e in epochs)
-    inflation_highest_c = inflation and abs(inflation[0].C - max_c) < 0.01
+    inflation_highest_c = abs(inflation[0].C - max_c) < 0.01 if inflation else False
     tests_passed += int(inflation_highest_c)
 
     return TheoremResult(
@@ -292,8 +292,9 @@ def theorem_AS6_gap_ic_anticorrelation() -> TheoremResult:
     # Spearman rank correlation
     from scipy.stats import spearmanr
 
-    corr, _ = spearmanr(ics, gaps)
-    details["spearman_rho"] = round(float(corr), 4)
+    result = spearmanr(ics, gaps)
+    corr: float = float(result[0])  # type: ignore[arg-type]
+    details["spearman_rho"] = round(corr, 4)
 
     # Test: Negative correlation (IC up → gap down)
     tests_total += 1
@@ -341,8 +342,9 @@ def theorem_AS7_entropy_curvature() -> TheoremResult:
 
     from scipy.stats import spearmanr
 
-    corr, _ = spearmanr(cs, ss)
-    details["spearman_C_S"] = round(float(corr), 4)
+    result = spearmanr(cs, ss)
+    corr: float = float(result[0])  # type: ignore[arg-type]
+    details["spearman_C_S"] = round(corr, 4)
 
     # Test: Negative correlation between C and S
     tests_total += 1

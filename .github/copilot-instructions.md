@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.1.5** · **8,239 tests** · **20 domains** · **139 closure modules** · **46 lemmas** · **44 structural identities** · **50 dashboard pages**
+**UMCP v2.1.5** · **8,239 tests** · **20 domains** · **151 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -10,7 +10,7 @@
 
 This is not a metaphor. It is a constraint on admissible claims. Every decision, description, comment, docstring, and code change in this repository must be consistent with this axiom. The Latin formulation is the primary seed — it carries the axiom's morphological, syntactic, and etymological layers simultaneously. If you are uncertain whether something aligns with AXIOM-0, defer to the operational definitions in `AXIOM.md` and the tier structure in `TIER_SYSTEM.md`.
 
-**When you encounter any symbol, lemma, identity, theorem, class, or concept you need to look up**: Consult `CATALOGUE.md` — the master index of all 546 tagged formal objects in the repository, organized by tier, with full definitions and lineage chains. Every tag (e.g., `K-F`, `L-12`, `I-B2`, `T2-PP-3`) resolves to exactly one definition. This eliminates searching across files — the catalogue IS the lookup table.
+**When you encounter any symbol, lemma, identity, theorem, class, or concept you need to look up**: Consult `CATALOGUE.md` — the master index of all ~598 tagged formal objects in the repository, organized by tier, with full definitions and lineage chains. Every tag (e.g., `K-F`, `L-12`, `I-B2`, `T2-PP-3`) resolves to exactly one definition. This eliminates searching across files — the catalogue IS the lookup table.
 
 ### Lexicon Latinum (Generative Reference)
 
@@ -387,7 +387,7 @@ src/umcp/
 ├── finance_dashboard.py      # Finance Streamlit dashboard
 ├── universal_calculator.py   # Universal kernel calculator CLI
 ├── umcp_extensions.py        # Protocol-based plugin system
-├── dashboard/                # [Optional] Modular Streamlit dashboard (50 pages)
+└── dashboard/                # [Optional] Modular Streamlit dashboard (46 pages)
 │   ├── __init__.py           # Main dashboard entry point
 │   ├── _deps.py              # Dashboard dependency management
 │   ├── _utils.py             # Shared dashboard utilities
@@ -483,12 +483,12 @@ closures/
 | `recursive_instantiation.py` | Recursive instantiation patterns | Structural self-similarity |
 
 **Data artifacts** (not Python — never import these):
-- `contracts/*.yaml` — 13 versioned mathematical contracts (JSON Schema Draft 2020-12)
+- `contracts/*.yaml` — 21 versioned mathematical contracts (JSON Schema Draft 2020-12)
 - `closures/registry.yaml` — central registry; must list every closure used in a run
-- `casepacks/*/manifest.json` — 17 casepack manifests referencing contract, closures, expected outputs
+- `casepacks/*/manifest.json` — 24 casepack manifests referencing contract, closures, expected outputs
 - `schemas/*.schema.json` — 17 JSON Schema Draft 2020-12 files validating all artifacts
-- `canon/*.yaml` — 14 canonical anchor files (domain-specific reference points)
-- `integrity/sha256.txt` — SHA-256 checksums for 164 tracked files
+- `canon/*.yaml` — 21 canonical anchor files (domain-specific reference points)
+- `integrity/sha256.txt` — SHA-256 checksums for 192 tracked files
 - `ledger/return_log.csv` — append-only validation log
 
 ## Standard Model Formalism (10 Theorems)
@@ -545,7 +545,7 @@ Published papers live in `paper/`. Current papers:
 
 All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bib`. Compile: `pdflatex → bibtex → pdflatex → pdflatex`.
 
-**Bibliography** (`paper/Bibliography.bib`): **109 entries** organized by section:
+**Bibliography** (`paper/Bibliography.bib`): **157 entries** organized by section:
 - Standard Model: PDG 2024, Cabibbo 1963, Kobayashi-Maskawa 1973, Wolfenstein 1983, Jarlskog 1985, Gross-Wilczek 1973, Politzer 1973, Higgs 1964, Weizsäcker 1935, Bethe 1936
 - Canon anchors: paulus2025episteme (Zenodo DOI:10.5281/zenodo.17756705), paulus2025physicscoherence (Zenodo DOI:10.5281/zenodo.18072852), paulus2026umcpcasepack (Zenodo DOI:10.5281/zenodo.18226878)
 - Core corpus: paulus2025umcp, paulus2025ucd, paulus2025cmp, paulus2025seams, paulus2025gor, paulus2025canonnote, paulus2026kinematics
@@ -562,7 +562,7 @@ pytest                                       # 8,239 tests (pytest --collect-onl
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
-umcp integrity                              # Verify SHA-256 checksums (164 tracked files)
+umcp integrity                              # Verify SHA-256 checksums (192 tracked files)
 ```
 
 **⚠️ `python scripts/update_integrity.py` is mandatory** after modifying any `src/umcp/*.py`, `contracts/*.yaml`, `closures/**`, `schemas/**`, or `scripts/*.py` file. It regenerates SHA256 checksums in `integrity/sha256.txt`. CI will fail on mismatch.
@@ -586,7 +586,7 @@ This script mirrors CI exactly and must exit 0 before committing. It runs 11 ste
 5. `git add -A` — stage all changes
 6. Repository health check — drift detection, version sync, freeze verification
 7. Update test count in documentation
-8. Regenerate SHA-256 integrity checksums (164 tracked files)
+8. Regenerate SHA-256 integrity checksums (192 tracked files)
 9. Pytest bounds — collect tests and verify count within bounds (1000–7500)
 10. `umcp validate .` — contract validation (must be CONFORMANT)
 11. Axiom-0 conformance — terminology, symbol capture, frozen params check
@@ -624,7 +624,7 @@ umcp validate <target>
 
 ## Test Patterns
 
-**8,239 test cases** across **123 test files** in `tests/` (122 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_251_*`). Single `tests/conftest.py` provides:
+**8,239 test cases** across **123 test files** in `tests/` (122 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_253_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
@@ -667,7 +667,9 @@ umcp validate <target>
 | `test_248` | Matter genesis (particle→atom→mass narrative) | 163 |
 | `test_249` | Stellar ages cosmology — Tomasetti et al. 2026 (oldest MW stars, H0 tension) | 159 |
 | `test_250` | QGP/RHIC — quark-gluon plasma, BES, centrality, confinement transition | 266 |
-| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems) | 67 |
+| `test_251` | Awareness-cognition closures (34 organisms, 10 theorems), kernel diagnostics | 116 |
+| `test_252` | Clinical neuroscience, Trinity blast wave (Taylor-Sedov, 16 theorems) | 433 |
+| `test_253` | Spacetime memory theorems (T-ST-1 through T-ST-10) | — |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 510 |
 | **TOTAL** | | **8,239** |
@@ -704,15 +706,15 @@ Extensions use `typing.Protocol` (`ExtensionProtocol` requiring `name`, `version
 | Tier-1 proof | `closures/atomic_physics/tier1_proof.py` (10,162 tests) |
 | Element database | `closures/materials_science/element_database.py` (118 × 18 fields) |
 | SM paper | `paper/standard_model_kernel.tex` (RevTeX4-2, 10 theorems) |
-| Bibliography | `paper/Bibliography.bib` (109 entries, PDG → Kramers) |
+| Bibliography | `paper/Bibliography.bib` (157 entries, PDG → Kramers) |
 | Test fixtures | `tests/conftest.py` (first 100 lines) |
 | Casepack structure | `casepacks/hello_world/` |
 | Contract format | `contracts/UMA.INTSTACK.v1.yaml` |
 | Semantic rules | `validator_rules.yaml` |
-| Canonical anchors | `canon/` (14 domain anchor files) |
+| Canonical anchors | `canon/` (21 domain anchor files) |
 | Semiotic convergence | `SEMIOTIC_CONVERGENCE.md` (GCD as semiotic system, Peirce correspondence) |
 | Semiotic kernel | `closures/dynamic_semiotics/semiotic_kernel.py` (30 sign systems, 8-channel trace) |
-| **Any symbol, lemma, identity, theorem, tag** | `CATALOGUE.md` — **master index** of all 546 formal objects, organized by tier with full definitions and lineage |
+| **Any symbol, lemma, identity, theorem, tag** | `CATALOGUE.md` — **master index** of all ~598 formal objects, organized by tier with full definitions and lineage |
 
 ## Decision-Making Framework (Binding on ALL Contributions)
 

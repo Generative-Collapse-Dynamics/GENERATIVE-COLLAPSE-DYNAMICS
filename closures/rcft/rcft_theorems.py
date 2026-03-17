@@ -354,8 +354,9 @@ def theorem_RC7_curvature_regime() -> TheoremResult:
 
     cs = [s.C for s in states]
     omegas = [s.omega for s in states]
-    corr, _ = spearmanr(cs, omegas)
-    details["spearman_C_omega"] = round(float(corr), 4)
+    result = spearmanr(cs, omegas)
+    corr: float = float(result[0])  # type: ignore[arg-type]
+    details["spearman_C_omega"] = round(corr, 4)
 
     # Test: Positive correlation between C and ω
     tests_total += 1
