@@ -331,10 +331,70 @@ def _relpath(repo_root: Path, p: Path) -> str:
         return p.as_posix()
 
 
+LEDGER_GENESIS_HASH = hashlib.sha256(b"GENESIS").hexdigest()[:16]
+
+LEDGER_FIELDNAMES = [
+    "timestamp",
+    "run_status",
+    "F",
+    "omega",
+    "kappa",
+    "IC",
+    "C",
+    "S",
+    "tau_R",
+    "delta_kappa",
+    "chain_hash",
+]
+
+LEDGER_DATA_FIELDS = [f for f in LEDGER_FIELDNAMES if f != "chain_hash"]
+
+
+def _ledger_row_canonical(row: dict[str, Any]) -> str:
+    """Canonical string for a ledger row (all fields except chain_hash, pipe-separated)."""
+    return "|".join(str(row.get(f, "")) for f in LEDGER_DATA_FIELDS)
+
+
+def _compute_chain_hash(prev_hash: str, row: dict[str, Any]) -> str:
+    """SHA-256(prev_hash + canonical_row) truncated to 16 hex chars."""
+    payload = f"{prev_hash}|{_ledger_row_canonical(row)}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def _get_last_chain_hash(ledger_path: Path) -> str:
+    """Read the chain_hash from the last row of the ledger, or GENESIS if empty/missing."""
+    if not ledger_path.exists() or ledger_path.stat().st_size == 0:
+        return LEDGER_GENESIS_HASH
+    # Read last non-empty line efficiently
+    last_line = ""
+    with open(ledger_path, encoding="utf-8") as f:
+        header = f.readline().strip()
+        if not header:
+            return LEDGER_GENESIS_HASH
+        # Check if chain_hash column exists
+        fields = header.split(",")
+        if "chain_hash" not in fields:
+            return LEDGER_GENESIS_HASH
+        for line in f:
+            stripped = line.strip()
+            if stripped:
+                last_line = stripped
+    if not last_line:
+        return LEDGER_GENESIS_HASH
+    # Parse the last field (chain_hash is the last column)
+    parts = last_line.split(",")
+    chain_hash = parts[-1].strip() if len(parts) == len(fields) else ""
+    return chain_hash if chain_hash else LEDGER_GENESIS_HASH
+
+
 def _append_to_ledger(repo_root: Path, run_status: str, invariants_data: dict[str, Any] | None = None) -> None:
     """
     Append validation result to continuous ledger at ledger/return_log.csv.
     Records: timestamp, run_status, and all kernel invariants (F, ω, κ, IC, C, S, τ_R).
+
+    Each row includes a chain_hash: SHA-256(prev_hash | row_data)[:16].
+    This creates a tamper-evident hash chain — if any row is modified,
+    all subsequent hashes become invalid.
 
     Extended columns (per KERNEL_SPECIFICATION.md):
     - F: Fidelity (arithmetic mean)
@@ -345,6 +405,7 @@ def _append_to_ledger(repo_root: Path, run_status: str, invariants_data: dict[st
     - S: Bernoulli field entropy
     - tau_R: Return time (∞ if no return)
     - delta_kappa: Seam accounting Δκ
+    - chain_hash: SHA-256 hash chain link (tamper-evident)
     """
     ledger_dir = repo_root / "ledger"
     ledger_path = ledger_dir / "return_log.csv"
@@ -357,7 +418,7 @@ def _append_to_ledger(repo_root: Path, run_status: str, invariants_data: dict[st
 
     # Prepare row data with ALL kernel invariants
     timestamp = _utc_now_iso()
-    row = {
+    row: dict[str, Any] = {
         "timestamp": timestamp,
         "run_status": run_status,
         "F": "",
@@ -381,21 +442,13 @@ def _append_to_ledger(repo_root: Path, run_status: str, invariants_data: dict[st
         row["tau_R"] = invariants_data.get("tau_R", invariants_data.get("return_time", ""))
         row["delta_kappa"] = invariants_data.get("delta_kappa", "")
 
+    # Compute chain hash
+    prev_hash = _get_last_chain_hash(ledger_path)
+    row["chain_hash"] = _compute_chain_hash(prev_hash, row)
+
     # Append to ledger
     with open(ledger_path, "a", newline="", encoding="utf-8") as f:
-        fieldnames = [
-            "timestamp",
-            "run_status",
-            "F",
-            "omega",
-            "kappa",
-            "IC",
-            "C",
-            "S",
-            "tau_R",
-            "delta_kappa",
-        ]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=LEDGER_FIELDNAMES)
 
         if write_header:
             writer.writeheader()
@@ -2096,6 +2149,93 @@ def _cmd_integrity(args: argparse.Namespace) -> int:
     return 0
 
 
+def _verify_ledger_chain(ledger_path: Path, *, verbose: bool = False) -> tuple[bool, int, str]:
+    """
+    Verify the hash chain in the ledger CSV.
+
+    Returns (valid, rows_checked, message).
+    """
+    if not ledger_path.exists() or ledger_path.stat().st_size == 0:
+        return True, 0, "Ledger is empty — nothing to verify."
+
+    with open(ledger_path, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fields = reader.fieldnames or []
+        if "chain_hash" not in fields:
+            return True, 0, "Ledger has no chain_hash column — run migration first."
+
+        prev_hash = LEDGER_GENESIS_HASH
+        row_num = 0
+        for row in reader:
+            row_num += 1
+            expected = _compute_chain_hash(prev_hash, row)
+            actual = row.get("chain_hash", "")
+            if actual != expected:
+                return (
+                    False,
+                    row_num,
+                    f"Chain broken at row {row_num}: expected {expected}, got {actual}",
+                )
+            if verbose and row_num % 1000 == 0:
+                print(f"  ... verified {row_num} rows")
+            prev_hash = actual
+
+    return True, row_num, f"Chain intact: {row_num} rows verified."
+
+
+def _cmd_ledger(args: argparse.Namespace) -> int:
+    """Ledger operations: verify hash chain, show stats."""
+    repo_root = Path.cwd()
+    ledger_path = repo_root / "ledger" / "return_log.csv"
+    action = getattr(args, "action", "verify")
+
+    if action == "verify":
+        if not ledger_path.exists():
+            print("No ledger found at ledger/return_log.csv")
+            return 1
+
+        print(f"Verifying ledger hash chain: {ledger_path}")
+        print("-" * 60)
+        valid, rows, message = _verify_ledger_chain(ledger_path, verbose=getattr(args, "verbose", False))
+        print(f"  {message}")
+
+        if valid:
+            print(f"\nLedger: CONFORMANT ✓ ({rows} rows)")
+            return 0
+        else:
+            print(f"\nLedger: NONCONFORMANT ✗ (chain broken at row {rows})")
+            return 1
+
+    elif action == "stats":
+        if not ledger_path.exists():
+            print("No ledger found at ledger/return_log.csv")
+            return 1
+
+        with open(ledger_path, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            fields = reader.fieldnames or []
+            all_rows = list(reader)
+
+        has_chain = "chain_hash" in fields
+        print(f"Ledger: {ledger_path}")
+        print(f"  Rows: {len(all_rows)}")
+        print(f"  Columns: {', '.join(fields)}")
+        print(f"  Hash chain: {'present' if has_chain else 'not migrated'}")
+        if all_rows:
+            print(f"  First entry: {all_rows[0].get('timestamp', '?')}")
+            print(f"  Last entry:  {all_rows[-1].get('timestamp', '?')}")
+            statuses: dict[str, int] = {}
+            for r in all_rows:
+                s = r.get("run_status", "?")
+                statuses[s] = statuses.get(s, 0) + 1
+            for s, cnt in sorted(statuses.items()):
+                print(f"  {s}: {cnt}")
+        return 0
+
+    print(f"Unknown ledger action: {action}", file=sys.stderr)
+    return 1
+
+
 def _cmd_report(args: argparse.Namespace) -> int:
     """Generate audit reports."""
     repo_root = Path.cwd()
@@ -2607,6 +2747,18 @@ def build_parser() -> argparse.ArgumentParser:
     ig = sub.add_parser("integrity", help="Verify artifact integrity via SHA256 hashes")
     ig.add_argument("path", nargs="?", default=".", help="Path to verify (default: .)")
     ig.set_defaults(func=_cmd_integrity)
+
+    # Ledger command - verify hash chain and show stats
+    lg = sub.add_parser("ledger", help="Verify ledger hash chain or show ledger stats")
+    lg.add_argument(
+        "action",
+        nargs="?",
+        default="verify",
+        choices=["verify", "stats"],
+        help="Action: verify chain integrity or show stats (default: verify)",
+    )
+    lg.add_argument("-v", "--verbose", action="store_true", help="Show progress during verification")
+    lg.set_defaults(func=_cmd_ledger)
 
     # Report command - generate audit reports
     rp = sub.add_parser("report", help="Generate audit reports")
