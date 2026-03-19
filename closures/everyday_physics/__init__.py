@@ -20,6 +20,15 @@ Cross-references:
 
 from __future__ import annotations
 
+from closures.everyday_physics.acoustics import (
+    AC_ENTITIES,
+)
+from closures.everyday_physics.acoustics import (
+    compute_all_entities as compute_all_ac_entities,
+)
+from closures.everyday_physics.acoustics import (
+    verify_all_theorems as verify_all_ac_theorems,
+)
 from closures.everyday_physics.electromagnetism import compute_electromagnetic_material
 from closures.everyday_physics.fluid_dynamics import compute_fd_kernel
 from closures.everyday_physics.optics import compute_optical_material
@@ -27,9 +36,12 @@ from closures.everyday_physics.thermodynamics import compute_thermal_material
 from closures.everyday_physics.wave_phenomena import compute_wave_system
 
 __all__ = [
+    "AC_ENTITIES",
+    "compute_all_ac_entities",
     "compute_electromagnetic_material",
     "compute_fd_kernel",
     "compute_optical_material",
     "compute_thermal_material",
     "compute_wave_system",
+    "verify_all_ac_theorems",
 ]

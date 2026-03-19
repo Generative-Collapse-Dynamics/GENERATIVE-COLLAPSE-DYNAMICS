@@ -18,9 +18,20 @@ from closures.nuclear_physics.double_sided_collapse import compute_double_sided
 from closures.nuclear_physics.fissility import compute_fissility
 from closures.nuclear_physics.nuclide_binding import compute_binding
 from closures.nuclear_physics.qgp_rhic import run_full_analysis as compute_qgp_rhic
+from closures.nuclear_physics.reaction_channels import (
+    RC_ENTITIES,
+)
+from closures.nuclear_physics.reaction_channels import (
+    compute_all_entities as compute_all_rc_entities,
+)
+from closures.nuclear_physics.reaction_channels import (
+    verify_all_theorems as verify_all_rc_theorems,
+)
 from closures.nuclear_physics.shell_structure import compute_shell
 
 __all__ = [
+    "RC_ENTITIES",
+    "compute_all_rc_entities",
     "compute_alpha_decay",
     "compute_binding",
     "compute_decay_chain",
@@ -28,4 +39,5 @@ __all__ = [
     "compute_fissility",
     "compute_qgp_rhic",
     "compute_shell",
+    "verify_all_rc_theorems",
 ]

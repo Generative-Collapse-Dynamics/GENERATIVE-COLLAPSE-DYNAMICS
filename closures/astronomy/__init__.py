@@ -12,6 +12,15 @@ Cross-references:
 
 from __future__ import annotations
 
+from closures.astronomy.binary_star_systems import (
+    BS_ENTITIES,
+)
+from closures.astronomy.binary_star_systems import (
+    compute_all_entities as compute_all_bs_entities,
+)
+from closures.astronomy.binary_star_systems import (
+    verify_all_theorems as verify_all_bs_theorems,
+)
 from closures.astronomy.cosmology import compute_all_cosmological_epochs, compute_cosmological_epoch
 from closures.astronomy.distance_ladder import compute_distance_ladder
 from closures.astronomy.gravitational_dynamics import compute_gravitational_dynamics
@@ -29,7 +38,9 @@ from closures.astronomy.stellar_evolution import compute_stellar_evolution
 from closures.astronomy.stellar_luminosity import compute_stellar_luminosity
 
 __all__ = [
+    "BS_ENTITIES",
     "build_lpt_catalog",
+    "compute_all_bs_entities",
     "compute_all_cosmological_epochs",
     "compute_all_lpt_kernels",
     "compute_cosmological_epoch",
@@ -41,4 +52,5 @@ __all__ = [
     "compute_stellar_evolution",
     "compute_stellar_luminosity",
     "run_lpt_analysis",
+    "verify_all_bs_theorems",
 ]

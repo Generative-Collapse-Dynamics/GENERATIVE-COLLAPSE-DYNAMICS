@@ -52,6 +52,15 @@ from closures.materials_science.crystal_morphology_database import (
     compute_crystal_kernel,
 )
 from closures.materials_science.debye_thermal import compute_debye_thermal
+from closures.materials_science.defect_physics import (
+    DP_ENTITIES,
+)
+from closures.materials_science.defect_physics import (
+    compute_all_entities as compute_all_dp_entities,
+)
+from closures.materials_science.defect_physics import (
+    verify_all_theorems as verify_all_dp_theorems,
+)
 from closures.materials_science.elastic_moduli import compute_elastic_moduli
 from closures.materials_science.magnetic_properties import (
     compute_magnetic_properties,
@@ -66,6 +75,8 @@ from closures.materials_science.photonic_materials_database import (
 from closures.materials_science.surface_catalysis import compute_surface_catalysis
 
 __all__ = [
+    "DP_ENTITIES",
+    "compute_all_dp_entities",
     "compute_band_structure",
     "compute_bcs_superconductivity",
     "compute_bioactive_kernel",
@@ -78,4 +89,5 @@ __all__ = [
     "compute_photonic_kernel",
     "compute_scintillator_kernel",
     "compute_surface_catalysis",
+    "verify_all_dp_theorems",
 ]

@@ -22,6 +22,15 @@ from __future__ import annotations
 from closures.standard_model.ckm_mixing import compute_ckm_mixing
 from closures.standard_model.coupling_constants import compute_running_coupling
 from closures.standard_model.cross_sections import compute_cross_section
+from closures.standard_model.electroweak_precision import (
+    EWP_ENTITIES,
+)
+from closures.standard_model.electroweak_precision import (
+    compute_all_entities as compute_all_ewp_entities,
+)
+from closures.standard_model.electroweak_precision import (
+    verify_all_theorems as verify_all_ewp_theorems,
+)
 from closures.standard_model.neutrino_oscillation import (
     compute_dune_prediction,
     compute_oscillation_point,
@@ -41,7 +50,9 @@ from closures.standard_model.subatomic_kernel import (
 from closures.standard_model.symmetry_breaking import compute_higgs_mechanism
 
 __all__ = [
+    "EWP_ENTITIES",
     "compute_all_composite",
+    "compute_all_ewp_entities",
     "compute_all_fundamental",
     "compute_ckm_mixing",
     "compute_cross_section",
@@ -56,4 +67,5 @@ __all__ = [
     "list_particles",
     "oscillation_probability_matter",
     "oscillation_probability_vacuum",
+    "verify_all_ewp_theorems",
 ]

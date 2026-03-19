@@ -23,11 +23,22 @@ from closures.quantum_mechanics.fqhe_bilayer_graphene import compute_all_states 
 from closures.quantum_mechanics.harmonic_oscillator import compute_harmonic_oscillator
 from closures.quantum_mechanics.photonic_confinement import compute_all_entities as compute_cpm_entities
 from closures.quantum_mechanics.spin_measurement import compute_spin_measurement
+from closures.quantum_mechanics.topological_band_structures import (
+    TB_ENTITIES,
+)
+from closures.quantum_mechanics.topological_band_structures import (
+    compute_all_entities as compute_all_tb_entities,
+)
+from closures.quantum_mechanics.topological_band_structures import (
+    verify_all_theorems as verify_all_tb_theorems,
+)
 from closures.quantum_mechanics.tunneling import compute_tunneling
 from closures.quantum_mechanics.uncertainty_principle import compute_uncertainty
 from closures.quantum_mechanics.wavefunction_collapse import compute_wavefunction_collapse
 
 __all__ = [
+    "TB_ENTITIES",
+    "compute_all_tb_entities",
     "compute_cpm_entities",
     "compute_entanglement",
     "compute_fqhe_states",
@@ -36,4 +47,5 @@ __all__ = [
     "compute_tunneling",
     "compute_uncertainty",
     "compute_wavefunction_collapse",
+    "verify_all_tb_theorems",
 ]

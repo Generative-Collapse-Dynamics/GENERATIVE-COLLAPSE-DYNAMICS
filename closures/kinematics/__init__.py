@@ -82,6 +82,15 @@ from closures.kinematics.phase_space_return import (
     compute_phase_trajectory,
     detect_oscillation,
 )
+from closures.kinematics.rigid_body_dynamics import (
+    RB_ENTITIES,
+)
+from closures.kinematics.rigid_body_dynamics import (
+    compute_all_entities as compute_all_rb_entities,
+)
+from closures.kinematics.rigid_body_dynamics import (
+    verify_all_theorems as verify_all_rb_theorems,
+)
 from closures.kinematics.rotational_kinematics import (
     compute_centripetal,
     compute_rotational_kinematics,
@@ -89,29 +98,25 @@ from closures.kinematics.rotational_kinematics import (
 )
 
 __all__ = [
+    "RB_ENTITIES",
     "classify_motion_regime",
+    "compute_all_rb_entities",
     "compute_centripetal",
     "compute_collision_1d",
     "compute_impulse",
     "compute_kinematic_budget",
     "compute_kinematic_return",
-    # Kinematic stability
     "compute_kinematic_stability",
-    # Energy mechanics
     "compute_kinetic_energy",
-    # Linear kinematics
     "compute_linear_kinematics",
-    # Momentum dynamics
     "compute_linear_momentum",
     "compute_lyapunov_estimate",
     "compute_mechanical_energy",
     "compute_momentum_flux",
-    # Phase space return
     "compute_phase_distance",
     "compute_phase_trajectory",
     "compute_potential_energy",
     "compute_power",
-    # Rotational kinematics
     "compute_rotational_kinematics",
     "compute_rotational_trajectory",
     "compute_stability_margin",
@@ -119,6 +124,7 @@ __all__ = [
     "compute_trajectory",
     "compute_work",
     "detect_oscillation",
+    "verify_all_rb_theorems",
     "verify_energy_conservation",
     "verify_kinematic_consistency",
     "verify_momentum_conservation",

@@ -7,10 +7,10 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](src/umcp_cpp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![UMCP v2.2.3](https://img.shields.io/badge/UMCP-v2.2.3-orange.svg)](pyproject.toml)
-[![Tests: 9,271](https://img.shields.io/badge/tests-9%2C271-brightgreen.svg)](tests/)
+[![Tests: 10,091](https://img.shields.io/badge/tests-10%2C091-brightgreen.svg)](tests/)
 [![Domains: 20](https://img.shields.io/badge/domains-20-blueviolet.svg)](closures/)
-[![Closures: 182](https://img.shields.io/badge/closures-182-informational.svg)](closures/)
-[![Theorems: 289](https://img.shields.io/badge/theorems-289_proven-ff69b4.svg)](closures/)
+[![Closures: 192](https://img.shields.io/badge/closures-192-informational.svg)](closures/)
+[![Theorems: 349](https://img.shields.io/badge/theorems-349_proven-ff69b4.svg)](closures/)
 [![Identities: 44](https://img.shields.io/badge/identities-44_verified-9cf.svg)](scripts/)
 
 > **Core Axiom**: *"Collapse is generative; only what returns is real."*
@@ -19,7 +19,7 @@
 
 This is not a simulation. It is a **metrological enforcement engine**: schema conformance, kernel identity verification, regime classification, and SHA-256 integrity checking — producing a three-valued `CONFORMANT` / `NONCONFORMANT` / `NON_EVALUABLE` verdict for every run.
 
-**Python + C++ integration**: The framework is written in Python with **20 domains**, **182 closure modules**, **289 proven theorems**, and **9,271 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
+**Python + C++ integration**: The framework is written in Python with **20 domains**, **192 closure modules**, **349 proven theorems**, and **10,091 tests**. An optional C++17 accelerator (`src/umcp_cpp/`) provides 50–80× speedup for three hot paths — kernel computation, seam chain accumulation, and SHA-256 integrity — via a pybind11 zero-copy NumPy bridge. The Python wrapper (`umcp.accel`) auto-detects the compiled extension at import time; if unavailable, every call falls back transparently to the equivalent NumPy implementation. Same formulas, same frozen parameters, same results to machine precision — the C++ layer is Tier-0 Protocol only and redefines no Tier-1 symbols.
 
 ---
 
@@ -129,7 +129,7 @@ Every claim, measurement, validation, and narrative in UMCP follows exactly **fi
 
 ### The Three-Tier Stack
 
-Tier-1 (44 structural identities, 46 lemmas, 289 proven theorems) → Tier-0 (9,271 tests, 182 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
+Tier-1 (44 structural identities, 46 lemmas, 349 proven theorems) → Tier-0 (10,091 tests, 192 closure modules, C++17 accelerator) → Tier-2 (20 domains from particle physics to consciousness). One-way dependency. No back-edges within a frozen run.
 
 <p align="center">
   <img src="images/10_tier_architecture.png" alt="Three-Tier Architecture: Tier-1 (Kernel) → Tier-0 (Protocol) → Tier-2 (Domains)" width="88%">
@@ -293,11 +293,11 @@ src/umcp_cpp/                   # Optional C++ accelerator (Tier-0 Protocol)
 
 ## Closure Domains
 
-UMCP validates across **20 domains** with **182 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
+UMCP validates across **20 domains** with **192 closure modules**, each encoding real-world measurements into the 8-channel kernel trace:
 
 ### Standard Model — 12 modules
 
-The crown jewel: 31 particles mapped through the GCD kernel with **27 proven theorems** (134/134 subtests at machine precision). Part of a **289-theorem corpus** across 20 formalisms spanning particle physics, quantum mechanics, nuclear physics, materials science, evolution, consciousness, semiotics, awareness-cognition, active matter, and blast-wave dynamics.
+The crown jewel: 31 particles mapped through the GCD kernel with **27 proven theorems** (134/134 subtests at machine precision). Part of a **349-theorem corpus** across 20 formalisms spanning particle physics, quantum mechanics, nuclear physics, materials science, evolution, consciousness, semiotics, awareness-cognition, active matter, and blast-wave dynamics.
 
 | Module | What It Encodes |
 |--------|----------------|
@@ -632,7 +632,7 @@ umcp validate casepacks/hello_world --strict
 ### Run the test suite
 
 ```bash
-pytest                            # All 9,271 tests
+pytest                            # All 10,091 tests
 pytest -v --tb=short            # Verbose with short tracebacks
 pytest -n auto                  # Parallel execution
 ```
@@ -814,7 +814,7 @@ umcp validate <target>
 The GitHub Actions workflow (`.github/workflows/validate.yml`) enforces:
 
 1. **Lint** — `ruff format --check` + `ruff check` + `mypy`
-2. **Test** — Full pytest suite (9,271 tests, 134 test files)
+2. **Test** — Full pytest suite (10,091 tests, 144 test files)
 3. **Validate** — Baseline + strict validation (both must return CONFORMANT)
 
 ### Pre-Commit Protocol
@@ -833,7 +833,7 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 
 ## Test Suite
 
-**9,271 tests** across **134 test files**, organized by tier and domain:
+**10,091 tests** across **144 test files**, organized by tier and domain:
 
 | Test Range | Domain | Tests |
 |------------|--------|------:|
@@ -882,6 +882,16 @@ This mirrors CI exactly: format → lint → type-check → integrity → test �
 | `test_261` | Topological persistence (12 entities, 6 theorems T-TP-1–T-TP-6) | 82 |
 | `test_262` | Attention mechanisms (12 entities, 6 theorems T-AM-1–T-AM-6) | 82 |
 | `test_263` | Fluid dynamics (12 entities, 6 theorems T-FD-1–T-FD-6) | 82 |
+| `test_264` | Electroweak precision (12 entities, 6 theorems T-EWP-1–T-EWP-6) | 82 |
+| `test_265` | Binary star systems (12 entities, 6 theorems T-BS-1–T-BS-6) | 82 |
+| `test_266` | Defect physics (12 entities, 6 theorems T-DP-1–T-DP-6) | 82 |
+| `test_267` | Topological band structures (12 entities, 6 theorems T-TB-1–T-TB-6) | 82 |
+| `test_268` | Sleep neurophysiology (12 entities, 6 theorems T-SN-1–T-SN-6) | 82 |
+| `test_269` | Molecular evolution (12 entities, 6 theorems T-ME-1–T-ME-6) | 82 |
+| `test_270` | Acoustics (12 entities, 6 theorems T-AC-1–T-AC-6) | 82 |
+| `test_271` | Nuclear reaction channels (12 entities, 6 theorems T-RC-1–T-RC-6) | 82 |
+| `test_272` | Rigid body dynamics (12 entities, 6 theorems T-RB-1–T-RB-6) | 82 |
+| `test_273` | Volatility surface (12 entities, 6 theorems T-VS-1–T-VS-6) | 82 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, API, insights | 1,318 |
 
@@ -933,7 +943,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 │   ├── epistemic_weld.py      # Epistemic cost tracking
 │   ├── fleet/                 # Distributed validation
 │   └── dashboard/             # Modular Streamlit dashboard
-├── closures/                  # 20 domains, 182 modules
+├── closures/                  # 20 domains, 192 modules
 │   ├── standard_model/        # 31 particles, 27 theorems
 │   ├── atomic_physics/        # 118 elements, Tier-1 proof
 │   ├── quantum_mechanics/     # Double slit, entanglement, tunneling, QDM, FQHE
@@ -957,7 +967,7 @@ The framework is anchored by peer-reviewed Zenodo publications covering the core
 ├── schemas/                   # 17 JSON Schema files
 ├── canon/                     # 21 canonical anchor files
 ├── casepacks/                 # 24 reproducible validation bundles
-├── tests/                     # 134 test files, 9,271 tests
+├── tests/                     # 144 test files, 10,091 tests
 ├── paper/                     # 10 LaTeX papers + 2 Markdown papers + Bibliography.bib (159 entries)
 ├── integrity/                 # SHA-256 checksums
 ├── ledger/                    # Append-only validation log

@@ -1,6 +1,6 @@
 # Copilot Instructions for GENERATIVE-COLLAPSE-DYNAMICS
 
-**UMCP v2.2.3** · **9,271 tests** · **20 domains** · **182 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
+**UMCP v2.2.3** · **10,091 tests** · **20 domains** · **192 closure modules** · **46 lemmas** · **44 structural identities** · **46 dashboard pages**
 
 ## Foundational Principle — Read This First
 
@@ -559,7 +559,7 @@ All papers use RevTeX4-2 (`revtex4-2` document class) and share `Bibliography.bi
 
 ```bash
 pip install -e ".[all]"                     # Dev install (core + api + viz + dev tools)
-pytest                                       # 9,271 tests (pytest --collect-only | grep ":" | wc -l to verify)
+pytest                                       # 10,091 tests (pytest --collect-only | grep ":" | wc -l to verify)
 python scripts/update_integrity.py          # MUST run after changing any tracked file
 umcp validate .                             # Validate entire repo
 umcp validate casepacks/hello_world --strict # Validate casepack (strict = fail on warnings)
@@ -625,12 +625,12 @@ umcp validate <target>
 
 ## Test Patterns
 
-**9,271 test cases** across **134 test files** in `tests/` (133 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_263_*`). Single `tests/conftest.py` provides:
+**10,091 test cases** across **144 test files** in `tests/` (143 top-level `test_*.py` + 1 in `tests/closures/` + `conftest.py`), numbered by tier and domain (`test_000_*` through `test_273_*`). Single `tests/conftest.py` provides:
 - Frozen `RepoPaths` dataclass (session-scoped) with all critical paths
 - `@lru_cache` helpers: `_read_file()`, `_parse_json()`, `_parse_yaml()`, `_compile_schema()`
 - Convention: `test_<subject>_<behavior>()` for functions; `TestCLI*` classes with `subprocess.run` for CLI integration
 - Additional coverage: `test_fleet_worker.py` (Worker, WorkerPool, WorkerConfig), `test_insights.py` (PatternDatabase, InsightEngine)
-- Parametrized tests expand the collected items to 9,271 (verify: `pytest --collect-only | grep "::" | wc -l`)
+- Parametrized tests expand the collected items to 10,091 (verify: `pytest --collect-only | grep "::" | wc -l`)
 
 ### Test Distribution by Range
 
@@ -681,9 +681,19 @@ umcp validate <target>
 | `test_261` | Topological persistence (12 entities, 6 theorems T-TP-1–T-TP-6) | 82 |
 | `test_262` | Attention mechanisms (12 entities, 6 theorems T-AM-1–T-AM-6) | 82 |
 | `test_263` | Fluid dynamics (12 entities, 6 theorems T-FD-1–T-FD-6) | 82 |
+| `test_264` | Electroweak precision (12 entities, 6 theorems T-EWP-1–T-EWP-6) | 82 |
+| `test_265` | Binary star systems (12 entities, 6 theorems T-BS-1–T-BS-6) | 82 |
+| `test_266` | Defect physics (12 entities, 6 theorems T-DP-1–T-DP-6) | 82 |
+| `test_267` | Topological band structures (12 entities, 6 theorems T-TB-1–T-TB-6) | 82 |
+| `test_268` | Sleep neurophysiology (12 entities, 6 theorems T-SN-1–T-SN-6) | 82 |
+| `test_269` | Molecular evolution (12 entities, 6 theorems T-ME-1–T-ME-6) | 82 |
+| `test_270` | Acoustics (12 entities, 6 theorems T-AC-1–T-AC-6) | 82 |
+| `test_271` | Nuclear reaction channels (12 entities, 6 theorems T-RC-1–T-RC-6) | 82 |
+| `test_272` | Rigid body dynamics (12 entities, 6 theorems T-RB-1–T-RB-6) | 82 |
+| `test_273` | Volatility surface (12 entities, 6 theorems T-VS-1–T-VS-6) | 82 |
 | `closures/` | Closure-specific tests (kinematics phase) | 27 |
 | Infrastructure | Kernel, seam, frozen contract, extensions, uncertainty, calculator, coverage, etc. | 1,318 |
-| **TOTAL** | | **9,271** |
+| **TOTAL** | | **10,091** |
 
 ## Extension System
 

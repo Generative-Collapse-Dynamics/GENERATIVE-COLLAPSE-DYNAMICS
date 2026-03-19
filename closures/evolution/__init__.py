@@ -26,3 +26,19 @@ Axiom-0 derivation:
 """
 
 from __future__ import annotations
+
+from closures.evolution.molecular_evolution import (
+    ME_ENTITIES,
+)
+from closures.evolution.molecular_evolution import (
+    compute_all_entities as compute_all_me_entities,
+)
+from closures.evolution.molecular_evolution import (
+    verify_all_theorems as verify_all_me_theorems,
+)
+
+__all__ = [
+    "ME_ENTITIES",
+    "compute_all_me_entities",
+    "verify_all_me_theorems",
+]

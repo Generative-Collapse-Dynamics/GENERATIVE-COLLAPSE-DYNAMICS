@@ -19,3 +19,19 @@ Cross-references:
 """
 
 from __future__ import annotations
+
+from closures.finance.volatility_surface import (
+    VS_ENTITIES,
+)
+from closures.finance.volatility_surface import (
+    compute_all_entities as compute_all_vs_entities,
+)
+from closures.finance.volatility_surface import (
+    verify_all_theorems as verify_all_vs_theorems,
+)
+
+__all__ = [
+    "VS_ENTITIES",
+    "compute_all_vs_entities",
+    "verify_all_vs_theorems",
+]
