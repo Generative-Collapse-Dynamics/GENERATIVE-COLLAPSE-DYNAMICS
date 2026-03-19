@@ -95,7 +95,9 @@ def _load_registry_metadata() -> dict[str, dict]:
         return {}
     with open(REGISTRY_PATH) as f:
         data = yaml.safe_load(f)
-    return data.get("extensions", {}).get("domain_metadata", {}) if data else {}
+    if not isinstance(data, dict):
+        return {}
+    return data.get("extensions", {}).get("domain_metadata", {})
 
 
 def _load_theorem_registry() -> list[dict]:
