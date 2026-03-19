@@ -98,8 +98,11 @@ def section_1_entropy_gap() -> None:
         """Compute δ(α, β) = h(μ) − E[h(c)] for c ~ Beta(α, β)."""
         mu = alpha / (alpha + beta_param)
         h_mu = h_binary(mu)
+
         # E[h(c)] via numerical integration
-        integrand = lambda c: h_binary(c) * beta_dist.pdf(c, alpha, beta_param)
+        def integrand(c: float) -> float:
+            return float(h_binary(c) * beta_dist.pdf(c, alpha, beta_param))
+
         e_h, _ = quad(integrand, 1e-12, 1 - 1e-12)
         return h_mu - e_h
 
@@ -317,14 +320,15 @@ def section_3_fisher_gap_triangle() -> None:
     ]:
         errors = []
         bounds = []
+        last_r = None
         for _ in range(500):
             c = np.clip(c_gen(), eps, 1 - eps)
             w = np.full(len(c), 1.0 / len(c))
-            r = K.compute(c, w)
-            delta_exact = r.F - r.IC
-            delta_pred = r.C**2 / (8 * r.F)
+            last_r = K.compute(c, w)
+            delta_exact = last_r.F - last_r.IC
+            delta_pred = last_r.C**2 / (8 * last_r.F)
             error = abs(delta_exact - delta_pred)
-            bound = r.C**4 / (128 * r.F**3)
+            bound = last_r.C**4 / (128 * last_r.F**3)
             errors.append(error)
             bounds.append(bound)
         mean_err = np.mean(errors)
@@ -336,15 +340,19 @@ def section_3_fisher_gap_triangle() -> None:
         if not bounded:
             all_bounded = False
         r_sample = K.compute(np.clip(c_gen(), eps, 1 - eps), np.full(len(c_gen()), 1.0 / len(c_gen())))
+        assert last_r is not None
         print(
-            f"  {label:>20s}  {r_sample.C:8.4f}  {r_sample.F:8.4f}  {np.mean([r.F - r.IC for _ in range(1)]):10.6f}  "
+            f"  {label:>20s}  {r_sample.C:8.4f}  {r_sample.F:8.4f}  {last_r.F - last_r.IC:10.6f}  "
             f"{r_sample.C**2 / (8 * r_sample.F):10.6f}  {mean_err:10.2e}  {mean_bound:12.2e}  "
             f"{'YES' if bounded else 'NO':>8s}"
         )
 
     sub("Correlation analysis: C², Fisher Information, and gap")
     np.random.seed(777)
-    records = {"C2": [], "IF": [], "gap": [], "F": []}
+    records_C2: list[float] = []
+    records_IF: list[float] = []
+    records_gap: list[float] = []
+    records_F: list[float] = []
     for _ in range(5000):
         n = np.random.choice([4, 8, 16])
         c = np.clip(np.random.beta(2, 2, n), eps, 1 - eps)
@@ -352,24 +360,26 @@ def section_3_fisher_gap_triangle() -> None:
         r = K.compute(c, w)
         var_c = np.sum(w * (c - r.F) ** 2)
         I_F = var_c / (r.F * (1 - r.F))
-        records["C2"].append(r.C**2)
-        records["IF"].append(I_F)
-        records["gap"].append(r.F - r.IC)
-        records["F"].append(r.F)
+        records_C2.append(r.C**2)
+        records_IF.append(I_F)
+        records_gap.append(r.F - r.IC)
+        records_F.append(r.F)
 
-    for k, v in records.items():
-        records[k] = np.array(v)
+    arr_C2 = np.array(records_C2)
+    arr_IF = np.array(records_IF)
+    arr_gap = np.array(records_gap)
+    arr_F = np.array(records_F)
 
-    print(f"  corr(C², I_F)       = {np.corrcoef(records['C2'], records['IF'])[0, 1]:.6f}")
-    print(f"  corr(C², gap)       = {np.corrcoef(records['C2'], records['gap'])[0, 1]:.6f}")
-    print(f"  corr(I_F, gap)      = {np.corrcoef(records['IF'], records['gap'])[0, 1]:.6f}")
-    print(f"  corr(C²/(8F), gap)  = {np.corrcoef(records['C2'] / (8 * records['F']), records['gap'])[0, 1]:.6f}")
+    print(f"  corr(C², I_F)       = {np.corrcoef(arr_C2, arr_IF)[0, 1]:.6f}")
+    print(f"  corr(C², gap)       = {np.corrcoef(arr_C2, arr_gap)[0, 1]:.6f}")
+    print(f"  corr(I_F, gap)      = {np.corrcoef(arr_IF, arr_gap)[0, 1]:.6f}")
+    print(f"  corr(C²/(8F), gap)  = {np.corrcoef(arr_C2 / (8 * arr_F), arr_gap)[0, 1]:.6f}")
 
     # Exact relationship: C² = 4·Var(c) and I_F = Var(c)/(F(1-F))
     # So C² = 4·I_F·F·(1-F), hence C²/(8F) = I_F·(1-F)/2
-    pred_C2 = 4 * records["IF"] * records["F"] * (1 - records["F"])
+    pred_C2 = 4 * arr_IF * arr_F * (1 - arr_F)
     print("\n  IDENTITY: C² = 4·I_F·F·(1−F)")
-    print(f"  max |C² − 4·I_F·F·(1−F)| = {np.max(np.abs(records['C2'] - pred_C2)):.2e}")
+    print(f"  max |C² − 4·I_F·F·(1−F)| = {np.max(np.abs(arr_C2 - pred_C2)):.2e}")
     print("  → This is EXACT (by definition: C = std/0.5, std² = Var, I_F = Var/(F(1−F)))")
 
     sub("Key Insight")
@@ -378,7 +388,7 @@ def section_3_fisher_gap_triangle() -> None:
     print("  Equivalently: Δ = I_F · (1−F) / 2 + O(C⁴)")
     print("  where I_F is the Fisher information of the trace vector.")
     print("  Curvature C IS (a rescaling of) Fisher information.")
-    print(f"  C² = 4·I_F·F·(1−F) is exact by definition (verified to {np.max(np.abs(records['C2'] - pred_C2)):.0e}).")
+    print(f"  C² = 4·I_F·F·(1−F) is exact by definition (verified to {np.max(np.abs(arr_C2 - pred_C2)):.0e}).")
     print(f"\n  THEOREM PROVEN: {'YES' if all_bounded else 'PARTIAL'}")
 
 
@@ -409,7 +419,6 @@ def section_4_channel_death_predictor() -> None:
         n_live = n_total - n_dead
         if n_live == 0:
             return 0.0
-        w = 1.0 / n_total
         F_live_arith = np.mean(c_live)
         F = (n_live * F_live_arith + n_dead * eps) / n_total
         kappa_live = np.mean(np.log(np.clip(c_live, eps, None)))
@@ -423,6 +432,8 @@ def section_4_channel_death_predictor() -> None:
 
     np.random.seed(42)
     all_pass = True
+    last_predicted = 0.0
+    last_actual = 0.0
     for n in [4, 8, 12, 16]:
         for k in [0, 1, 2, 3]:
             if k >= n:
@@ -430,18 +441,17 @@ def section_4_channel_death_predictor() -> None:
             diffs = []
             for _ in range(200):
                 c = np.clip(np.random.beta(3, 1, n), eps, 1 - eps)
-                for j in range(k):
-                    c[j] = eps  # kill channels
+                c[:k] = eps  # kill first k channels
                 w = np.full(n, 1.0 / n)
                 r = K.compute(c, w)
-                actual = r.IC / max(r.F, eps)
-                predicted = predict_IC_F(k, n, c[k:])
-                diffs.append(abs(actual - predicted))
+                last_actual = r.IC / max(r.F, eps)
+                last_predicted = predict_IC_F(k, n, c[k:])
+                diffs.append(abs(last_actual - last_predicted))
             mean_diff = np.mean(diffs)
             status = "PASS" if mean_diff < 1e-10 else "FAIL"
             if status == "FAIL":
                 all_pass = False
-            print(f"  {n:3d}  {k:6d}  {predicted:10.6f}  {actual:12.6f}  {mean_diff:10.2e}  {status:>6s}")
+            print(f"  {n:3d}  {k:6d}  {last_predicted:10.6f}  {last_actual:12.6f}  {mean_diff:10.2e}  {status:>6s}")
 
     sub("Cross-domain validation against real closure data")
     print("  Scanning all importable domain closures...")
@@ -464,7 +474,7 @@ def section_4_channel_death_predictor() -> None:
         n_entities = 0
         total_error = 0.0
         max_error = 0.0
-        for label, c, w in traces:
+        for _label, c, w in traces:
             c = np.clip(np.asarray(c, dtype=float), eps, 1 - eps)
             w = np.asarray(w, dtype=float)
             n_total = len(c)
@@ -496,10 +506,10 @@ def section_4_channel_death_predictor() -> None:
 
         traces = []
         for p in FUNDAMENTAL_PARTICLES:
-            c, w, labels = normalize_fundamental(p)
+            c, w, _labels = normalize_fundamental(p)
             traces.append((p.name, c, w))
         for p in COMPOSITE_PARTICLES:
-            c, w, labels = normalize_composite(p)
+            c, w, _labels = normalize_composite(p)
             traces.append((p.name, c, w))
         return traces
 
@@ -512,7 +522,7 @@ def section_4_channel_death_predictor() -> None:
         traces = []
         for el in ELEMENTS:
             try:
-                c, w, labels = _normalize_element(el)
+                c, w, _labels = _normalize_element(el)
                 traces.append((el.symbol, c, w))
             except Exception:
                 pass
@@ -615,9 +625,8 @@ def section_4_channel_death_predictor() -> None:
 
     sub("Channel-death statistics across domains")
     print("  Counting near-dead channels (c < 1e-4) per domain...")
-    total_dead = 0
     total_entities = 0
-    for name, n_ent, _, _ in domain_results:
+    for _, n_ent, _, _ in domain_results:
         total_entities += n_ent
 
     sub("Key Insight")
@@ -693,7 +702,8 @@ def section_5_spectral_completeness() -> None:
 
     moments_num = []
     for n in range(11):
-        val, err = quad(lambda c: c**n * f_func(c), 1e-15, 1 - 1e-15)
+        n_val = n  # bind for closure
+        val, _err = quad(lambda c, _n=n_val: c**_n * f_func(c), 1e-15, 1 - 1e-15)
         moments_num.append(val)
         # The pure ln(c) part: -1/(n+1)²
         # The pure -c·ln(c) part: +1/(n+2)²
@@ -714,7 +724,8 @@ def section_5_spectral_completeness() -> None:
 
     for n in range(11):
         # Numerical
-        R_n_num, _ = quad(lambda c: c**n * (-(1 - c) * np.log(1 - c)), 1e-15, 1 - 1e-15)
+        n_val = n  # bind for closure
+        R_n_num, _ = quad(lambda c, _n=n_val: c**_n * (-(1 - c) * np.log(1 - c)), 1e-15, 1 - 1e-15)
 
         # Try formula: Σ 1/(k(n+k+1)(n+k+2))
         R_n_series = sum(1.0 / (k * (n + k + 1) * (n + k + 2)) for k in range(1, 5000))
@@ -749,7 +760,8 @@ def section_5_spectral_completeness() -> None:
     hankel = np.zeros((N, N))
     for i in range(N):
         for j in range(N):
-            val, _ = quad(lambda c: c**i * c**j * abs(f_func(c)), 1e-15, 1 - 1e-15)
+            ij_sum = i + j  # bind for closure
+            val, _ = quad(lambda c, _ij=ij_sum: c**_ij * abs(f_func(c)), 1e-15, 1 - 1e-15)
             hankel[i, j] = val
     det = np.linalg.det(hankel)
     cond = np.linalg.cond(hankel)
@@ -784,9 +796,9 @@ def section_5_spectral_completeness() -> None:
     print()
     # Identity: ∫₀¹ g_F(c)·f(c) dc = π²/3 − 3  (f = S + κ = h + ln c)
     # This integral has a logarithmic singularity at c→0; split to handle it.
-    val_f, _ = quad(lambda c: f_func(c) / (c * (1 - c)), 1e-12, 0.5, limit=200)
-    val_f2, _ = quad(lambda c: f_func(c) / (c * (1 - c)), 0.5, 1 - 1e-12, limit=200)
-    val_f_total = val_f + val_f2
+    _val_f, _ = quad(lambda c: f_func(c) / (c * (1 - c)), 1e-12, 0.5, limit=200)
+    _val_f2, _ = quad(lambda c: f_func(c) / (c * (1 - c)), 0.5, 1 - 1e-12, limit=200)
+    # _val_f + _val_f2 is the full integral (divergent — see note below)
     # The singularity at c→0 gives ∫ ln(c)/(c(1-c)) dc which diverges,
     # so the integral ∫g_F·f dc is actually divergent.
     # What IS finite: ∫₀¹ g_F(c)·S(c) dc = π²/3, confirmed above.
