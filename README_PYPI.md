@@ -4,7 +4,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/blob/main/LICENSE)
 [![CI](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions/workflows/validate.yml/badge.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/actions)
-[![Tests: 8,397](https://img.shields.io/badge/tests-8%2C397-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
+[![Tests: 10,159](https://img.shields.io/badge/tests-10%2C159-brightgreen.svg)](https://github.com/calebpruett927/GENERATIVE-COLLAPSE-DYNAMICS/tree/main/tests)
 
 **A contract-first validation framework for reproducible computational workflows.**
 
@@ -23,7 +23,7 @@ Built on **Generative Collapse Dynamics (GCD)**, a measurement theory derived fr
 | **Contract-first validation** | Define mathematical contracts before evidence. Frozen parameters ensure reproducibility. |
 | **Tier-1 kernel** | Six invariants (F, ω, S, C, κ, IC) computed from any bounded trace vector — domain-independent. |
 | **20 scientific domains** | From particle physics and cosmology to neuroscience and finance — all through one kernel. |
-| **8,397 tests** | Comprehensive test suite with 174 closure modules and 241 proven theorems. |
+| **10,159 tests** | Comprehensive test suite with 193 closure modules and 247 proven theorems. |
 | **Three-valued verdicts** | Never boolean. Always CONFORMANT / NONCONFORMANT / NON\_EVALUABLE. |
 | **Interactive dashboard** | 46-page Streamlit dashboard for real-time kernel exploration. |
 | **CLI + Python API** | Full command-line interface and programmatic access. |
@@ -204,7 +204,7 @@ src/umcp/               # Core validation engine
 ├── fleet/               # Distributed validation (scheduler, workers, queue)
 └── ...
 
-closures/                # 20 domain closure modules (174 total)
+closures/                # 20 domain closure modules (193 total)
 contracts/               # Versioned mathematical contracts (YAML)
 casepacks/               # 24 self-contained validation packages
 schemas/                 # JSON Schema Draft 2020-12 definitions

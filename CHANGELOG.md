@@ -5,6 +5,29 @@ All notable changes to the UMCP validator and repository will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.4] - 2026-03-19
+
+### Added
+- `tests/test_api_routes_v2_coverage.py` — 67 new tests for API routes v2 coverage (86% → 97%)
+- 19 new closure modules across 10 domains (Batch 1 + Batch 2: 18 theorems, all PROVEN)
+- 8 new closures: neurotransmitter systems, altered states, gravitational wave memory,
+  market microstructure, media coherence, topological persistence, attention mechanisms,
+  fluid dynamics, electroweak precision, binary star systems, defect physics, topological
+  band structures, sleep neurophysiology, molecular evolution, acoustics, nuclear reaction
+  channels, rigid body dynamics, volatility surface
+
+### Changed
+- Synchronized all instruction/guidance files with ground truth metrics:
+  10,159 tests, 193 closures, 247 theorems, 213 tracked files, 44 identities, 46 lemmas
+- Updated `README_PYPI.md` metrics for PyPI page accuracy
+- Version bump 2.2.3 → 2.2.4
+
+### Fixed
+- `TIER_SYSTEM.md`: corrected legacy bug — "38 structural identities" → "44 structural identities"
+- `.github/copilot-instructions.md`: dashboard page count inconsistency (50 → 46)
+- `.github/copilot-instructions.md`: pytest bounds description (1000–10000 → 1000–11000)
+- `__init__.py` coverage → 100%, `api_routes_v2.py` coverage → 97%
+
 ## [2.2.3] - 2026-03-19
 
 ### Added
