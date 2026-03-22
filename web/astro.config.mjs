@@ -4,7 +4,8 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://gcd-kernel.org',
+  site: 'https://calebpruett927.github.io',
+  base: '/GENERATIVE-COLLAPSE-DYNAMICS/',
   integrations: [mdx(), tailwind()],
   // Domain routing: /finance/, /astronomy/, /standard_model/, etc.
   // Each domain gets its own hermetic section

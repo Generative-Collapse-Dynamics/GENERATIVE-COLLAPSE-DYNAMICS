@@ -323,7 +323,7 @@ def generate_index_markdown(domains: list[SiteData]) -> str:
         snap = d.latest_snapshot
         if snap:
             lines.append(
-                f"| [{d.domain_display}](/{d.domain}/) "
+                f"| [{d.domain_display}](./{d.domain}/) "
                 f"| {snap.regime} "
                 f"| {snap.F:.3f} "
                 f"| {snap.IC:.3f} "
@@ -331,7 +331,7 @@ def generate_index_markdown(domains: list[SiteData]) -> str:
                 f"| {len(d.closure_modules)} |"
             )
         else:
-            lines.append(f"| [{d.domain_display}](/{d.domain}/) | — | — | — | — | {len(d.closure_modules)} |")
+            lines.append(f"| [{d.domain_display}](./{d.domain}/) | — | — | — | — | {len(d.closure_modules)} |")
 
     lines.append("")
     lines.append("---\n")

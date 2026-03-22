@@ -26,6 +26,7 @@ const regimeColors: Record<string, string> = {
 };
 
 const regimeBadge = regimeColors[regime] || regimeColors['UNKNOWN'];
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title={title} description={description} primaryColor={primaryColor} accentColor={accentColor}>
@@ -47,9 +48,9 @@ const regimeBadge = regimeColors[regime] || regimeColors['UNKNOWN'];
 
     <!-- Sub-page navigation -->
     <nav class="flex gap-3 mt-5 pt-4 border-t border-kernel-800 text-sm">
-      <a href={`/${domain}/contract`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Contract</a>
-      <a href={`/${domain}/theorems`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Theorems</a>
-      <a href={`/${domain}/entities`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Entities</a>
+      <a href={`${base}${domain}/contract`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Contract</a>
+      <a href={`${base}${domain}/theorems`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Theorems</a>
+      <a href={`${base}${domain}/entities`} class="px-3 py-1 rounded bg-kernel-800 text-kernel-300 hover:bg-kernel-700 hover:text-kernel-100 transition-colors">Entities</a>
     </nav>
   </div>
 

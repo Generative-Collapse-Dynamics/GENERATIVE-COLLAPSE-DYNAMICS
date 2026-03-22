@@ -75,8 +75,8 @@ Comprehensive quantum mechanics casepack covering 6 subdomains: wavefunction col
 
 ## Validation Ledger Summary
 
-- **Total entries**: 9670
-- **CONFORMANT**: 9670
+- **Total entries**: 9671
+- **CONFORMANT**: 9671
 - **Conformance rate**: 100.0%
 
 ## The Spine

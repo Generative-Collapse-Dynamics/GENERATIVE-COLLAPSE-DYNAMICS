@@ -91,8 +91,8 @@ Modified gravity testing using DES Y3 MAGLIM data via Weyl evolution and hJ prox
 
 ## Validation Ledger Summary
 
-- **Total entries**: 9670
-- **CONFORMANT**: 9670
+- **Total entries**: 9671
+- **CONFORMANT**: 9671
 - **Conformance rate**: 100.0%
 
 ## The Spine
