@@ -22,6 +22,7 @@ on:
       - 'casepacks/**'
       - 'src/umcp/hcg/**'
       - 'web/**'
+      - '.github/workflows/hcg-deploy.yml'
 
   # Webhook trigger from api_umcp.py
   repository_dispatch:
