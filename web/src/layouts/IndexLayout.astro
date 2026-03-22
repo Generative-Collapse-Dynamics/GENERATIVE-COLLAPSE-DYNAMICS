@@ -6,6 +6,18 @@ import BaseLayout from './BaseLayout.astro';
 
 const { frontmatter } = Astro.props;
 const { title = 'GCD Kernel', description = '' } = frontmatter || {};
+const base = import.meta.env.BASE_URL;
+
+const tools = [
+  { name: 'Calculator', href: `${base}calculator/`, desc: 'Interactive kernel computation', icon: '⊕' },
+  { name: 'Regime', href: `${base}regime/`, desc: 'Phase diagram visualization', icon: '◉' },
+  { name: 'τ_R*', href: `${base}diagnostics/`, desc: 'Thermodynamic diagnostic', icon: '∇' },
+  { name: 'Precision', href: `${base}precision/`, desc: 'Identity verification', icon: '✓' },
+  { name: 'Formulas', href: `${base}formulas/`, desc: 'Expression builder + sweep', icon: 'ƒ' },
+  { name: 'Geometry', href: `${base}geometry/`, desc: 'Manifold explorer', icon: 'Σ' },
+  { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-lens translation', icon: '⟷' },
+  { name: 'Ledger', href: `${base}ledger/`, desc: 'Domain overview + metrics', icon: '☰' },
+];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -34,6 +46,21 @@ const { title = 'GCD Kernel', description = '' } = frontmatter || {};
       <span class="px-2 py-1 bg-kernel-800 rounded">STANCE</span>
       <span>→</span>
       <span class="px-2 py-1 bg-blue-900/50 text-blue-400 rounded border border-blue-800">PUBLISH</span>
+    </div>
+  </div>
+
+  <!-- Interactive tools grid -->
+  <div class="mb-12">
+    <h2 class="text-lg font-bold text-kernel-300 mb-4">Interactive Tools</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {tools.map(t => (
+        <a href={t.href}
+          class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 hover:border-amber-600 hover:bg-kernel-800 transition group">
+          <div class="text-2xl mb-2 opacity-60 group-hover:opacity-100 transition">{t.icon}</div>
+          <div class="text-sm font-bold text-kernel-200 group-hover:text-amber-400 transition">{t.name}</div>
+          <div class="text-xs text-kernel-500 mt-1">{t.desc}</div>
+        </a>
+      ))}
     </div>
   </div>
 

@@ -1,0 +1,342 @@
+---
+/**
+ * Interactive Kernel Calculator
+ * Port of: dashboard/pages_interactive.py render_test_templates_page()
+ *
+ * Computes F, ω, S, C, κ, IC from user-supplied trace vectors.
+ * Runs entirely client-side using the TypeScript kernel.
+ */
+---
+
+<div id="kernel-calc" class="space-y-6">
+  <!-- Header -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">Kernel Calculator</h2>
+    <p class="text-kernel-400 text-sm">
+      Compute the six Tier-1 invariants from any trace vector.
+      The kernel runs <strong>in your browser</strong> — identical math to the C and Python implementations.
+    </p>
+  </div>
+
+  <!-- Preset selector -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <label class="text-sm text-kernel-300 font-medium">Presets</label>
+    <div id="preset-buttons" class="flex flex-wrap gap-2 mt-2">
+      <!-- Populated by script -->
+    </div>
+  </div>
+
+  <!-- Input panel -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- Channels -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <div class="flex justify-between items-center mb-3">
+        <label class="text-sm text-kernel-300 font-medium">Channels (cᵢ ∈ [0, 1])</label>
+        <div class="flex gap-2">
+          <button id="btn-add-ch" class="text-xs px-2 py-1 bg-kernel-800 text-kernel-300 rounded hover:bg-kernel-700">+ Add</button>
+          <button id="btn-rm-ch" class="text-xs px-2 py-1 bg-kernel-800 text-kernel-300 rounded hover:bg-kernel-700">− Remove</button>
+        </div>
+      </div>
+      <div id="channel-inputs" class="space-y-2">
+        <!-- Populated by script -->
+      </div>
+    </div>
+    <!-- Weights -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <div class="flex justify-between items-center mb-3">
+        <label class="text-sm text-kernel-300 font-medium">Weights (wᵢ, must sum to 1)</label>
+        <button id="btn-uniform" class="text-xs px-2 py-1 bg-kernel-800 text-kernel-300 rounded hover:bg-kernel-700">Uniform</button>
+      </div>
+      <div id="weight-inputs" class="space-y-2">
+        <!-- Populated by script -->
+      </div>
+      <div id="weight-sum" class="text-xs text-kernel-500 mt-2">Σw = 1.000</div>
+    </div>
+  </div>
+
+  <!-- Compute button -->
+  <button id="btn-compute" class="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition">
+    Compute Kernel →
+  </button>
+
+  <!-- Results -->
+  <div id="results-panel" class="hidden space-y-4">
+    <!-- Regime badge -->
+    <div id="regime-badge" class="text-center py-3 rounded-lg font-bold text-lg"></div>
+
+    <!-- Six invariants -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="invariants-grid">
+      <!-- Populated by script -->
+    </div>
+
+    <!-- Identity checks -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Identity Verification</h3>
+      <div id="identity-checks" class="space-y-2">
+        <!-- Populated by script -->
+      </div>
+    </div>
+
+    <!-- Seam budget -->
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-sm font-bold text-kernel-300 mb-3">Seam Budget</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="text-xs text-kernel-500">Return rate (R)</label>
+          <input id="seam-R" type="number" value="1.0" step="0.1" min="0" max="10"
+            class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm" />
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">Return time (τ_R)</label>
+          <input id="seam-tauR" type="number" value="1.0" step="0.1" min="0" max="100"
+            class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm" />
+        </div>
+      </div>
+      <div id="seam-results" class="text-sm text-kernel-300">
+        <!-- Populated by script -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { computeKernel, classifyRegime, computeSeamBudget, verifyIdentities, PRESETS } from '../lib/kernel';
+  import { REGIME_COLORS, KERNEL_SYMBOLS } from '../lib/constants';
+  import type { KernelResult } from '../lib/kernel';
+
+  // State
+  let nChannels = 8;
+  let channelValues: number[] = [0.95, 0.92, 0.97, 0.93, 0.96, 0.94, 0.91, 0.98];
+  let weightValues: number[] = Array(8).fill(0.125);
+
+  function init() {
+    renderPresets();
+    renderInputs();
+    attachListeners();
+  }
+
+  function renderPresets() {
+    const container = document.getElementById('preset-buttons')!;
+    container.innerHTML = '';
+    for (const [key, preset] of Object.entries(PRESETS)) {
+      const btn = document.createElement('button');
+      btn.className = 'text-xs px-3 py-1.5 bg-kernel-800 text-kernel-300 rounded hover:bg-kernel-700 hover:text-kernel-100 transition';
+      btn.textContent = preset.name;
+      btn.addEventListener('click', () => {
+        channelValues = [...preset.c];
+        weightValues = [...preset.w];
+        nChannels = channelValues.length;
+        renderInputs();
+        compute();
+      });
+      container.appendChild(btn);
+    }
+  }
+
+  function renderInputs() {
+    const chContainer = document.getElementById('channel-inputs')!;
+    const wContainer = document.getElementById('weight-inputs')!;
+
+    chContainer.innerHTML = '';
+    wContainer.innerHTML = '';
+
+    for (let i = 0; i < nChannels; i++) {
+      // Channel slider + number
+      const chDiv = document.createElement('div');
+      chDiv.className = 'flex items-center gap-2';
+      chDiv.innerHTML = `
+        <span class="text-xs text-kernel-500 w-8">c${i + 1}</span>
+        <input type="range" min="0" max="1" step="0.001" value="${channelValues[i] ?? 0.5}"
+          class="flex-1 h-1.5 accent-amber-500" data-ch="${i}" />
+        <input type="number" min="0" max="1" step="0.01" value="${(channelValues[i] ?? 0.5).toFixed(3)}"
+          class="w-20 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-xs text-right" data-ch-num="${i}" />
+      `;
+      chContainer.appendChild(chDiv);
+
+      // Weight input
+      const wDiv = document.createElement('div');
+      wDiv.className = 'flex items-center gap-2';
+      wDiv.innerHTML = `
+        <span class="text-xs text-kernel-500 w-8">w${i + 1}</span>
+        <input type="range" min="0" max="1" step="0.001" value="${weightValues[i] ?? 1 / nChannels}"
+          class="flex-1 h-1.5 accent-blue-400" data-w="${i}" />
+        <input type="number" min="0" max="1" step="0.01" value="${(weightValues[i] ?? 1 / nChannels).toFixed(4)}"
+          class="w-20 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-xs text-right" data-w-num="${i}" />
+      `;
+      wContainer.appendChild(wDiv);
+    }
+    updateWeightSum();
+  }
+
+  function attachListeners() {
+    // Channel sliders
+    document.getElementById('channel-inputs')!.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      const idx = target.dataset.ch ?? target.dataset.chNum;
+      if (idx !== undefined) {
+        channelValues[parseInt(idx)] = parseFloat(target.value);
+        // Sync slider ↔ number
+        const container = target.closest('div')!;
+        const slider = container.querySelector(`[data-ch="${idx}"]`) as HTMLInputElement;
+        const num = container.querySelector(`[data-ch-num="${idx}"]`) as HTMLInputElement;
+        if (slider && target !== slider) slider.value = target.value;
+        if (num && target !== num) num.value = parseFloat(target.value).toFixed(3);
+      }
+    });
+
+    // Weight sliders
+    document.getElementById('weight-inputs')!.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      const idx = target.dataset.w ?? target.dataset.wNum;
+      if (idx !== undefined) {
+        weightValues[parseInt(idx)] = parseFloat(target.value);
+        const container = target.closest('div')!;
+        const slider = container.querySelector(`[data-w="${idx}"]`) as HTMLInputElement;
+        const num = container.querySelector(`[data-w-num="${idx}"]`) as HTMLInputElement;
+        if (slider && target !== slider) slider.value = target.value;
+        if (num && target !== num) num.value = parseFloat(target.value).toFixed(4);
+        updateWeightSum();
+      }
+    });
+
+    // Add/remove channels
+    document.getElementById('btn-add-ch')!.addEventListener('click', () => {
+      nChannels++;
+      channelValues.push(0.5);
+      weightValues.push(0);
+      renderInputs();
+    });
+    document.getElementById('btn-rm-ch')!.addEventListener('click', () => {
+      if (nChannels > 2) {
+        nChannels--;
+        channelValues.pop();
+        weightValues.pop();
+        renderInputs();
+      }
+    });
+
+    // Uniform weights
+    document.getElementById('btn-uniform')!.addEventListener('click', () => {
+      weightValues = Array(nChannels).fill(1.0 / nChannels);
+      renderInputs();
+    });
+
+    // Compute button
+    document.getElementById('btn-compute')!.addEventListener('click', compute);
+  }
+
+  function updateWeightSum() {
+    const sum = weightValues.reduce((a, b) => a + b, 0);
+    const el = document.getElementById('weight-sum')!;
+    el.textContent = `Σw = ${sum.toFixed(4)}`;
+    el.className = Math.abs(sum - 1.0) < 0.01
+      ? 'text-xs text-green-400 mt-2'
+      : 'text-xs text-red-400 mt-2';
+  }
+
+  function compute() {
+    const result = computeKernel(channelValues, weightValues);
+    const { regime, isCritical } = classifyRegime(result);
+    const identities = verifyIdentities(result);
+
+    // Show results panel
+    document.getElementById('results-panel')!.classList.remove('hidden');
+
+    // Regime badge
+    const badge = document.getElementById('regime-badge')!;
+    const colors = REGIME_COLORS[isCritical ? 'CRITICAL' : regime];
+    badge.style.backgroundColor = colors.bg;
+    badge.style.color = colors.text;
+    badge.style.borderColor = colors.border;
+    badge.className = 'text-center py-3 rounded-lg font-bold text-lg border-2';
+    badge.textContent = isCritical ? `${regime} + CRITICAL` : regime;
+
+    // Invariants grid
+    const grid = document.getElementById('invariants-grid')!;
+    const symbols = KERNEL_SYMBOLS;
+    const entries = [
+      { key: 'F', value: result.F, sym: symbols.F },
+      { key: 'omega', value: result.omega, sym: symbols.omega },
+      { key: 'S', value: result.S, sym: symbols.S },
+      { key: 'C', value: result.C, sym: symbols.C },
+      { key: 'kappa', value: result.kappa, sym: symbols.kappa },
+      { key: 'IC', value: result.IC, sym: symbols.IC },
+    ];
+    grid.innerHTML = entries.map(e => `
+      <div class="bg-kernel-800 rounded-lg p-3 border border-kernel-700">
+        <div class="text-xs text-kernel-500">${e.sym.name} (${e.sym.symbol})</div>
+        <div class="text-lg font-mono font-bold text-kernel-100">${e.value.toFixed(6)}</div>
+        <div class="text-xs text-kernel-600 mt-1">${e.sym.latin}</div>
+      </div>
+    `).join('');
+
+    // Add heterogeneity gap
+    grid.innerHTML += `
+      <div class="bg-kernel-800 rounded-lg p-3 border border-kernel-700 col-span-2 md:col-span-3">
+        <div class="flex justify-between items-center">
+          <span class="text-xs text-kernel-500">Heterogeneity Gap (Δ = F − IC)</span>
+          <span class="text-lg font-mono font-bold ${result.delta > 0.1 ? 'text-amber-400' : 'text-kernel-100'}">${result.delta.toFixed(6)}</span>
+        </div>
+        <div class="w-full bg-kernel-900 rounded-full h-2 mt-2">
+          <div class="h-2 rounded-full transition-all ${result.delta > 0.3 ? 'bg-red-500' : result.delta > 0.1 ? 'bg-amber-500' : 'bg-green-500'}"
+            style="width: ${Math.min(result.delta * 100, 100)}%"></div>
+        </div>
+      </div>
+    `;
+
+    // Identity checks
+    const idContainer = document.getElementById('identity-checks')!;
+    idContainer.innerHTML = identities.map(check => `
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-kernel-300">
+          <span class="${check.pass ? 'text-green-400' : 'text-red-400'}">${check.pass ? '✓' : '✗'}</span>
+          ${check.name}: ${check.formula}
+        </span>
+        <span class="font-mono text-xs ${check.pass ? 'text-green-400' : 'text-red-400'}">
+          |residual| = ${check.residual.toExponential(2)}
+        </span>
+      </div>
+    `).join('');
+
+    // Seam budget
+    updateSeam(result);
+
+    // Re-attach seam listeners
+    document.getElementById('seam-R')!.addEventListener('input', () => updateSeam(result));
+    document.getElementById('seam-tauR')!.addEventListener('input', () => updateSeam(result));
+  }
+
+  function updateSeam(result: KernelResult) {
+    const R = parseFloat((document.getElementById('seam-R') as HTMLInputElement).value);
+    const tauR = parseFloat((document.getElementById('seam-tauR') as HTMLInputElement).value);
+    const seam = computeSeamBudget(result.omega, result.C, R, tauR);
+
+    const container = document.getElementById('seam-results')!;
+    container.innerHTML = `
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-kernel-800 rounded p-2">
+          <span class="text-kernel-500">Γ(ω)</span>
+          <span class="float-right font-mono text-kernel-200">${seam.gamma.toFixed(6)}</span>
+        </div>
+        <div class="bg-kernel-800 rounded p-2">
+          <span class="text-kernel-500">D_ω (drift debit)</span>
+          <span class="float-right font-mono text-kernel-200">${seam.D_omega.toFixed(6)}</span>
+        </div>
+        <div class="bg-kernel-800 rounded p-2">
+          <span class="text-kernel-500">D_C (curvature debit)</span>
+          <span class="float-right font-mono text-kernel-200">${seam.D_C.toFixed(6)}</span>
+        </div>
+        <div class="bg-kernel-800 rounded p-2">
+          <span class="text-kernel-500">Δκ (budget)</span>
+          <span class="float-right font-mono text-kernel-200">${seam.deltaKappa.toFixed(6)}</span>
+        </div>
+      </div>
+      <div class="mt-2 p-2 rounded text-center font-bold text-sm ${seam.pass ? 'bg-green-900/50 text-green-400 border border-green-700' : 'bg-red-900/50 text-red-400 border border-red-700'}">
+        Seam ${seam.pass ? 'PASS' : 'FAIL'} — |s| = ${Math.abs(seam.residual).toFixed(6)} ${seam.pass ? '≤' : '>'} tol=${0.005}
+      </div>
+    `;
+  }
+
+  // Initialize on DOM ready
+  init();
+</script>

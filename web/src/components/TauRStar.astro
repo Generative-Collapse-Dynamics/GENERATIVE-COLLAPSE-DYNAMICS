@@ -1,0 +1,289 @@
+---
+/**
+ * τ_R* Thermodynamic Diagnostic
+ * Port of: dashboard/pages_diagnostic.py render_tau_r_star_page()
+ *
+ * Canvas-based heatmap of τ_R* across the ω–C plane.
+ * Shows the thermodynamic return time diagnostic with interactive controls.
+ */
+---
+
+<div id="tau-diagnostic" class="space-y-4">
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">τ_R* Thermodynamic Diagnostic</h2>
+    <p class="text-kernel-400 text-sm">
+      τ_R* = (1 − ω) / (Γ(ω) + α·C + ε) measures how favorable return conditions are.
+      Higher τ_R* → easier return from collapse. The heatmap shows τ_R* across the ω–C plane.
+    </p>
+  </div>
+
+  <!-- Single-point calculator -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Point Calculator</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div>
+        <label class="text-xs text-kernel-500">ω (Drift)</label>
+        <input id="tau-omega" type="range" min="0" max="0.999" step="0.001" value="0.15"
+          class="w-full h-1.5 accent-amber-500" />
+        <span id="tau-omega-val" class="text-xs text-kernel-400 font-mono">0.150</span>
+      </div>
+      <div>
+        <label class="text-xs text-kernel-500">C (Curvature)</label>
+        <input id="tau-C" type="range" min="0" max="1" step="0.001" value="0.1"
+          class="w-full h-1.5 accent-blue-400" />
+        <span id="tau-C-val" class="text-xs text-kernel-400 font-mono">0.100</span>
+      </div>
+      <div>
+        <label class="text-xs text-kernel-500">R (Return rate)</label>
+        <input id="tau-R" type="range" min="0" max="5" step="0.01" value="1.0"
+          class="w-full h-1.5 accent-green-400" />
+        <span id="tau-R-val" class="text-xs text-kernel-400 font-mono">1.000</span>
+      </div>
+      <div>
+        <label class="text-xs text-kernel-500">Δκ (memory)</label>
+        <input id="tau-dk" type="range" min="-1" max="1" step="0.01" value="0"
+          class="w-full h-1.5 accent-purple-400" />
+        <span id="tau-dk-val" class="text-xs text-kernel-400 font-mono">0.000</span>
+      </div>
+    </div>
+
+    <!-- Computed values -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4" id="tau-computed">
+      <!-- Filled by script -->
+    </div>
+  </div>
+
+  <!-- Heatmap -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">τ_R* Heatmap (ω × C)</h3>
+    <div class="flex gap-4">
+      <canvas id="tau-canvas" width="400" height="400"
+        class="flex-1 max-w-[400px] cursor-crosshair rounded border border-kernel-600"
+        style="image-rendering: pixelated;">
+      </canvas>
+      <!-- Color legend -->
+      <div class="flex flex-col justify-between text-xs text-kernel-500 w-16">
+        <span>High τ_R*</span>
+        <div class="flex-1 my-2 rounded" id="legend-gradient"></div>
+        <span>Low τ_R*</span>
+      </div>
+    </div>
+    <div class="flex justify-between text-xs text-kernel-500 mt-1 max-w-[400px]">
+      <span>ω = 0</span>
+      <span>ω →</span>
+      <span>ω = 1</span>
+    </div>
+  </div>
+
+  <!-- Drift cost curve Γ(ω) -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Drift Cost Γ(ω) = ω³/(1−ω+ε)</h3>
+    <canvas id="gamma-canvas" width="600" height="200"
+      class="w-full max-w-[600px] rounded border border-kernel-600">
+    </canvas>
+    <div class="flex justify-between text-xs text-kernel-500 mt-1 max-w-[600px]">
+      <span>ω = 0</span>
+      <span>ω₀ ≈ 0.038</span>
+      <span>ω_trap ≈ 0.318</span>
+      <span>ω = 1</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { computeTauRStar, computeRCritical, gammaOmega, costCurvature, computeSeamBudget } from '../lib/kernel';
+  import { EPSILON, P_EXPONENT, ALPHA, OMEGA_TRAP, C_STAR } from '../lib/constants';
+
+  // Elements
+  const omegaSlider = document.getElementById('tau-omega') as HTMLInputElement;
+  const cSlider = document.getElementById('tau-C') as HTMLInputElement;
+  const rSlider = document.getElementById('tau-R') as HTMLInputElement;
+  const dkSlider = document.getElementById('tau-dk') as HTMLInputElement;
+
+  // Render τ_R* heatmap
+  function renderHeatmap() {
+    const canvas = document.getElementById('tau-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const res = 200;
+    canvas.width = res;
+    canvas.height = res;
+
+    const imageData = ctx.createImageData(res, res);
+
+    // Find max τ_R* for normalization
+    let maxTau = 0;
+    const vals: number[][] = [];
+    for (let py = 0; py < res; py++) {
+      vals[py] = [];
+      const C = 1.0 - py / (res - 1); // top=1, bottom=0
+      for (let px = 0; px < res; px++) {
+        const omega = px / (res - 1);
+        const tau = computeTauRStar(omega, C);
+        vals[py][px] = tau;
+        if (isFinite(tau) && tau > maxTau) maxTau = tau;
+      }
+    }
+
+    // Render pixels
+    for (let py = 0; py < res; py++) {
+      for (let px = 0; px < res; px++) {
+        const tau = vals[py][px];
+        const norm = isFinite(tau) ? Math.min(tau / maxTau, 1.0) : 0;
+
+        // Color: blue (low) → green (mid) → yellow (high)
+        const idx = (py * res + px) * 4;
+        if (norm < 0.5) {
+          const t = norm * 2;
+          imageData.data[idx] = Math.floor(10 * (1 - t));
+          imageData.data[idx + 1] = Math.floor(80 * t);
+          imageData.data[idx + 2] = Math.floor(120 * (1 - t) + 40 * t);
+        } else {
+          const t = (norm - 0.5) * 2;
+          imageData.data[idx] = Math.floor(40 * t + 10);
+          imageData.data[idx + 1] = Math.floor(80 + 120 * t);
+          imageData.data[idx + 2] = Math.floor(40 * (1 - t));
+        }
+        imageData.data[idx + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    // Draw regime boundary lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+
+    // ω = 0.038 (stable boundary)
+    const x038 = Math.floor(0.038 * (res - 1));
+    ctx.beginPath(); ctx.moveTo(x038, 0); ctx.lineTo(x038, res); ctx.stroke();
+
+    // ω = 0.30 (collapse boundary)
+    const x030 = Math.floor(0.30 * (res - 1));
+    ctx.beginPath(); ctx.moveTo(x030, 0); ctx.lineTo(x030, res); ctx.stroke();
+
+    ctx.setLineDash([]);
+
+    // Labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px monospace';
+    ctx.fillText('C ↑', 3, 12);
+    ctx.fillText('ω →', res - 30, res - 4);
+  }
+
+  // Render Γ(ω) curve
+  function renderGammaCurve() {
+    const canvas = document.getElementById('gamma-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0, 0, W, H);
+
+    // Compute Γ(ω) for ω ∈ [0, 0.999]
+    const points: [number, number][] = [];
+    let maxGamma = 0;
+
+    for (let i = 0; i < W; i++) {
+      const omega = (i / (W - 1)) * 0.999;
+      const gamma = gammaOmega(omega);
+      if (isFinite(gamma)) maxGamma = Math.max(maxGamma, gamma);
+      points.push([omega, gamma]);
+    }
+
+    // Cap for visualization
+    const capGamma = Math.min(maxGamma, 50);
+
+    // Draw curve
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    for (let i = 0; i < points.length; i++) {
+      const [omega, gamma] = points[i];
+      const x = (omega / 0.999) * W;
+      const y = H - (Math.min(gamma, capGamma) / capGamma) * (H - 20);
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Mark ω = 0.038 (stable boundary)
+    ctx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
+    ctx.setLineDash([4, 4]);
+    const x038 = (0.038 / 0.999) * W;
+    ctx.beginPath(); ctx.moveTo(x038, 0); ctx.lineTo(x038, H); ctx.stroke();
+
+    // Mark ω_trap ≈ 0.318
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+    const xTrap = (OMEGA_TRAP / 0.999) * W;
+    ctx.beginPath(); ctx.moveTo(xTrap, 0); ctx.lineTo(xTrap, H); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Axis labels
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px monospace';
+    ctx.fillText('Γ(ω)', 5, 12);
+    ctx.fillText(`max ≈ ${capGamma.toFixed(1)}`, W - 80, 12);
+  }
+
+  // Render color legend
+  function renderLegend() {
+    const legend = document.getElementById('legend-gradient')!;
+    legend.style.background = 'linear-gradient(to bottom, #30c840, #105028, #0a0a78)';
+  }
+
+  // Update single-point display
+  function updatePoint() {
+    const omega = parseFloat(omegaSlider.value);
+    const C = parseFloat(cSlider.value);
+    const R = parseFloat(rSlider.value);
+    const dk = parseFloat(dkSlider.value);
+
+    document.getElementById('tau-omega-val')!.textContent = omega.toFixed(3);
+    document.getElementById('tau-C-val')!.textContent = C.toFixed(3);
+    document.getElementById('tau-R-val')!.textContent = R.toFixed(3);
+    document.getElementById('tau-dk-val')!.textContent = dk.toFixed(3);
+
+    const tauRStar = computeTauRStar(omega, C);
+    const gamma = gammaOmega(omega);
+    const dC = costCurvature(C);
+    const rCrit = computeRCritical(omega, C, 1.0);
+
+    // Phase determination
+    let phase: string;
+    let phaseColor: string;
+    if (tauRStar > 10) { phase = 'Favorable Return'; phaseColor = 'text-green-400'; }
+    else if (tauRStar > 1) { phase = 'Marginal'; phaseColor = 'text-yellow-400'; }
+    else if (tauRStar > 0.1) { phase = 'Difficult'; phaseColor = 'text-orange-400'; }
+    else { phase = 'Trapped'; phaseColor = 'text-red-400'; }
+
+    const container = document.getElementById('tau-computed')!;
+    container.innerHTML = [
+      { label: 'τ_R*', value: tauRStar.toFixed(4), color: phaseColor },
+      { label: 'Γ(ω)', value: gamma.toFixed(6), color: 'text-kernel-200' },
+      { label: 'D_C', value: dC.toFixed(6), color: 'text-kernel-200' },
+      { label: 'R_crit', value: rCrit.toFixed(4), color: 'text-kernel-200' },
+      { label: 'Phase', value: phase, color: phaseColor },
+    ].map(v => `
+      <div class="bg-kernel-800 rounded p-2 text-center">
+        <div class="text-xs text-kernel-500">${v.label}</div>
+        <div class="font-mono text-sm ${v.color}">${v.value}</div>
+      </div>
+    `).join('');
+  }
+
+  // Attach listeners
+  [omegaSlider, cSlider, rSlider, dkSlider].forEach(el => {
+    el.addEventListener('input', updatePoint);
+  });
+
+  // Initialize
+  renderHeatmap();
+  renderGammaCurve();
+  renderLegend();
+  updatePoint();
+</script>

@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GeometryExplorer from '../components/GeometryExplorer.astro';
+---
+
+<BaseLayout title="Geometry Explorer — GCD">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Geometry Explorer</h1>
+      <p class="text-kernel-400">
+        Explore the Fisher-Bernoulli manifold: flat metric, S + κ projection,
+        equator convergence, and the integrity bound IC ≤ F visualized.
+      </p>
+    </div>
+    <GeometryExplorer />
+  </div>
+</BaseLayout>

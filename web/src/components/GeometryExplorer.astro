@@ -1,0 +1,260 @@
+---
+/**
+ * Geometry Explorer
+ * Port of: dashboard/pages_advanced.py render_geometry_page()
+ *
+ * Visualizes the Fisher-Bernoulli manifold structure:
+ * flat metric g_F(θ) = 1, S + κ projection, equator convergence.
+ */
+---
+
+<div id="geometry-explorer" class="space-y-4">
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">Geometry Explorer</h2>
+    <p class="text-kernel-400 text-sm">
+      The Bernoulli manifold is flat in Fisher coordinates: g_F(θ) = 1.
+      S and κ are projections of one function: f(θ) = 2cos²θ·ln(tan θ).
+      Explore these structures interactively.
+    </p>
+  </div>
+
+  <!-- S + κ curve -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">f(c) = S(c) + κ(c) — The One Function</h3>
+    <canvas id="sk-canvas" width="600" height="300"
+      class="w-full max-w-[600px] rounded border border-kernel-600">
+    </canvas>
+    <div class="grid grid-cols-3 gap-2 mt-2 text-xs text-kernel-500 max-w-[600px]">
+      <span class="text-amber-400">S(c) — Bernoulli field entropy</span>
+      <span class="text-blue-400">κ(c) — Log-integrity</span>
+      <span class="text-green-400">f(c) = S + κ — Combined</span>
+    </div>
+    <div class="mt-2 text-xs text-kernel-500">
+      Note: f(1/2) = 0 exactly — the equator is a zero of the combined function.
+    </div>
+  </div>
+
+  <!-- IC ≤ F visualization -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">IC ≤ F — The Integrity Bound</h3>
+    <p class="text-kernel-500 text-xs mb-2">
+      For n = 2 channels with equal weights, scan c₁ × c₂ and verify IC ≤ F everywhere.
+      The gap Δ = F − IC measures channel heterogeneity.
+    </p>
+    <canvas id="icf-canvas" width="300" height="300"
+      class="max-w-[300px] rounded border border-kernel-600 cursor-crosshair"
+      style="image-rendering: pixelated;">
+    </canvas>
+    <div class="grid grid-cols-2 gap-2 mt-2 text-xs max-w-[300px]">
+      <span class="text-kernel-500">x-axis: c₁ (0 → 1)</span>
+      <span class="text-kernel-500">y-axis: c₂ (0 → 1)</span>
+    </div>
+    <div id="icf-hover" class="text-xs text-kernel-400 font-mono mt-1"></div>
+  </div>
+
+  <!-- Key geometric facts -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Geometric Facts (Verified to Machine Precision)</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="geo-facts"></div>
+  </div>
+</div>
+
+<script>
+  import { computeKernel } from '../lib/kernel';
+  import { EPSILON, C_STAR, OMEGA_TRAP } from '../lib/constants';
+
+  // Bernoulli entropy for single channel
+  function singleS(c: number): number {
+    const eps = EPSILON;
+    const cc = Math.max(eps, Math.min(1 - eps, c));
+    return -(cc * Math.log(cc) + (1 - cc) * Math.log(1 - cc));
+  }
+
+  // Log-integrity for single channel
+  function singleKappa(c: number): number {
+    const eps = EPSILON;
+    return Math.log(Math.max(c, eps));
+  }
+
+  // S + κ curve
+  function renderSKCurve() {
+    const canvas = document.getElementById('sk-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0, 0, W, H);
+
+    const N = 500;
+    const sVals: number[] = [];
+    const kVals: number[] = [];
+    const fVals: number[] = [];
+
+    for (let i = 0; i < N; i++) {
+      const c = 0.001 + (0.998) * (i / (N - 1));
+      const s = singleS(c);
+      const k = singleKappa(c);
+      sVals.push(s);
+      kVals.push(k);
+      fVals.push(s + k);
+    }
+
+    // Find range
+    const allVals = [...sVals, ...kVals, ...fVals];
+    const minY = Math.min(...allVals) - 0.1;
+    const maxY = Math.max(...allVals) + 0.1;
+
+    // Mapping
+    const mapX = (i: number) => (i / (N - 1)) * W;
+    const mapY = (v: number) => H - ((v - minY) / (maxY - minY)) * H;
+
+    // Zero line
+    const y0 = mapY(0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
+
+    // c=1/2 line
+    const x_half = mapX(Math.floor((0.5 - 0.001) / 0.998 * (N - 1)));
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(x_half, 0); ctx.lineTo(x_half, H); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Draw curves
+    function drawCurve(vals: number[], color: string, width: number) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      for (let i = 0; i < vals.length; i++) {
+        const x = mapX(i);
+        const y = mapY(vals[i]);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    drawCurve(sVals, '#f59e0b', 2);  // S — amber
+    drawCurve(kVals, '#3b82f6', 2);   // κ — blue
+    drawCurve(fVals, '#34d399', 2.5); // f — green
+
+    // Labels
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px monospace';
+    ctx.fillText('c = 0', 5, H - 5);
+    ctx.fillText('c = 1', W - 35, H - 5);
+    ctx.fillText('c = 1/2', x_half + 4, 12);
+    ctx.fillText('f(1/2) = 0', x_half + 4, 24);
+  }
+
+  // IC ≤ F heatmap
+  function renderICFHeatmap() {
+    const canvas = document.getElementById('icf-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const res = 200;
+    canvas.width = res;
+    canvas.height = res;
+
+    const imageData = ctx.createImageData(res, res);
+
+    for (let py = 0; py < res; py++) {
+      const c2 = 1.0 - py / (res - 1); // top = 1
+      for (let px = 0; px < res; px++) {
+        const c1 = px / (res - 1);
+        const w = [0.5, 0.5];
+        const result = computeKernel([c1, c2], w);
+        const delta = result.F - result.IC;
+
+        const idx = (py * res + px) * 4;
+        // Color by Δ: small gap = green, large gap = red
+        const norm = Math.min(delta / 0.5, 1.0);
+        imageData.data[idx] = Math.floor(norm * 200);
+        imageData.data[idx + 1] = Math.floor((1 - norm) * 150);
+        imageData.data[idx + 2] = 30;
+        imageData.data[idx + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    // Diagonal line (c1 = c2 → Δ = 0)
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(0, res - 1);
+    ctx.lineTo(res - 1, 0);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Hover listener
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = res / rect.width;
+      const scaleY = res / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      const c1 = px / (res - 1);
+      const c2 = 1.0 - py / (res - 1);
+      if (c1 < 0 || c1 > 1 || c2 < 0 || c2 > 1) return;
+
+      const result = computeKernel([c1, c2], [0.5, 0.5]);
+      const el = document.getElementById('icf-hover')!;
+      el.textContent = `c₁=${c1.toFixed(3)} c₂=${c2.toFixed(3)} | F=${result.F.toFixed(4)} IC=${result.IC.toFixed(4)} Δ=${result.delta.toFixed(4)} IC≤F: ${result.IC <= result.F + 1e-15 ? '✓' : '✗'}`;
+    });
+  }
+
+  // Geometric facts
+  function renderFacts() {
+    const facts = [
+      {
+        title: 'Flat Manifold',
+        value: 'g_F(θ) = 1',
+        desc: 'The Fisher metric on the Bernoulli manifold is exactly 1 everywhere. All structure comes from the embedding.',
+      },
+      {
+        title: 'One Function',
+        value: 'f(θ) = 2cos²θ·ln(tan θ)',
+        desc: 'S and κ are projections of this single function, verified to < 10⁻¹⁶ residual.',
+      },
+      {
+        title: 'Equator Convergence',
+        value: 'f(1/2) = 0.0',
+        desc: 'At c = 1/2, S + κ = 0 exactly. This is a four-way convergence point (quintuple fixed point).',
+      },
+      {
+        title: 'Cardano Root',
+        value: 'p = 3: x³ + x − 1 = 0',
+        desc: `p = 3 is the unique integer where ω_trap ≈ ${OMEGA_TRAP} is a Cardano root.`,
+      },
+      {
+        title: 'Self-Dual Fixed Point',
+        value: `c* = ${C_STAR}`,
+        desc: 'Logistic self-dual fixed point that maximizes S + κ per channel.',
+      },
+      {
+        title: 'Solvability Condition',
+        value: 'IC ≤ F always',
+        desc: 'For n=2 channels, c₁,₂ = F ± √(F²−IC²) requires IC ≤ F for real solutions. This is the integrity bound.',
+      },
+    ];
+
+    const container = document.getElementById('geo-facts')!;
+    container.innerHTML = facts.map(f => `
+      <div class="bg-kernel-800 rounded-lg p-3 border border-kernel-700">
+        <div class="text-amber-400 text-xs font-medium">${f.title}</div>
+        <div class="font-mono text-sm text-kernel-200 my-1">${f.value}</div>
+        <div class="text-kernel-500 text-xs">${f.desc}</div>
+      </div>
+    `).join('');
+  }
+
+  // Initialize
+  renderSKCurve();
+  renderICFHeatmap();
+  renderFacts();
+</script>

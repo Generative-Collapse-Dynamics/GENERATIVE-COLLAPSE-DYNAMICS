@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import KernelCalculator from '../components/KernelCalculator.astro';
+---
+
+<BaseLayout title="Kernel Calculator — GCD">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Kernel Calculator</h1>
+      <p class="text-kernel-400">
+        Interactive computation of the GCD kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC).
+        All computation runs client-side in your browser using the TypeScript kernel port.
+      </p>
+    </div>
+    <KernelCalculator />
+  </div>
+</BaseLayout>

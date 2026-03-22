@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LedgerViewer from '../components/LedgerViewer.astro';
+---
+
+<BaseLayout title="Domain Overview — GCD">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Domain Overview &amp; Ledger</h1>
+      <p class="text-kernel-400">
+        Overview of all 20 closure domains with kernel metrics, regime classification,
+        and cross-domain comparison. Kernel computed in-browser for each domain trace.
+      </p>
+    </div>
+    <LedgerViewer />
+  </div>
+</BaseLayout>

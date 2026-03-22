@@ -1,0 +1,256 @@
+---
+/**
+ * Interactive Regime Phase Diagram
+ * Port of: dashboard/pages_core.py render_regime_page()
+ *
+ * Canvas-based 2D phase diagram showing regime boundaries.
+ * Computes kernel across a grid and renders in real-time.
+ */
+---
+
+<div id="regime-diagram" class="space-y-4">
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">Regime Phase Diagram</h2>
+    <p class="text-kernel-400 text-sm">
+      Two-channel phase space showing regime boundaries. Drag the cursor to explore.
+      Colors: <span class="text-green-400">Stable (12.5%)</span> ·
+      <span class="text-yellow-400">Watch (24.4%)</span> ·
+      <span class="text-red-400">Collapse (63.1%)</span>
+    </p>
+  </div>
+
+  <!-- Controls -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-3">
+      <label class="text-xs text-kernel-500">Channels (n)</label>
+      <input id="regime-n" type="number" min="2" max="64" value="8"
+        class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm" />
+    </div>
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-3">
+      <label class="text-xs text-kernel-500">Resolution</label>
+      <select id="regime-res"
+        class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm">
+        <option value="50">50×50 (fast)</option>
+        <option value="100" selected>100×100</option>
+        <option value="200">200×200 (detailed)</option>
+      </select>
+    </div>
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-3">
+      <label class="text-xs text-kernel-500">X-axis</label>
+      <select id="regime-x"
+        class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm">
+        <option value="omega" selected>ω (Drift)</option>
+        <option value="F">F (Fidelity)</option>
+        <option value="C">C (Curvature)</option>
+      </select>
+    </div>
+    <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-3">
+      <label class="text-xs text-kernel-500">Y-axis</label>
+      <select id="regime-y"
+        class="w-full mt-1 px-2 py-1 bg-kernel-800 border border-kernel-600 rounded text-kernel-200 text-sm">
+        <option value="C" selected>C (Curvature)</option>
+        <option value="S">S (Entropy)</option>
+        <option value="IC">IC (Integrity)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <canvas id="phase-canvas" width="600" height="600"
+      class="w-full max-w-[600px] mx-auto cursor-crosshair rounded border border-kernel-600"
+      style="image-rendering: pixelated;">
+    </canvas>
+  </div>
+
+  <!-- Hover info -->
+  <div id="hover-info" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 text-sm text-kernel-300 hidden">
+    <div class="grid grid-cols-3 md:grid-cols-6 gap-2" id="hover-values"></div>
+  </div>
+
+  <!-- Regime partition -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Regime Partition (Fisher Space)</h3>
+    <div class="flex gap-2 items-center">
+      <div class="flex-1">
+        <div class="flex h-6 rounded overflow-hidden">
+          <div class="bg-green-700" style="width: 12.5%"></div>
+          <div class="bg-yellow-700" style="width: 24.4%"></div>
+          <div class="bg-red-700" style="width: 63.1%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-kernel-500 mt-1">
+          <span>Stable 12.5%</span>
+          <span>Watch 24.4%</span>
+          <span>Collapse 63.1%</span>
+        </div>
+      </div>
+    </div>
+    <p class="text-xs text-kernel-500 mt-2 italic">
+      Stability is rare — 87.5% of the manifold lies outside it.
+      Return from collapse to stability is what the axiom measures.
+    </p>
+  </div>
+</div>
+
+<script>
+  import { computeKernel, classifyRegime } from '../lib/kernel';
+  import type { KernelResult } from '../lib/kernel';
+
+  const canvas = document.getElementById('phase-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+  const hoverInfo = document.getElementById('hover-info')!;
+  const hoverValues = document.getElementById('hover-values')!;
+
+  const COLORS = {
+    STABLE: [6, 95, 70],      // green
+    WATCH: [120, 53, 15],     // amber
+    COLLAPSE: [127, 29, 29],  // red
+  };
+
+  const CRITICAL_TINT = [88, 28, 135]; // purple overlay
+
+  let currentImageData: ImageData | null = null;
+  let currentResults: (KernelResult | null)[][] = [];
+
+  function renderPhaseDiagram() {
+    const res = parseInt((document.getElementById('regime-res') as HTMLSelectElement).value);
+    const nChannels = parseInt((document.getElementById('regime-n') as HTMLInputElement).value);
+
+    canvas.width = res;
+    canvas.height = res;
+
+    const imageData = ctx.createImageData(res, res);
+    currentResults = [];
+
+    // Build grid: x = c1 (0→1), y = c2 (0→1), other channels fixed at 0.5
+    for (let py = 0; py < res; py++) {
+      const row: (KernelResult | null)[] = [];
+      const c2 = 1.0 - (py / (res - 1)); // y-axis top=1, bottom=0
+
+      for (let px = 0; px < res; px++) {
+        const c1 = px / (res - 1); // x-axis left=0, right=1
+
+        // Build trace vector: [c1, c2, 0.5, 0.5, ...]
+        const c = Array(nChannels).fill(0.5);
+        c[0] = c1;
+        c[1] = c2;
+
+        const result = computeKernel(c);
+        const { regime, isCritical } = classifyRegime(result);
+        row.push(result);
+
+        const color = COLORS[regime];
+        const idx = (py * res + px) * 4;
+
+        if (isCritical) {
+          // Blend with purple
+          imageData.data[idx] = Math.floor((color[0] + CRITICAL_TINT[0]) / 2);
+          imageData.data[idx + 1] = Math.floor((color[1] + CRITICAL_TINT[1]) / 2);
+          imageData.data[idx + 2] = Math.floor((color[2] + CRITICAL_TINT[2]) / 2);
+        } else {
+          imageData.data[idx] = color[0];
+          imageData.data[idx + 1] = color[1];
+          imageData.data[idx + 2] = color[2];
+        }
+        imageData.data[idx + 3] = 255;
+      }
+      currentResults.push(row);
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    currentImageData = imageData;
+
+    // Draw regime boundary lines (ω = 0.038 and ω = 0.30)
+    // These are approximate and depend on trace structure, so we overlay grid lines
+    drawGridLines(res);
+  }
+
+  function drawGridLines(res: number) {
+    ctx.save();
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+
+    // Grid at 0.25 intervals
+    for (let v = 0.25; v < 1; v += 0.25) {
+      const px_x = Math.floor(v * (res - 1));
+      const px_y = Math.floor((1 - v) * (res - 1));
+
+      ctx.beginPath();
+      ctx.moveTo(px_x, 0);
+      ctx.lineTo(px_x, res);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, px_y);
+      ctx.lineTo(res, px_y);
+      ctx.stroke();
+    }
+
+    // Labels
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#fff';
+    ctx.font = `${Math.max(10, res / 30)}px monospace`;
+    ctx.fillText('c₁ →', 5, res - 5);
+    ctx.save();
+    ctx.translate(12, res - 20);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('c₂ →', 0, 0);
+    ctx.restore();
+
+    // Corner labels
+    ctx.fillText('0', 2, res - 2);
+    ctx.fillText('1', res - 12, res - 2);
+
+    ctx.restore();
+  }
+
+  // Hover handler
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const px = Math.floor((e.clientX - rect.left) * scaleX);
+    const py = Math.floor((e.clientY - rect.top) * scaleY);
+
+    if (px < 0 || px >= canvas.width || py < 0 || py >= canvas.height) return;
+
+    const result = currentResults[py]?.[px];
+    if (!result) return;
+
+    const { regime, isCritical } = classifyRegime(result);
+
+    hoverInfo.classList.remove('hidden');
+    hoverValues.innerHTML = [
+      { label: 'F', value: result.F },
+      { label: 'ω', value: result.omega },
+      { label: 'S', value: result.S },
+      { label: 'C', value: result.C },
+      { label: 'κ', value: result.kappa },
+      { label: 'IC', value: result.IC },
+    ].map(v => `
+      <div class="bg-kernel-800 rounded p-1 text-center">
+        <div class="text-xs text-kernel-500">${v.label}</div>
+        <div class="font-mono text-xs">${v.value.toFixed(4)}</div>
+      </div>
+    `).join('') + `
+      <div class="bg-kernel-800 rounded p-1 text-center col-span-3 md:col-span-6">
+        <span class="text-xs ${regime === 'STABLE' ? 'text-green-400' : regime === 'WATCH' ? 'text-yellow-400' : 'text-red-400'}">
+          ${regime}${isCritical ? ' + CRITICAL' : ''} · Δ = ${result.delta.toFixed(4)}
+        </span>
+      </div>
+    `;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoverInfo.classList.add('hidden');
+  });
+
+  // Re-render on control changes
+  ['regime-res', 'regime-n', 'regime-x', 'regime-y'].forEach(id => {
+    document.getElementById(id)!.addEventListener('change', renderPhaseDiagram);
+  });
+
+  // Initial render
+  renderPhaseDiagram();
+</script>

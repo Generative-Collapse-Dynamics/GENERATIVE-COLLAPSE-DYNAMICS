@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RosettaTranslator from '../components/RosettaTranslator.astro';
+---
+
+<BaseLayout title="Rosetta Translation — GCD">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Rosetta Translation</h1>
+      <p class="text-kernel-400">
+        Cross-lens translation of the five words across 9 disciplinary lenses.
+        <em class="text-kernel-500">Significatio stabilis manet dum dialectus mutatur.</em>
+        — Meaning stays stable while dialect changes.
+      </p>
+    </div>
+    <RosettaTranslator />
+  </div>
+</BaseLayout>

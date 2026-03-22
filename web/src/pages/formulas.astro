@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FormulaBuilder from '../components/FormulaBuilder.astro';
+---
+
+<BaseLayout title="Formula Builder — GCD">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-kernel-100 mb-2">Formula Builder</h1>
+      <p class="text-kernel-400">
+        Build and evaluate kernel expressions with live results.
+        Bind variables to sliders and sweep expressions over ranges.
+      </p>
+    </div>
+    <FormulaBuilder />
+  </div>
+</BaseLayout>

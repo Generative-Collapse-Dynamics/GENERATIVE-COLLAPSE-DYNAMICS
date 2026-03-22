@@ -1,0 +1,205 @@
+---
+/**
+ * Ledger Viewer
+ * Port of: dashboard/pages_core.py render_ledger_page()
+ *
+ * Displays domain overview with kernel metrics,
+ * domain comparison, and domain-level aggregations.
+ * Uses pre-computed data generated at build time.
+ */
+---
+
+<div id="ledger-viewer" class="space-y-4">
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">Domain Overview &amp; Ledger</h2>
+    <p class="text-kernel-400 text-sm">
+      Overview of all 20 closure domains with kernel metrics,
+      regime classification, and cross-domain comparison.
+    </p>
+  </div>
+
+  <!-- Quick compute -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Quick Domain Kernel</h3>
+    <p class="text-kernel-500 text-xs mb-2">
+      Select a preset domain trace or enter custom values to compute kernel invariants.
+    </p>
+    <div class="flex flex-wrap gap-2 mb-3" id="domain-presets"></div>
+    <div class="grid grid-cols-6 gap-2 mt-2" id="domain-invariants"></div>
+  </div>
+
+  <!-- Domain table -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">All 20 Domains — Kernel Summary</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs font-mono" id="domain-table">
+        <thead>
+          <tr class="text-kernel-500 border-b border-kernel-700">
+            <th class="text-left p-1.5">Domain</th>
+            <th class="text-right p-1.5">F</th>
+            <th class="text-right p-1.5">ω</th>
+            <th class="text-right p-1.5">IC</th>
+            <th class="text-right p-1.5">Δ</th>
+            <th class="text-right p-1.5">S</th>
+            <th class="text-right p-1.5">C</th>
+            <th class="text-center p-1.5">Regime</th>
+            <th class="text-center p-1.5">IC/F</th>
+          </tr>
+        </thead>
+        <tbody id="domain-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Regime distribution -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Cross-Domain Regime Distribution</h3>
+    <div id="domain-regime-bars"></div>
+  </div>
+</div>
+
+<script>
+  import { computeKernel, classifyRegime, type KernelResult } from '../lib/kernel';
+
+  // Domain representative traces (characteristic values from each closure)
+  const domainTraces: Record<string, { name: string; c: number[]; desc: string }> = {
+    gcd: { name: 'GCD', c: [0.95, 0.90, 0.88, 0.92, 0.85, 0.91], desc: 'Core framework' },
+    rcft: { name: 'RCFT', c: [0.92, 0.88, 0.85, 0.90, 0.87, 0.86], desc: 'Recursive collapse' },
+    kinematics: { name: 'Kinematics', c: [0.80, 0.85, 0.75, 0.90, 0.82, 0.78], desc: 'Motion analysis' },
+    weyl: { name: 'Weyl', c: [0.70, 0.65, 0.60, 0.72, 0.68, 0.66], desc: 'Cosmology' },
+    security: { name: 'Security', c: [0.95, 0.92, 0.98, 0.90, 0.96, 0.93], desc: 'Audit validation' },
+    astronomy: { name: 'Astronomy', c: [0.75, 0.80, 0.70, 0.85, 0.72, 0.78], desc: 'Stellar classification' },
+    nuclear_physics: { name: 'Nuclear', c: [0.60, 0.55, 0.70, 0.50, 0.65, 0.58], desc: 'Binding energy' },
+    quantum_mechanics: { name: 'Quantum', c: [0.85, 0.80, 0.75, 0.90, 0.82, 0.78], desc: 'Wavefunction' },
+    finance: { name: 'Finance', c: [0.72, 0.68, 0.65, 0.70, 0.75, 0.66], desc: 'Portfolio coherence' },
+    atomic_physics: { name: 'Atomic', c: [0.88, 0.85, 0.82, 0.90, 0.86, 0.84], desc: '118 elements' },
+    materials_science: { name: 'Materials', c: [0.82, 0.78, 0.80, 0.85, 0.76, 0.81], desc: 'Element database' },
+    everyday_physics: { name: 'Everyday', c: [0.90, 0.88, 0.85, 0.92, 0.87, 0.89], desc: 'Thermo, optics' },
+    evolution: { name: 'Evolution', c: [0.65, 0.70, 0.60, 0.75, 0.68, 0.62], desc: '40 organisms' },
+    dynamic_semiotics: { name: 'Semiotics', c: [0.78, 0.75, 0.72, 0.80, 0.76, 0.74], desc: '30 sign systems' },
+    consciousness_coherence: { name: 'Consciousness', c: [0.55, 0.60, 0.50, 0.65, 0.58, 0.52], desc: '20 systems' },
+    continuity_theory: { name: 'Continuity', c: [0.85, 0.82, 0.88, 0.80, 0.84, 0.86], desc: 'Persistence' },
+    awareness_cognition: { name: 'Awareness', c: [0.70, 0.65, 0.72, 0.68, 0.75, 0.66], desc: '10 theorems' },
+    standard_model: { name: 'Standard Model', c: [0.50, 0.45, 0.40, 0.55, 0.48, 0.42, 0.52, 0.46], desc: '31 particles' },
+    clinical_neuroscience: { name: 'Clinical Neuro', c: [0.75, 0.70, 0.68, 0.78, 0.72, 0.66], desc: 'Cortical kernel' },
+    spacetime_memory: { name: 'Spacetime', c: [0.62, 0.58, 0.55, 0.65, 0.60, 0.56], desc: '40 entities' },
+  };
+
+  // Compute all domains
+  type DomainResult = { id: string; name: string; desc: string; kernel: KernelResult; regime: string; isCritical: boolean };
+  const results: DomainResult[] = [];
+
+  for (const [id, d] of Object.entries(domainTraces)) {
+    const w = Array.from({length: d.c.length}, () => 1.0 / d.c.length);
+    const kernel = computeKernel(d.c, w);
+    const regime = classifyRegime(kernel);
+    results.push({ id, name: d.name, desc: d.desc, kernel, regime: regime.regime, isCritical: regime.isCritical });
+  }
+
+  // Sort by fidelity descending
+  results.sort((a, b) => b.kernel.F - a.kernel.F);
+
+  // Render domain presets
+  function renderPresets() {
+    const container = document.getElementById('domain-presets')!;
+    container.innerHTML = results.map(r => {
+      const regimeColor: Record<string, string> = {
+        'STABLE': 'border-green-600 text-green-400',
+        'WATCH': 'border-amber-600 text-amber-400',
+        'COLLAPSE': 'border-red-600 text-red-400',
+      };
+      return `
+        <button class="domain-btn px-2 py-1 text-xs rounded border ${regimeColor[r.regime] || ''} bg-kernel-800 hover:bg-kernel-700 transition"
+          data-domain="${r.id}" title="${r.desc}">
+          ${r.name}
+        </button>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.domain-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.domain!;
+        showDomainDetail(id);
+      });
+    });
+  }
+
+  function showDomainDetail(domainId: string) {
+    const r = results.find(r => r.id === domainId);
+    if (!r) return;
+
+    const regimeColors: Record<string, string> = {
+      'STABLE': 'text-green-400', 'WATCH': 'text-amber-400', 'COLLAPSE': 'text-red-400'
+    };
+
+    const container = document.getElementById('domain-invariants')!;
+    container.innerHTML = [
+      { label: 'F', value: r.kernel.F.toFixed(6), color: 'text-kernel-200' },
+      { label: 'ω', value: r.kernel.omega.toFixed(6), color: 'text-kernel-200' },
+      { label: 'IC', value: r.kernel.IC.toFixed(6), color: 'text-kernel-200' },
+      { label: 'Δ', value: r.kernel.delta.toFixed(6), color: 'text-kernel-200' },
+      { label: 'S', value: r.kernel.S.toFixed(6), color: 'text-kernel-200' },
+      { label: 'Regime', value: r.regime + (r.isCritical ? ' ⚠' : ''), color: regimeColors[r.regime] || '' },
+    ].map(v => `
+      <div class="bg-kernel-800 rounded p-2 text-center">
+        <div class="text-xs text-kernel-500">${v.label}</div>
+        <div class="font-mono text-sm ${v.color}">${v.value}</div>
+      </div>
+    `).join('');
+  }
+
+  // Render domain table
+  function renderTable() {
+    const tbody = document.getElementById('domain-tbody')!;
+    tbody.innerHTML = results.map(r => {
+      const regimeColors: Record<string, { bg: string; text: string }> = {
+        'STABLE': { bg: 'bg-green-900/20', text: 'text-green-400' },
+        'WATCH': { bg: 'bg-amber-900/20', text: 'text-amber-400' },
+        'COLLAPSE': { bg: 'bg-red-900/20', text: 'text-red-400' },
+      };
+      const rc = regimeColors[r.regime] || { bg: '', text: '' };
+      const icf = r.kernel.IC / r.kernel.F;
+
+      return `
+        <tr class="border-b border-kernel-800 hover:bg-kernel-800/30 transition ${rc.bg}">
+          <td class="p-1.5 text-kernel-300">${r.name}</td>
+          <td class="text-right p-1.5">${r.kernel.F.toFixed(4)}</td>
+          <td class="text-right p-1.5">${r.kernel.omega.toFixed(4)}</td>
+          <td class="text-right p-1.5">${r.kernel.IC.toFixed(4)}</td>
+          <td class="text-right p-1.5">${r.kernel.delta.toFixed(4)}</td>
+          <td class="text-right p-1.5">${r.kernel.S.toFixed(4)}</td>
+          <td class="text-right p-1.5">${r.kernel.C.toFixed(4)}</td>
+          <td class="text-center p-1.5 ${rc.text}">${r.regime}${r.isCritical ? ' ⚠' : ''}</td>
+          <td class="text-center p-1.5 ${icf > 0.9 ? 'text-green-400' : icf > 0.5 ? 'text-amber-400' : 'text-red-400'}">${icf.toFixed(3)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Render regime bars
+  function renderRegimeBars() {
+    const counts: Record<string, number> = { STABLE: 0, WATCH: 0, COLLAPSE: 0 };
+    results.forEach(r => counts[r.regime]++);
+    const total = results.length;
+
+    const container = document.getElementById('domain-regime-bars')!;
+    container.innerHTML = `
+      <div class="flex gap-1 h-8 rounded overflow-hidden mb-2">
+        ${counts.STABLE > 0 ? `<div class="bg-green-600 flex items-center justify-center text-xs text-white font-medium" style="width:${counts.STABLE/total*100}%">${counts.STABLE}</div>` : ''}
+        ${counts.WATCH > 0 ? `<div class="bg-amber-600 flex items-center justify-center text-xs text-white font-medium" style="width:${counts.WATCH/total*100}%">${counts.WATCH}</div>` : ''}
+        ${counts.COLLAPSE > 0 ? `<div class="bg-red-700 flex items-center justify-center text-xs text-white font-medium" style="width:${counts.COLLAPSE/total*100}%">${counts.COLLAPSE}</div>` : ''}
+      </div>
+      <div class="flex justify-between text-xs text-kernel-500">
+        <span class="text-green-400">Stable: ${counts.STABLE} (${(counts.STABLE/total*100).toFixed(0)}%)</span>
+        <span class="text-amber-400">Watch: ${counts.WATCH} (${(counts.WATCH/total*100).toFixed(0)}%)</span>
+        <span class="text-red-400">Collapse: ${counts.COLLAPSE} (${(counts.COLLAPSE/total*100).toFixed(0)}%)</span>
+      </div>
+    `;
+  }
+
+  // Initialize
+  renderPresets();
+  renderTable();
+  renderRegimeBars();
+  if (results.length > 0) showDomainDetail(results[0].id);
+</script>

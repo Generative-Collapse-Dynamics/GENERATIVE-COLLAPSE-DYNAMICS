@@ -1,0 +1,191 @@
+---
+/**
+ * Rosetta Translator
+ * Port of: dashboard/pages_exploration.py render_rosetta_page()
+ *
+ * Interactive cross-lens translation of the five words.
+ * Shows how Drift, Fidelity, Roughness, Return, Integrity
+ * translate across 9 disciplinary lenses.
+ */
+---
+
+<div id="rosetta-translator" class="space-y-4">
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-kernel-100 mb-2">Rosetta Translation</h2>
+    <p class="text-kernel-400 text-sm">
+      The five words (Drift · Fidelity · Roughness · Return · Integrity) map across
+      disciplinary lenses so different fields can read each other's results in their
+      own dialect without losing auditability.
+      <em class="text-kernel-500">Significatio stabilis manet dum dialectus mutatur.</em>
+    </p>
+  </div>
+
+  <!-- Lens selector -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Select Lenses</h3>
+    <div class="flex flex-wrap gap-2" id="lens-buttons"></div>
+    <div class="mt-2">
+      <button id="lens-all" class="text-xs text-kernel-500 hover:text-kernel-300 transition">Select All</button>
+      <span class="text-kernel-700 mx-1">|</span>
+      <button id="lens-none" class="text-xs text-kernel-500 hover:text-kernel-300 transition">Clear</button>
+    </div>
+  </div>
+
+  <!-- Translation table -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Quinque Verba — Five-Word Translation</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm" id="rosetta-table">
+        <thead>
+          <tr class="border-b border-kernel-600 text-kernel-400">
+            <th class="text-left p-2 font-medium">Lens</th>
+            <th class="text-left p-2 font-medium text-amber-400">Drift</th>
+            <th class="text-left p-2 font-medium text-green-400">Fidelity</th>
+            <th class="text-left p-2 font-medium text-red-400">Roughness</th>
+            <th class="text-left p-2 font-medium text-blue-400">Return</th>
+          </tr>
+        </thead>
+        <tbody id="rosetta-body"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-kernel-600 mt-2">
+      Integrity is never asserted in the Rosetta; it is read holistically per lens
+      from the reconciled ledger and stance.
+    </p>
+  </div>
+
+  <!-- Word deep-dives -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Five Words — Operational Definitions</h3>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="word-cards"></div>
+  </div>
+
+  <!-- Conservation budget -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-2">Conservation Budget (Semantic Warranty)</h3>
+    <div class="text-center py-4">
+      <div class="font-mono text-lg text-kernel-200">
+        Δκ = R·τ_R − (D_ω + D_C)
+      </div>
+      <div class="font-mono text-sm text-kernel-400 mt-2">
+        I ≡ e<sup>κ</sup> &nbsp;(interpretive density, unitless, multiplicative)
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 text-xs text-center mt-2">
+      <div class="bg-kernel-800 rounded p-2">
+        <div class="text-blue-400 font-medium">Credit</div>
+        <div class="text-kernel-400">R·τ_R (Return × Re-entry delay)</div>
+      </div>
+      <div class="bg-kernel-800 rounded p-2">
+        <div class="text-amber-400 font-medium">Debit: Drift</div>
+        <div class="text-kernel-400">D_ω = Γ(ω) (drift cost closure)</div>
+      </div>
+      <div class="bg-kernel-800 rounded p-2">
+        <div class="text-red-400 font-medium">Debit: Roughness</div>
+        <div class="text-kernel-400">D_C = α·C (curvature cost)</div>
+      </div>
+    </div>
+    <div class="text-center text-xs text-kernel-500 mt-3">
+      The algebra is a warranty, not a gate. Authors write in prose; the ledger reconciles.
+      <em class="block mt-1">Algebra est cautio, non porta.</em>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { ROSETTA_LENSES, FIVE_WORDS } from '../lib/constants';
+
+  const selectedLenses = new Set<string>(ROSETTA_LENSES.map(l => l.id));
+
+  // Lens button colors
+  const lensColors: Record<string, string> = {
+    epistemology: 'bg-purple-700/40 border-purple-600 hover:bg-purple-700/60',
+    ontology: 'bg-blue-700/40 border-blue-600 hover:bg-blue-700/60',
+    phenomenology: 'bg-teal-700/40 border-teal-600 hover:bg-teal-700/60',
+    history: 'bg-amber-700/40 border-amber-600 hover:bg-amber-700/60',
+    policy: 'bg-red-700/40 border-red-600 hover:bg-red-700/60',
+    physics: 'bg-cyan-700/40 border-cyan-600 hover:bg-cyan-700/60',
+    finance: 'bg-green-700/40 border-green-600 hover:bg-green-700/60',
+    security: 'bg-orange-700/40 border-orange-600 hover:bg-orange-700/60',
+    semiotics: 'bg-indigo-700/40 border-indigo-600 hover:bg-indigo-700/60',
+  };
+
+  function renderButtons() {
+    const container = document.getElementById('lens-buttons')!;
+    container.innerHTML = ROSETTA_LENSES.map(lens => {
+      const active = selectedLenses.has(lens.id);
+      const colorClass = lensColors[lens.id] || 'bg-kernel-700 border-kernel-600';
+      return `
+        <button data-lens="${lens.id}"
+          class="lens-btn px-3 py-1.5 text-xs rounded border transition
+            ${active ? colorClass + ' text-white' : 'bg-kernel-800/40 border-kernel-700 text-kernel-500'}">
+          ${lens.name}
+        </button>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.lens-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.lens!;
+        if (selectedLenses.has(id)) selectedLenses.delete(id);
+        else selectedLenses.add(id);
+        renderButtons();
+        renderTable();
+      });
+    });
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('rosetta-body')!;
+    const activeLenses = ROSETTA_LENSES.filter(l => selectedLenses.has(l.id));
+
+    if (activeLenses.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-kernel-500 p-4">Select at least one lens.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = activeLenses.map(lens => `
+      <tr class="border-b border-kernel-800 hover:bg-kernel-800/30 transition">
+        <td class="p-2 font-medium text-kernel-300">${lens.name}</td>
+        <td class="p-2 text-amber-300/80 text-sm">${lens.drift}</td>
+        <td class="p-2 text-green-300/80 text-sm">${lens.fidelity}</td>
+        <td class="p-2 text-red-300/80 text-sm">${lens.roughness}</td>
+        <td class="p-2 text-blue-300/80 text-sm">${lens.return_}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderWordCards() {
+    const container = document.getElementById('word-cards')!;
+    const wordColors = ['amber', 'green', 'red', 'blue', 'purple'];
+
+    container.innerHTML = FIVE_WORDS.map((word, i) => `
+      <div class="bg-kernel-800 rounded-lg p-3 border border-kernel-700">
+        <div class="text-${wordColors[i]}-400 font-bold text-sm mb-1">${word.word}</div>
+        <div class="text-kernel-500 text-xs italic mb-2">${word.latin}</div>
+        <div class="text-kernel-400 text-xs">${word.operational}</div>
+        <div class="mt-2 pt-2 border-t border-kernel-700">
+          <span class="text-kernel-600 text-xs">${word.ledgerRole}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Select all / clear buttons
+  document.getElementById('lens-all')!.addEventListener('click', () => {
+    ROSETTA_LENSES.forEach(l => selectedLenses.add(l.id));
+    renderButtons();
+    renderTable();
+  });
+
+  document.getElementById('lens-none')!.addEventListener('click', () => {
+    selectedLenses.clear();
+    renderButtons();
+    renderTable();
+  });
+
+  // Initialize
+  renderButtons();
+  renderTable();
+  renderWordCards();
+</script>
