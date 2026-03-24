@@ -24,6 +24,7 @@ license = "MIT"
 
 authors = [
   { name = "Clement Paulus" }
+
 ]
 
 keywords = [

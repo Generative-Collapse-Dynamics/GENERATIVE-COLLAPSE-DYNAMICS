@@ -3,206 +3,291 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="About — GCD Kernel" description="What is Generative Collapse Dynamics? The axiom, the kernel, the spine.">
-  <div class="max-w-4xl mx-auto">
-    <!-- Hero -->
-    <div class="text-center mb-16">
-      <h1 class="text-4xl font-bold text-kernel-100 mb-4">Generative Collapse Dynamics</h1>
-      <p class="text-xl text-kernel-300 italic">
-        "Collapse is generative; only what returns is real."
-      </p>
-      <p class="text-sm text-kernel-500 mt-2">
+<BaseLayout title="About" description="What is Generative Collapse Dynamics? The axiom, the kernel, the spine — interactive onboarding.">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- ═══ Hero ═══ -->
+    <div class="text-center mb-16 relative">
+      <div class="absolute inset-0 -z-10 opacity-20" id="hero-particles"></div>
+      <p class="text-xs uppercase tracking-[0.3em] text-kernel-500 mb-4">Axiom-0</p>
+      <h1 class="text-4xl md:text-5xl font-bold text-kernel-100 mb-5 leading-tight">
+        Collapse is generative.<br/>
+        <span class="text-amber-400">Only what returns is real.</span>
+      </h1>
+      <p class="text-sm text-kernel-500 italic mb-8">
         Collapsus generativus est; solum quod redit, reale est.
       </p>
+      <div class="inline-flex gap-3">
+        <a href="#kernel-section" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition">
+          Explore the Kernel &darr;
+        </a>
+        <a href={`${base}calculator/`} class="border border-kernel-600 hover:border-kernel-400 text-kernel-300 hover:text-kernel-100 px-5 py-2.5 rounded-lg text-sm font-bold transition">
+          Try the Calculator &rarr;
+        </a>
+      </div>
     </div>
 
-    <!-- What is GCD? -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">What is GCD?</h2>
-      <div class="space-y-4 text-kernel-300">
-        <p>
-          <strong class="text-kernel-100">Generative Collapse Dynamics</strong> is a
-          mathematical framework that measures what survives collapse and what returns.
-          It begins from a single axiom — <em>Axiom-0</em> — and derives a complete
-          measurement protocol that works identically across 20 scientific domains,
-          from particle physics to consciousness studies.
-        </p>
-        <p>
-          The framework is implemented as <strong class="text-kernel-100">UMCP</strong>
-          (Universal Measurement Contract Protocol), a reproducible validation system
-          with 14,362 tests, 47 lemmas, 44 structural identities, and frozen parameters
-          that are seam-derived — discovered by the mathematics, not chosen by convention.
-        </p>
+    <!-- ═══ What is GCD? ═══ -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-6 border-b border-kernel-800 pb-2">What is GCD?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4 text-kernel-300">
+          <p>
+            <strong class="text-kernel-100">Generative Collapse Dynamics</strong> is a
+            mathematical framework that measures what survives collapse and what returns.
+            It begins from a single axiom — <em class="text-amber-400">Axiom-0</em> — and derives a complete
+            measurement protocol that works identically across 20 scientific domains,
+            from particle physics to consciousness studies.
+          </p>
+          <p>
+            The framework is implemented as <strong class="text-kernel-100">UMCP</strong>
+            (Universal Measurement Contract Protocol), a reproducible validation system
+            with frozen parameters that are <em>seam-derived</em> — discovered by the
+            mathematics, not chosen by convention.
+          </p>
+        </div>
+        <div class="bg-kernel-900 border border-kernel-800 rounded-xl p-5">
+          <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-4">At a Glance</h3>
+          <div class="grid grid-cols-2 gap-3">
+            {[
+              { n: '14,362', label: 'Tests', icon: '✓' },
+              { n: '20', label: 'Domains', icon: '◈' },
+              { n: '44', label: 'Identities', icon: '≡' },
+              { n: '47', label: 'Lemmas', icon: '∴' },
+              { n: '181', label: 'Closures', icon: '⊕' },
+              { n: '3', label: 'Languages', icon: '⟨⟩' },
+            ].map(s => (
+              <div class="text-center py-2">
+                <div class="text-2xl font-bold text-amber-400">{s.n}</div>
+                <div class="text-xs text-kernel-500">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- The Kernel -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Kernel</h2>
-      <p class="text-kernel-300 mb-6">
-        The kernel function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) maps any trace vector
-        to six invariants with only <strong class="text-kernel-100">3 effective degrees of freedom</strong>.
+    <!-- ═══ The Kernel — Interactive ═══ -->
+    <section class="mb-16" id="kernel-section">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">The Kernel</h2>
+      <p class="text-kernel-400 text-sm mb-2">
+        The kernel function <span class="font-mono text-kernel-300">K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC)</span> maps
+        any trace vector to six invariants — but only <strong class="text-kernel-200">3 effective degrees of freedom</strong>.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">F</div>
-          <div class="text-sm text-kernel-300"><strong>Fidelity</strong> — what survives collapse</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">F = Σ wᵢcᵢ</div>
+      <p class="text-kernel-500 text-xs italic mb-6">
+        Click any invariant to learn what it measures, why it exists, and how it connects to the others.
+      </p>
+
+      <!-- Primitive vs Derived legend -->
+      <div class="flex flex-wrap gap-4 mb-6 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+          <span class="text-kernel-400">Primitive — computed directly from the trace vector</span>
         </div>
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">ω</div>
-          <div class="text-sm text-kernel-300"><strong>Drift</strong> — what is lost</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">ω = 1 − F</div>
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-blue-400 inline-block"></span>
+          <span class="text-kernel-400">Derived — follows algebraically from a primitive</span>
         </div>
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">S</div>
-          <div class="text-sm text-kernel-300"><strong>Entropy</strong> — field uncertainty</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">S = −Σ wᵢ[cᵢ ln cᵢ + (1−cᵢ) ln(1−cᵢ)]</div>
+      </div>
+
+      <!-- Invariant cards (clickable) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4" id="invariant-cards">
+        <!-- Populated by script -->
+      </div>
+
+      <!-- Expanded detail panel -->
+      <div id="invariant-detail" class="hidden">
+        <div class="bg-kernel-900 border border-kernel-700 rounded-xl overflow-hidden transition-all duration-300">
+          <!-- Header -->
+          <div class="p-5 border-b border-kernel-800" id="detail-header">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl font-mono" id="detail-symbol"></span>
+                <div>
+                  <h3 class="text-lg font-bold text-kernel-100" id="detail-name"></h3>
+                  <p class="text-xs italic text-kernel-500" id="detail-latin"></p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-xs px-2 py-1 rounded-full font-medium" id="detail-badge"></span>
+                <button id="detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none">&times;</button>
+              </div>
+            </div>
+          </div>
+          <!-- Body tabs -->
+          <div class="border-b border-kernel-800 flex text-xs" id="detail-tabs">
+            <button data-tab="what" class="detail-tab px-4 py-2.5 text-amber-400 border-b-2 border-amber-400 font-medium">What</button>
+            <button data-tab="why" class="detail-tab px-4 py-2.5 text-kernel-500 hover:text-kernel-300 transition">Why</button>
+            <button data-tab="how" class="detail-tab px-4 py-2.5 text-kernel-500 hover:text-kernel-300 transition">How</button>
+            <button data-tab="connections" class="detail-tab px-4 py-2.5 text-kernel-500 hover:text-kernel-300 transition">Connections</button>
+          </div>
+          <!-- Tab content -->
+          <div class="p-5" id="detail-content"></div>
         </div>
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">C</div>
-          <div class="text-sm text-kernel-300"><strong>Curvature</strong> — coupling to uncontrolled DOF</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">C = stddev(cᵢ) / 0.5</div>
-        </div>
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">κ</div>
-          <div class="text-sm text-kernel-300"><strong>Log-integrity</strong> — logarithmic sensitivity</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">κ = Σ wᵢ ln(cᵢ,ε)</div>
-        </div>
-        <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-4">
-          <div class="text-2xl font-mono text-amber-400 mb-1">IC</div>
-          <div class="text-sm text-kernel-300"><strong>Integrity</strong> — multiplicative coherence</div>
-          <div class="text-xs text-kernel-500 mt-1 font-mono">IC = exp(κ)</div>
+      </div>
+
+      <!-- Relationship diagram -->
+      <div class="mt-6 bg-kernel-900 border border-kernel-800 rounded-xl p-5">
+        <h3 class="text-sm font-bold text-kernel-400 uppercase tracking-wider mb-3">How the Six Invariants Relate</h3>
+        <p class="text-xs text-kernel-500 mb-4">
+          4 are <span class="text-amber-400 font-medium">primitive</span> (computed directly), 2 are <span class="text-blue-400 font-medium">derived</span> (follow algebraically).
+          Together, they have only 3 effective degrees of freedom because S is asymptotically determined by F and C.
+        </p>
+        <div class="flex justify-center">
+          <div class="relative w-full max-w-lg" id="relationship-diagram">
+            <!-- SVG relationship diagram rendered by script -->
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- The Spine -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Spine</h2>
+    <!-- ═══ The Spine — Interactive ═══ -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">The Spine</h2>
       <p class="text-kernel-300 mb-6">
         Every claim, validation, and discourse follows a fixed five-stop spine.
-        This is both a validation pipeline and a grammatical structure.
+        <span class="text-kernel-500">Click each stop to see what happens there.</span>
       </p>
-      <div class="flex flex-col md:flex-row items-stretch gap-2">
-        {[
-          { name: 'Contract', role: 'Freeze rules before evidence', color: 'border-blue-500' },
-          { name: 'Canon', role: 'Tell with five words', color: 'border-green-500' },
-          { name: 'Closures', role: 'Publish thresholds', color: 'border-yellow-500' },
-          { name: 'Ledger', role: 'Debit/credit must balance', color: 'border-orange-500' },
-          { name: 'Stance', role: 'Derived verdict', color: 'border-red-500' },
-        ].map((stop, i) => (
-          <div class={`flex-1 bg-kernel-900 border-t-2 ${stop.color} rounded-lg p-4 text-center`}>
-            <div class="text-xs text-kernel-500 mb-1">Stop {i + 1}</div>
-            <div class="text-lg font-bold text-kernel-100">{stop.name}</div>
-            <div class="text-xs text-kernel-400 mt-1">{stop.role}</div>
-          </div>
-        ))}
+
+      <!-- Spine stops (clickable) -->
+      <div class="flex flex-col md:flex-row items-stretch gap-2 mb-4" id="spine-stops">
+        <!-- Populated by script -->
+      </div>
+
+      <!-- Spine detail -->
+      <div id="spine-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-kernel-100" id="spine-detail-title"></h3>
+          <button id="spine-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none">&times;</button>
+        </div>
+        <div id="spine-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
       </div>
     </section>
 
-    <!-- Three Regimes -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Three Regimes</h2>
+    <!-- ═══ Three Regimes — Interactive ═══ -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">Three Regimes</h2>
       <p class="text-kernel-300 mb-4">
-        Regime classification is derived from gates on (ω, F, S, C) — never asserted.
+        Regime classification is <em>derived</em> from gates on (ω, F, S, C) — never asserted.
+        <span class="text-kernel-500">Click to explore each regime.</span>
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-kernel-900 border border-green-700 rounded-lg p-4">
-          <div class="text-lg font-bold text-green-400 mb-1">Stable</div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <button class="regime-card bg-kernel-900 border-2 border-green-800 hover:border-green-500 rounded-xl p-5 text-left transition group" data-regime="stable">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-lg font-bold text-green-400">Stable</span>
+            <span class="text-2xl font-bold text-green-400/50 group-hover:text-green-400 transition">12.5%</span>
+          </div>
           <div class="text-xs text-kernel-400">ω &lt; 0.038 ∧ F &gt; 0.90 ∧ S &lt; 0.15 ∧ C &lt; 0.14</div>
-          <div class="text-sm text-kernel-500 mt-2">12.5% of Fisher space</div>
-        </div>
-        <div class="bg-kernel-900 border border-yellow-700 rounded-lg p-4">
-          <div class="text-lg font-bold text-yellow-400 mb-1">Watch</div>
+          <div class="text-xs text-kernel-600 mt-2">Click for details &rarr;</div>
+        </button>
+        <button class="regime-card bg-kernel-900 border-2 border-yellow-800 hover:border-yellow-500 rounded-xl p-5 text-left transition group" data-regime="watch">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-lg font-bold text-yellow-400">Watch</span>
+            <span class="text-2xl font-bold text-yellow-400/50 group-hover:text-yellow-400 transition">24.4%</span>
+          </div>
           <div class="text-xs text-kernel-400">0.038 ≤ ω &lt; 0.30 (or Stable gates not all met)</div>
-          <div class="text-sm text-kernel-500 mt-2">24.4% of Fisher space</div>
-        </div>
-        <div class="bg-kernel-900 border border-red-700 rounded-lg p-4">
-          <div class="text-lg font-bold text-red-400 mb-1">Collapse</div>
+          <div class="text-xs text-kernel-600 mt-2">Click for details &rarr;</div>
+        </button>
+        <button class="regime-card bg-kernel-900 border-2 border-red-800 hover:border-red-500 rounded-xl p-5 text-left transition group" data-regime="collapse">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-lg font-bold text-red-400">Collapse</span>
+            <span class="text-2xl font-bold text-red-400/50 group-hover:text-red-400 transition">63.1%</span>
+          </div>
           <div class="text-xs text-kernel-400">ω ≥ 0.30</div>
-          <div class="text-sm text-kernel-500 mt-2">63.1% of Fisher space</div>
-        </div>
+          <div class="text-xs text-kernel-600 mt-2">Click for details &rarr;</div>
+        </button>
       </div>
-      <p class="text-kernel-500 text-sm mt-3 italic">
-        Stability is rare — 87.5% of the manifold lies outside it.
-        Return from collapse to stability is what the axiom measures.
-      </p>
+
+      <div id="regime-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold" id="regime-detail-title"></h3>
+          <button id="regime-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none">&times;</button>
+        </div>
+        <div id="regime-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
+      </div>
+
+      <!-- Fisher space bar -->
+      <div class="mt-4 bg-kernel-900 border border-kernel-800 rounded-xl p-4">
+        <p class="text-xs text-kernel-500 mb-2">Fisher Space Partition</p>
+        <div class="h-6 rounded-full overflow-hidden flex">
+          <div class="bg-green-600 flex items-center justify-center text-[10px] text-white font-bold" style="width:12.5%">12.5%</div>
+          <div class="bg-yellow-600 flex items-center justify-center text-[10px] text-white font-bold" style="width:24.4%">24.4%</div>
+          <div class="bg-red-600 flex items-center justify-center text-[10px] text-white font-bold" style="width:63.1%">63.1%</div>
+        </div>
+        <p class="text-xs text-kernel-500 mt-2 italic">
+          Stability is rare — 87.5% of the manifold lies outside it.
+          Return from collapse to stability is what the axiom measures.
+        </p>
+      </div>
     </section>
 
-    <!-- Five Words -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">The Five Words</h2>
+    <!-- ═══ Five Words ═══ -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">The Five Words</h2>
       <p class="text-kernel-300 mb-4">
-        The minimal prose vocabulary for telling the story of any collapse-return cycle:
+        The minimal prose vocabulary for telling the story of any collapse-return cycle.
+        <span class="text-kernel-500">Click a word to see its ledger role and operational definition.</span>
       </p>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {[
-          { word: 'Drift', latin: 'derivatio', role: 'What moved' },
-          { word: 'Fidelity', latin: 'fidelitas', role: 'What persisted' },
-          { word: 'Roughness', latin: 'curvatura', role: 'Where it was bumpy' },
-          { word: 'Return', latin: 'reditus', role: 'Credible re-entry' },
-          { word: 'Integrity', latin: 'integritas', role: 'Does it hold together' },
-        ].map(w => (
-          <div class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 text-center">
-            <div class="text-lg font-bold text-kernel-100">{w.word}</div>
-            <div class="text-xs text-kernel-500 italic">{w.latin}</div>
-            <div class="text-xs text-kernel-400 mt-1">{w.role}</div>
-          </div>
-        ))}
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4" id="five-words-grid">
+        <!-- Populated by script -->
+      </div>
+      <div id="word-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-kernel-100" id="word-detail-title"></h3>
+          <button id="word-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none">&times;</button>
+        </div>
+        <div id="word-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
       </div>
     </section>
 
-    <!-- Architecture -->
-    <section class="mb-12">
-      <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Architecture</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-          <div class="text-xs text-kernel-500 mb-1">Tier 1</div>
-          <div class="text-lg font-bold text-kernel-100 mb-2">The Kernel</div>
-          <div class="text-sm text-kernel-400">
-            The mathematical function and its provable identities.
-            47 lemmas, 44 structural identities, 5 frozen constants.
-            Domain-independent. Immutable within a run.
-          </div>
+    <!-- ═══ Architecture — Interactive ═══ -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-kernel-100 mb-2 border-b border-kernel-800 pb-2">Three-Tier Architecture</h2>
+      <p class="text-kernel-300 mb-6">
+        Every symbol, function, and artifact belongs to exactly one tier. <span class="text-kernel-500">Click to understand each layer.</span>
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" id="tier-cards">
+        <!-- Populated by script -->
+      </div>
+      <div id="tier-detail" class="hidden bg-kernel-900 border border-kernel-700 rounded-xl p-5 transition-all duration-300">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg font-bold text-kernel-100" id="tier-detail-title"></h3>
+          <button id="tier-detail-close" class="text-kernel-500 hover:text-kernel-300 transition text-xl leading-none">&times;</button>
         </div>
-        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-          <div class="text-xs text-kernel-500 mb-1">Tier 0</div>
-          <div class="text-lg font-bold text-kernel-100 mb-2">Protocol</div>
-          <div class="text-sm text-kernel-400">
-            Operational machinery: embedding, kernel computation,
-            regime gates, seam calculus, contracts, validation.
-            Implemented in Python, C99, and C++.
-          </div>
+        <div id="tier-detail-body" class="text-sm text-kernel-300 space-y-3"></div>
+      </div>
+      <!-- Dependency arrow -->
+      <div class="bg-kernel-900 border border-kernel-800 rounded-xl p-4 text-center">
+        <p class="text-xs text-kernel-500 mb-2">One-Way Dependency (No Back-Edges)</p>
+        <div class="flex items-center justify-center gap-2 text-kernel-400 font-mono text-sm">
+          <span class="px-3 py-1 bg-kernel-800 rounded text-amber-400">Tier-1</span>
+          <span>&rarr;</span>
+          <span class="px-3 py-1 bg-kernel-800 rounded text-blue-400">Tier-0</span>
+          <span>&rarr;</span>
+          <span class="px-3 py-1 bg-kernel-800 rounded text-green-400">Tier-2</span>
         </div>
-        <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-          <div class="text-xs text-kernel-500 mb-1">Tier 2</div>
-          <div class="text-lg font-bold text-kernel-100 mb-2">Expansion</div>
-          <div class="text-sm text-kernel-400">
-            20 domain closures choosing which real-world quantities
-            become trace vectors. From particle physics to
-            consciousness studies. Freely extensible.
-          </div>
-        </div>
+        <p class="text-[10px] text-kernel-600 mt-2">No feedback from Tier-2 to Tier-1 or Tier-0 within a frozen run.</p>
       </div>
     </section>
 
-    <!-- Quick links -->
+    <!-- ═══ Quick links ═══ -->
     <section class="mb-12">
       <h2 class="text-2xl font-bold text-kernel-100 mb-4 border-b border-kernel-800 pb-2">Explore</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { name: 'Calculator', href: `${base}calculator/`, desc: 'Compute kernel live' },
-          { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-domain lenses' },
-          { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities' },
-          { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Quarks → bulk matter' },
-          { name: 'Formulas', href: `${base}formulas/`, desc: 'Build expressions' },
-          { name: 'Geometry', href: `${base}geometry/`, desc: 'Fisher manifold' },
-          { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Γ(ω), D_C, Δκ' },
-          { name: 'Papers', href: `${base}papers/`, desc: 'Published research' },
+          { name: 'Calculator', href: `${base}calculator/`, desc: 'Compute kernel live', icon: '⊕' },
+          { name: 'Rosetta', href: `${base}rosetta/`, desc: 'Cross-domain lenses', icon: '⇌' },
+          { name: 'Identities', href: `${base}identities/`, desc: '44 structural identities', icon: '≡' },
+          { name: 'Scale Ladder', href: `${base}scale-ladder/`, desc: 'Quarks → bulk matter', icon: '⋮' },
+          { name: 'Formulas', href: `${base}formulas/`, desc: 'Build expressions', icon: 'ƒ' },
+          { name: 'Geometry', href: `${base}geometry/`, desc: 'Fisher manifold', icon: '◎' },
+          { name: 'Seam Budget', href: `${base}seam-budget/`, desc: 'Γ(ω), D_C, Δκ', icon: '△' },
+          { name: 'Papers', href: `${base}papers/`, desc: 'Published research', icon: '📄' },
         ].map(link => (
           <a href={link.href}
-             class="bg-kernel-900 border border-kernel-800 rounded-lg p-3 hover:border-kernel-600 transition group">
+             class="bg-kernel-900 border border-kernel-800 rounded-xl p-4 hover:border-kernel-600 hover:bg-kernel-900/80 transition group">
+            <div class="text-xl mb-1">{link.icon}</div>
             <div class="text-sm font-bold text-kernel-100 group-hover:text-amber-400 transition">{link.name}</div>
             <div class="text-xs text-kernel-500">{link.desc}</div>
           </a>
@@ -210,27 +295,648 @@ const base = import.meta.env.BASE_URL;
       </div>
     </section>
 
-    <!-- Stats -->
-    <section class="bg-kernel-900 border border-kernel-800 rounded-lg p-6 mb-8">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-        {[
-          { n: '14,362', label: 'Tests' },
-          { n: '20', label: 'Domains' },
-          { n: '44', label: 'Identities' },
-          { n: '47', label: 'Lemmas' },
-          { n: '181', label: 'Closures' },
-        ].map(s => (
-          <div>
-            <div class="text-2xl font-bold text-amber-400">{s.n}</div>
-            <div class="text-xs text-kernel-500">{s.label}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <div class="text-center text-kernel-600 text-xs">
+    <!-- ═══ Footer ═══ -->
+    <div class="text-center text-kernel-600 text-xs pb-8">
       <p>UMCP v2.2.5 · MIT License</p>
       <p class="mt-1 italic">Continuitas non narratur: mensuratur.</p>
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  // ═══════════════════════════════════════════════════
+  //  Interactive About Page — Client-Side Logic
+  // ═══════════════════════════════════════════════════
+
+  const BASE = (document.querySelector('link[rel="icon"]')?.getAttribute('href') || '/').replace('favicon.svg', '');
+
+  // ── Invariant Data ───────────────────────────────
+
+  interface InvariantData {
+    symbol: string;
+    name: string;
+    latin: string;
+    formula: string;
+    kind: 'primitive' | 'derived';
+    range: string;
+    color: string;
+    what: string;
+    why: string;
+    how: string;
+    connections: string;
+    derivedFrom?: string;
+  }
+
+  const invariants: InvariantData[] = [
+    {
+      symbol: 'F', name: 'Fidelity', latin: 'Fidelitas',
+      formula: 'F = Σ wᵢcᵢ',
+      kind: 'primitive', range: '[0, 1]', color: 'amber',
+      what: `<p><strong>Fidelity</strong> measures <em>what survives collapse</em>. It is the weighted arithmetic mean of all channel values in the trace vector.</p>
+             <p>When F = 1, everything is perfectly preserved. When F → 0, almost nothing survives. In particle physics, quark channels have F ≈ 0.55–0.65. In atomic physics, stable atoms push F above 0.90.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>fidelitas</em> — "faithfulness." <em>Quid supersit post collapsum</em> — what survives after collapse.</p>`,
+      why: `<p>Fidelity is primitive because it is the <strong>most direct measurement</strong> of the axiom. Axiom-0 asks "what returns?" — F answers by measuring what fraction of the signal is retained across all channels.</p>
+            <p>Its computation requires only the trace vector c and weights w — no other invariants. This makes it the <strong>anchor</strong> of the entire kernel.</p>
+            <p>It also appears in two of the three core identities: <span class="font-mono text-amber-400">F + ω = 1</span> and <span class="font-mono text-amber-400">IC ≤ F</span>. No other symbol appears in more constraints.</p>`,
+      how: `<p>Given n channels with values c₁, c₂, ..., cₙ and weights w₁, w₂, ..., wₙ (summing to 1):</p>
+            <div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">F = w₁c₁ + w₂c₂ + ... + wₙcₙ</div>
+            <p>This is a standard weighted arithmetic mean, but its meaning is fixed by Axiom-0: it measures the survival fraction across the collapse field.</p>
+            <p class="text-xs text-kernel-500 mt-2">Implemented in: <code>kernel_optimized.py</code>, <code>kernel.c</code>, <code>kernel.ts</code></p>`,
+      connections: `<p><strong>F → ω:</strong> Drift is defined as ω = 1 − F. Knowing F immediately gives ω.</p>
+                    <p><strong>F ↔ IC:</strong> The integrity bound IC ≤ F always holds. F is the arithmetic mean; IC is the geometric mean. They are equal only when all channels are identical (homogeneous trace).</p>
+                    <p><strong>F ↔ S:</strong> As n grows, entropy S becomes asymptotically determined by F and C. This reduces the kernel from 4 free variables to 3.</p>
+                    <p><strong>F in Regime Gates:</strong> Stable regime requires F > 0.90.</p>`
+    },
+    {
+      symbol: 'κ', name: 'Log-Integrity', latin: 'Log-Integritas',
+      formula: 'κ = Σ wᵢ ln(cᵢ,ε)',
+      kind: 'primitive', range: '(−∞, 0]', color: 'amber',
+      what: `<p><strong>Log-integrity</strong> measures the <em>logarithmic sensitivity of coherence</em>. It's the weighted sum of log-channel values, using ε-clamped channels to avoid the pole at 0.</p>
+             <p>κ is always ≤ 0. When κ = 0, all channels are maximal (cᵢ = 1). As any channel drops toward ε, κ plummets — logarithmically amplifying the weakness. This is why a single dead channel can destroy integrity even when F stays healthy.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>sensibilitas logarithmica</em> — logarithmic sensitivity of coherence.</p>`,
+      why: `<p>κ is primitive because it provides a fundamentally different view from F. While F averages channels arithmetically, κ averages their <strong>logarithms</strong> — making it exquisitely sensitive to weak channels.</p>
+            <p>This sensitivity is not a design choice. It emerges from Axiom-0's requirement that integrity be <strong>multiplicative</strong>: if one channel is dead, the whole system's integrity should collapse. The log transform converts this multiplicative requirement into additive computation.</p>
+            <p>The ε guard band (ε = 10⁻⁸) prevents the pole at c = 0 from producing −∞, while keeping sensitivity to 8 decimal places.</p>`,
+      how: `<div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">κ = w₁ ln(max(c₁, ε)) + w₂ ln(max(c₂, ε)) + ... + wₙ ln(max(cₙ, ε))</div>
+            <p>The ε-clamp ensures numerical stability. With ε = 10⁻⁸, a fully dead channel contributes ln(10⁻⁸) ≈ −18.4 per unit weight — enough to dominate κ even when other channels are perfect.</p>
+            <p class="text-xs text-kernel-500 mt-2">This is the "geometric slaughter" phenomenon: in an 8-channel system, 7 perfect channels (c = 1) and 1 dead channel (c → ε) gives IC/F ≈ 0.11.</p>`,
+      connections: `<p><strong>κ → IC:</strong> Integrity composite IC = exp(κ). This is the defining link — IC is simply κ exponentiated.</p>
+                    <p><strong>κ ↔ S:</strong> At the equator (c = 1/2), S + κ = 0 exactly. This four-way convergence is identity E4.</p>
+                    <p><strong>κ ↔ F:</strong> IC ≤ F means κ ≤ ln(F). Log-integrity can never exceed the log of fidelity.</p>`
+    },
+    {
+      symbol: 'S', name: 'Entropy', latin: 'Entropia',
+      formula: 'S = −Σ wᵢ[cᵢ ln cᵢ + (1−cᵢ) ln(1−cᵢ)]',
+      kind: 'primitive', range: '[0, ln 2]', color: 'amber',
+      what: `<p><strong>Bernoulli field entropy</strong> measures the <em>uncertainty of the collapse field</em>. It is the weighted sum of binary entropy functions applied to each channel.</p>
+             <p>When S = 0, every channel is at an extreme (0 or 1) — the outcome is certain. When S is maximal (at c = 1/2 for all channels), uncertainty peaks — the system is maximally ambiguous about its state.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>incertitudo campi collapsus</em> — uncertainty of the collapse field. Note: this is Bernoulli field entropy, not Shannon entropy. Shannon entropy is the degenerate limit when the collapse field is removed.</p>`,
+      why: `<p>S is primitive because it captures information that neither F nor κ can: the <strong>uncertainty</strong> inherent in the channel configuration. Two systems can have the same F and κ but very different entropies.</p>
+            <p>However, S has a special status: as the number of channels n grows, S becomes <strong>asymptotically determined</strong> by F and C (corr(C,S) → −1 as n → ∞). This means S is computed as a primitive but does not add a free degree of freedom — it is the reason the kernel has only 3 effective DOF, not 4.</p>`,
+      how: `<p>For each channel cᵢ, compute the binary (Bernoulli) entropy:</p>
+            <div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">h(c) = −[c ln(c) + (1−c) ln(1−c)]</div>
+            <p>Then weight and sum: <span class="font-mono">S = Σ wᵢ · h(cᵢ)</span></p>
+            <p>At the boundaries (c = 0 or c = 1), h(c) = 0 by convention (L'Hôpital). Maximum at c = 1/2: h(1/2) = ln 2.</p>`,
+      connections: `<p><strong>S ↔ F, C:</strong> S ≈ f(F, C) asymptotically. This is the statistical constraint that reduces DOF from 4 to 3.</p>
+                    <p><strong>S in Regime Gates:</strong> Stable regime requires S < 0.15.</p>
+                    <p><strong>S + κ at equator:</strong> When all c = 1/2, S + κ = 0 exactly (identity E4). This four-way convergence is one of the deepest results.</p>`
+    },
+    {
+      symbol: 'C', name: 'Curvature', latin: 'Curvatura',
+      formula: 'C = stddev(cᵢ) / 0.5',
+      kind: 'primitive', range: '[0, 1]', color: 'amber',
+      what: `<p><strong>Curvature</strong> measures <em>coupling to uncontrolled degrees of freedom</em>. It normalizes the standard deviation of channel values to the [0, 1] range.</p>
+             <p>When C = 0, all channels are identical (homogeneous trace). When C → 1, channels are maximally spread — some near 0, others near 1. High curvature means the system's coherence varies dramatically across its dimensions.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>coniunctio cum gradibus libertatis</em> — coupling to degrees of freedom.</p>`,
+      why: `<p>C is primitive because it captures the <strong>spread</strong> of channel values — something that F (average) and κ (product-sensitivity) both miss. Two systems with F = 0.5 can have C = 0 (all channels at 0.5) or C = 1 (channels at 0 and 1).</p>
+            <p>Curvature directly enters the seam budget as the curvature debit D_C = α·C, penalizing systems whose channels are heterogeneous. It also determines the heterogeneity gap Δ = F − IC: high C implies IC ≪ F (geometric slaughter).</p>
+            <p>Together with F and κ, C forms the three independent degrees of freedom of the kernel.</p>`,
+      how: `<div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">C = σ(c) / 0.5 where σ = √(Σ wᵢ(cᵢ − F)²)</div>
+            <p>Division by 0.5 normalizes to [0, 1] since the maximum possible stddev of values in [0, 1] is 0.5 (attained when half the weight is at 0 and half at 1).</p>`,
+      connections: `<p><strong>C ↔ S:</strong> corr(C, S) → −1 as n → ∞. This is why S doesn't add a free DOF.</p>
+                    <p><strong>C → Δ:</strong> High curvature drives the heterogeneity gap Δ = F − IC. The correction is −C²/(8F²) to first order.</p>
+                    <p><strong>C in Regime Gates:</strong> Stable regime requires C < 0.14.</p>
+                    <p><strong>C in Seam Budget:</strong> Curvature debit D_C = α·C = 1.0 · C.</p>`
+    },
+    {
+      symbol: 'ω', name: 'Drift', latin: 'Derivatio',
+      formula: 'ω = 1 − F',
+      kind: 'derived', range: '[0, 1]', color: 'blue',
+      derivedFrom: 'F',
+      what: `<p><strong>Drift</strong> measures <em>what is lost to collapse</em>. It is the complement of fidelity — the fraction of the signal that does not survive.</p>
+             <p>When ω = 0, nothing is lost. When ω → 1, almost everything is lost. The primary regime boundary is at ω = 0.30: above this, the system is in Collapse regime.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>derivatio</em> — diversion from the channel. <em>Quantum collapsu deperdatur</em> — how much is lost to collapse.</p>`,
+      why: `<p>ω is <strong>derived</strong>, not primitive, because it carries no independent information — it is completely determined by F through the duality identity <span class="font-mono text-amber-400">F + ω = 1</span>.</p>
+            <p>Despite being derived, ω is deeply important: it is the primary variable for regime classification (the main gates are on ω), it drives the drift cost Γ(ω) = ω³/(1−ω+ε) in the seam budget, and it maps to the prose word "Drift" — one of the five words of the Canon.</p>
+            <p>The duality identity F + ω = 1 is verified to <strong>exactly 0.0e+00</strong> residual across 10,000 random traces. It is algebraically forced, not approximately true.</p>`,
+      how: `<div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">ω = 1 − F = 1 − Σ wᵢcᵢ</div>
+            <p>No additional computation needed — just subtract F from 1. The identity F + ω = 1 is the <em>complementum perfectum</em>: there is no third possibility.</p>`,
+      connections: `<p><strong>ω ← F:</strong> Derived directly. F + ω = 1 exactly (duality identity E1).</p>
+                    <p><strong>ω → Γ:</strong> Drift cost Γ(ω) = ω³/(1−ω+ε). This enters the seam budget as the drift debit D_ω.</p>
+                    <p><strong>ω in Regime Gates:</strong> Stable: ω < 0.038. Watch: 0.038 ≤ ω < 0.30. Collapse: ω ≥ 0.30.</p>
+                    <p><strong>ω remains Tier-1:</strong> Even though derived, ω is a Tier-1 output — it appears in immutable identities, not a Tier-0 diagnostic.</p>`
+    },
+    {
+      symbol: 'IC', name: 'Integrity', latin: 'Integritas Composita',
+      formula: 'IC = exp(κ)',
+      kind: 'derived', range: '(0, 1]', color: 'blue',
+      derivedFrom: 'κ',
+      what: `<p><strong>Integrity composite</strong> measures <em>multiplicative coherence</em>. It is the weighted geometric mean of all channel values — if any single channel is dead, IC crashes toward ε regardless of how healthy the others are.</p>
+             <p>This is the "geometric slaughter" phenomenon. In an 8-channel system with 7 perfect channels and 1 dead channel, F stays at 0.875 but IC drops to 0.11. One rotten channel is enough.</p>
+             <p class="text-xs text-kernel-500 mt-2">Latin: <em>cohaerentia multiplicativa</em> — multiplicative coherence. IC ≤ F is the <em>limbus integritatis</em> — the threshold where integrity approaches fidelity but cannot cross.</p>`,
+      why: `<p>IC is <strong>derived</strong> from κ via IC = exp(κ), but it provides the most operationally important insight: <strong>the integrity bound IC ≤ F</strong>.</p>
+            <p>This bound is the solvability condition: for n = 2 channels, the trace values c₁, c₂ = F ± √(F² − IC²). Real solutions require IC ≤ F. This is derived independently from Axiom-0 — it is NOT the classical AM-GM inequality (which is a degenerate limit when channel semantics are stripped away).</p>
+            <p>IC also composes <strong>geometrically</strong>: IC₁₂ = √(IC₁ · IC₂), while F composes <strong>arithmetically</strong>: F₁₂ = (F₁ + F₂)/2. These composition laws have no classical analogue.</p>`,
+      how: `<div class="bg-kernel-950 rounded-lg p-3 font-mono text-sm my-2">IC = exp(κ) = exp(Σ wᵢ ln(max(cᵢ, ε))) = ∏ max(cᵢ, ε)^wᵢ</div>
+            <p>This is literally the weighted geometric mean of the ε-clamped channels. The exponential map converts additive log-coherence (κ) into multiplicative integrity (IC).</p>
+            <p>The heterogeneity gap Δ = F − IC measures how much the geometric mean falls below the arithmetic mean due to channel heterogeneity.</p>`,
+      connections: `<p><strong>IC ← κ:</strong> IC = exp(κ) by definition (identity E2).</p>
+                    <p><strong>IC ≤ F:</strong> The integrity bound (identity E3 / solvability condition). Always holds. Equality iff all channels are identical.</p>
+                    <p><strong>Δ = F − IC:</strong> The heterogeneity gap — central diagnostic. Large Δ means some channels are much weaker than others.</p>
+                    <p><strong>IC < 0.30:</strong> Critical overlay — flags dangerous integrity loss regardless of regime.</p>
+                    <p><strong>IC remains Tier-1:</strong> Appears in immutable identities (IC ≤ F). Not a diagnostic.</p>`
+    },
+  ];
+
+  // ── Render invariant cards ────────────────────────
+
+  const cardsContainer = document.getElementById('invariant-cards')!;
+  const detailPanel = document.getElementById('invariant-detail')!;
+
+  function renderCards() {
+    cardsContainer.innerHTML = '';
+    invariants.forEach((inv, i) => {
+      const isPrimitive = inv.kind === 'primitive';
+      const borderColor = isPrimitive ? 'border-amber-700 hover:border-amber-500' : 'border-blue-700 hover:border-blue-500';
+      const dotColor = isPrimitive ? 'bg-amber-500' : 'bg-blue-400';
+      const symColor = isPrimitive ? 'text-amber-400' : 'text-blue-400';
+
+      const card = document.createElement('button');
+      card.className = `inv-card bg-kernel-900 border-2 ${borderColor} rounded-xl p-4 text-left transition group cursor-pointer`;
+      card.dataset.index = String(i);
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-2xl font-mono ${symColor}">${inv.symbol}</span>
+          <span class="w-2.5 h-2.5 rounded-full ${dotColor}"></span>
+        </div>
+        <div class="text-sm font-bold text-kernel-200">${inv.name}</div>
+        <div class="text-xs text-kernel-500 italic">${inv.latin}</div>
+        <div class="text-[11px] text-kernel-600 font-mono mt-1">${inv.formula}</div>
+        <div class="text-[10px] text-kernel-600 mt-2 group-hover:text-kernel-400 transition">Click to explore &rarr;</div>
+      `;
+      card.addEventListener('click', () => showInvariantDetail(i));
+      cardsContainer.appendChild(card);
+    });
+  }
+
+  // ── Show invariant detail ──────────────────────────
+
+  let activeTab = 'what';
+  let activeInvariantIndex = -1;
+
+  function showInvariantDetail(index: number) {
+    const inv = invariants[index];
+    activeInvariantIndex = index;
+
+    // Update header
+    const symEl = document.getElementById('detail-symbol')!;
+    const nameEl = document.getElementById('detail-name')!;
+    const latinEl = document.getElementById('detail-latin')!;
+    const badgeEl = document.getElementById('detail-badge')!;
+
+    const isPrimitive = inv.kind === 'primitive';
+    symEl.textContent = inv.symbol;
+    symEl.className = `text-3xl font-mono ${isPrimitive ? 'text-amber-400' : 'text-blue-400'}`;
+    nameEl.textContent = inv.name;
+    latinEl.textContent = `${inv.latin} · ${inv.range}`;
+
+    badgeEl.textContent = isPrimitive ? 'PRIMITIVE' : `DERIVED from ${inv.derivedFrom}`;
+    badgeEl.className = `text-xs px-2 py-1 rounded-full font-medium ${
+      isPrimitive ? 'bg-amber-900/50 text-amber-400' : 'bg-blue-900/50 text-blue-400'
+    }`;
+
+    // Reset to "what" tab
+    activeTab = 'what';
+    updateTabs();
+    renderTabContent();
+
+    // Highlight active card
+    document.querySelectorAll('.inv-card').forEach((c, i) => {
+      if (i === index) {
+        c.classList.add('ring-2', isPrimitive ? 'ring-amber-500' : 'ring-blue-400');
+      } else {
+        c.classList.remove('ring-2', 'ring-amber-500', 'ring-blue-400');
+      }
+    });
+
+    detailPanel.classList.remove('hidden');
+    detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function updateTabs() {
+    document.querySelectorAll('.detail-tab').forEach(tab => {
+      const t = (tab as HTMLElement).dataset.tab!;
+      if (t === activeTab) {
+        tab.className = 'detail-tab px-4 py-2.5 text-amber-400 border-b-2 border-amber-400 font-medium';
+      } else {
+        tab.className = 'detail-tab px-4 py-2.5 text-kernel-500 hover:text-kernel-300 transition';
+      }
+    });
+  }
+
+  function renderTabContent() {
+    const content = document.getElementById('detail-content')!;
+    const inv = invariants[activeInvariantIndex];
+    content.innerHTML = inv[activeTab as keyof InvariantData] as string;
+  }
+
+  // Tab clicks
+  document.querySelectorAll('.detail-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      activeTab = (tab as HTMLElement).dataset.tab!;
+      updateTabs();
+      renderTabContent();
+    });
+  });
+
+  // Close button
+  document.getElementById('detail-close')!.addEventListener('click', () => {
+    detailPanel.classList.add('hidden');
+    document.querySelectorAll('.inv-card').forEach(c => {
+      c.classList.remove('ring-2', 'ring-amber-500', 'ring-blue-400');
+    });
+    activeInvariantIndex = -1;
+  });
+
+  // ── Relationship Diagram (SVG) ─────────────────────
+
+  function renderRelationshipDiagram() {
+    const container = document.getElementById('relationship-diagram')!;
+    container.innerHTML = `
+      <svg viewBox="0 0 500 280" class="w-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#64748b" />
+          </marker>
+          <marker id="arrowhead-amber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#f59e0b" />
+          </marker>
+        </defs>
+
+        <!-- Primitive region -->
+        <rect x="10" y="10" width="300" height="260" rx="12" fill="#0f172a" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4 3" opacity="0.5" />
+        <text x="25" y="32" fill="#f59e0b" font-size="10" font-weight="bold" opacity="0.6">PRIMITIVE</text>
+
+        <!-- Derived region -->
+        <rect x="340" y="10" width="150" height="260" rx="12" fill="#0f172a" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4 3" opacity="0.5" />
+        <text x="355" y="32" fill="#60a5fa" font-size="10" font-weight="bold" opacity="0.6">DERIVED</text>
+
+        <!-- F node -->
+        <circle cx="80" cy="80" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+        <text x="80" y="78" text-anchor="middle" fill="#f59e0b" font-size="20" font-weight="bold" font-family="monospace">F</text>
+        <text x="80" y="92" text-anchor="middle" fill="#94a3b8" font-size="8">Fidelity</text>
+
+        <!-- κ node -->
+        <circle cx="80" cy="190" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+        <text x="80" y="188" text-anchor="middle" fill="#f59e0b" font-size="20" font-weight="bold" font-family="monospace">κ</text>
+        <text x="80" y="202" text-anchor="middle" fill="#94a3b8" font-size="8">Log-integrity</text>
+
+        <!-- S node -->
+        <circle cx="220" cy="80" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+        <text x="220" y="78" text-anchor="middle" fill="#f59e0b" font-size="20" font-weight="bold" font-family="monospace">S</text>
+        <text x="220" y="92" text-anchor="middle" fill="#94a3b8" font-size="8">Entropy</text>
+
+        <!-- C node -->
+        <circle cx="220" cy="190" r="28" fill="#1e293b" stroke="#f59e0b" stroke-width="2" />
+        <text x="220" y="188" text-anchor="middle" fill="#f59e0b" font-size="20" font-weight="bold" font-family="monospace">C</text>
+        <text x="220" y="202" text-anchor="middle" fill="#94a3b8" font-size="8">Curvature</text>
+
+        <!-- ω node -->
+        <circle cx="415" cy="80" r="28" fill="#1e293b" stroke="#60a5fa" stroke-width="2" />
+        <text x="415" y="78" text-anchor="middle" fill="#60a5fa" font-size="20" font-weight="bold" font-family="monospace">ω</text>
+        <text x="415" y="92" text-anchor="middle" fill="#94a3b8" font-size="8">Drift</text>
+
+        <!-- IC node -->
+        <circle cx="415" cy="190" r="28" fill="#1e293b" stroke="#60a5fa" stroke-width="2" />
+        <text x="415" y="188" text-anchor="middle" fill="#60a5fa" font-size="18" font-weight="bold" font-family="monospace">IC</text>
+        <text x="415" y="202" text-anchor="middle" fill="#94a3b8" font-size="8">Integrity</text>
+
+        <!-- F → ω (derivation arrow) -->
+        <line x1="108" y1="80" x2="385" y2="80" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="6 3" />
+        <text x="245" y="72" text-anchor="middle" fill="#60a5fa" font-size="9" font-style="italic">ω = 1 − F</text>
+
+        <!-- κ → IC (derivation arrow) -->
+        <line x1="108" y1="190" x2="385" y2="190" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="6 3" />
+        <text x="245" y="182" text-anchor="middle" fill="#60a5fa" font-size="9" font-style="italic">IC = exp(κ)</text>
+
+        <!-- IC ≤ F constraint -->
+        <line x1="415" y1="162" x2="415" y2="110" stroke="#ef4444" stroke-width="1" marker-end="url(#arrowhead)" opacity="0.6" />
+        <text x="440" y="140" fill="#ef4444" font-size="8" opacity="0.8">IC ≤ F</text>
+
+        <!-- S ≈ f(F,C) constraint -->
+        <line x1="140" y1="120" x2="195" y2="82" stroke="#64748b" stroke-width="1" opacity="0.4" stroke-dasharray="3 2" />
+        <line x1="200" y1="165" x2="215" y2="110" stroke="#64748b" stroke-width="1" opacity="0.4" stroke-dasharray="3 2" />
+        <text x="170" y="145" fill="#64748b" font-size="8" opacity="0.6">S ≈ f(F,C)</text>
+
+        <!-- 3 DOF annotation -->
+        <text x="150" y="255" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="bold" opacity="0.7">3 effective DOF: F, κ, C</text>
+      </svg>
+    `;
+  }
+
+  // ── Spine Data & Rendering ────────────────────────
+
+  interface SpineStop {
+    name: string;
+    role: string;
+    color: string;
+    borderColor: string;
+    detail: string;
+    example: string;
+    latin: string;
+  }
+
+  const spineStops: SpineStop[] = [
+    {
+      name: 'Contract', role: 'Freeze rules before evidence', color: 'text-blue-400', borderColor: 'border-blue-500 hover:border-blue-400',
+      latin: 'Contractus',
+      detail: '<p>The Contract is where you <strong>declare the rules</strong> before looking at any data. This includes: which sources to use, how to normalize, what thresholds apply, and what the near-wall policy is.</p><p>Freezing the contract prevents p-hacking, threshold shopping, and post-hoc rationalization. Once frozen, the same rules apply on <em>both</em> sides of every collapse-return boundary (<em>trans suturam congelatum</em>).</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> A contract might specify: "Use PDG 2024 particle data, normalize masses to log scale, ε = 10⁻⁸, regime thresholds as per frozen_contract.py." This is locked before any kernel computation begins.</p>',
+    },
+    {
+      name: 'Canon', role: 'Tell the story with five words', color: 'text-green-400', borderColor: 'border-green-500 hover:border-green-400',
+      latin: 'Canon',
+      detail: '<p>The Canon is where you <strong>narrate what happened</strong> using the five words: Drift, Fidelity, Roughness, Return, Integrity. This is prose — human-readable description of the collapse-return cycle.</p><p>The five words are not arbitrary. Each maps to a precise operational role in the integrity ledger. Authors write in prose; the ledger provides the audit.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> "The quark→hadron transition shows extreme <em>Drift</em> (ω = 0.42). <em>Fidelity</em> partially persists (F = 0.58) but <em>Roughness</em> is high due to color confinement. No credible <em>Return</em> within the hadronic phase. <em>Integrity</em> collapses: IC drops 98%."</p>',
+    },
+    {
+      name: 'Closures', role: 'Publish thresholds — no mid-edit', color: 'text-yellow-400', borderColor: 'border-yellow-500 hover:border-yellow-400',
+      latin: 'Clausurae',
+      detail: '<p>Closures <strong>publish the decision boundaries</strong> and their ordering. Once a closure set is declared, it cannot be edited mid-episode — the stance <em>must</em> change when thresholds are crossed.</p><p>Each of the 20 domains has its own closures: which real-world quantities become channels, how they map to [0, 1], and what entity catalogs are used.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> The standard model closure maps 31 particles to 8 channels: mass_log, spin_norm, charge_norm, color, weak_isospin, lepton_num, baryon_num, generation. Equal weights w_i = 1/8.</p>',
+    },
+    {
+      name: 'Ledger', role: 'Debit/credit must balance', color: 'text-orange-400', borderColor: 'border-orange-500 hover:border-orange-400',
+      latin: 'Liber Integritatis',
+      detail: '<p>The Integrity Ledger is the <strong>accounting system</strong>. Every claim is an account:</p><ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Debits:</strong> Drift cost D_ω and Roughness cost D_C</li><li><strong>Credits:</strong> Return credit R·τ_R (zero if τ_R = ∞_rec)</li></ul><p>The conservation budget Δκ = R·τ_R − (D_ω + D_C) must reconcile: residual ≤ tol_seam (0.005).</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> A particle with ω = 0.15, C = 0.3 gets debits D_ω = Γ(0.15) and D_C = 0.3. If return credit exceeds these debits, the seam closes (PASS). Otherwise, FAIL.</p>',
+    },
+    {
+      name: 'Stance', role: 'Derived verdict — never asserted', color: 'text-red-400', borderColor: 'border-red-500 hover:border-red-400',
+      latin: 'Status',
+      detail: '<p>The Stance is the <strong>output</strong> — a three-valued verdict read from the gates and ledger:</p><ul class="list-disc list-inside mt-2 space-y-1"><li><strong>CONFORMANT:</strong> All checks pass, seam closes, identities verified</li><li><strong>NONCONFORMANT:</strong> One or more checks fail</li><li><strong>NON_EVALUABLE:</strong> Insufficient data or structure to produce a verdict</li></ul><p>The stance is <em>derived</em>, never asserted. No agent frames the verdict — the structure produces it.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> If ω < 0.038, F > 0.90, S < 0.15, C < 0.14, and all identity checks pass → Stable regime, CONFORMANT verdict. The agent did not decide this — the gates did.</p>',
+    },
+  ];
+
+  const spineContainer = document.getElementById('spine-stops')!;
+  const spineDetailPanel = document.getElementById('spine-detail')!;
+
+  function renderSpine() {
+    spineContainer.innerHTML = '';
+    spineStops.forEach((stop, i) => {
+      const btn = document.createElement('button');
+      btn.className = `spine-stop flex-1 bg-kernel-900 border-t-2 ${stop.borderColor} rounded-lg p-4 text-center cursor-pointer transition group`;
+      btn.dataset.index = String(i);
+      btn.innerHTML = `
+        <div class="text-xs text-kernel-500 mb-1">Stop ${i + 1}</div>
+        <div class="text-lg font-bold ${stop.color}">${stop.name}</div>
+        <div class="text-xs text-kernel-400 mt-1">${stop.role}</div>
+        <div class="text-[10px] text-kernel-600 mt-2 group-hover:text-kernel-400 transition">Click &rarr;</div>
+      `;
+      btn.addEventListener('click', () => showSpineDetail(i));
+      // Arrow between stops
+      if (i < spineStops.length - 1) {
+        const arrow = document.createElement('div');
+        arrow.className = 'hidden md:flex items-center text-kernel-600 text-lg';
+        arrow.textContent = '→';
+        spineContainer.appendChild(btn);
+        spineContainer.appendChild(arrow);
+      } else {
+        spineContainer.appendChild(btn);
+      }
+    });
+  }
+
+  function showSpineDetail(index: number) {
+    const stop = spineStops[index];
+    document.getElementById('spine-detail-title')!.innerHTML = `<span class="${stop.color}">${stop.name}</span> — ${stop.role}`;
+    document.getElementById('spine-detail-body')!.innerHTML = `
+      ${stop.detail}
+      <div class="bg-kernel-950 rounded-lg p-3 mt-3">${stop.example}</div>
+      <p class="text-xs text-kernel-600 italic mt-2">Latin: <em>${stop.latin}</em></p>
+    `;
+    spineDetailPanel.classList.remove('hidden');
+
+    document.querySelectorAll('.spine-stop').forEach((s, i) => {
+      if (i === index) s.classList.add('ring-2', 'ring-kernel-500');
+      else s.classList.remove('ring-2', 'ring-kernel-500');
+    });
+
+    spineDetailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('spine-detail-close')!.addEventListener('click', () => {
+    spineDetailPanel.classList.add('hidden');
+    document.querySelectorAll('.spine-stop').forEach(s => s.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // ── Regime Detail ───────────────────────────────
+
+  interface RegimeData {
+    name: string;
+    color: string;
+    gates: string;
+    detail: string;
+    example: string;
+    percent: string;
+  }
+
+  const regimes: Record<string, RegimeData> = {
+    stable: {
+      name: 'Stable', color: 'text-green-400', gates: 'ω < 0.038 ∧ F > 0.90 ∧ S < 0.15 ∧ C < 0.14', percent: '12.5%',
+      detail: '<p>Stable is a <strong>conjunctive</strong> regime — ALL four gates must be satisfied simultaneously. This makes stability rare: only 12.5% of the Fisher manifold qualifies.</p><p>A system in Stable regime has low drift, high fidelity, low uncertainty, and low channel spread. It is the "quiet zone" where the axiom\'s return condition is most easily satisfied.</p><p>Because stability requires <em>all</em> gates, a single violating invariant (e.g., C > 0.14 while others OK) pushes the system to Watch.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> A nickel atom in the periodic kernel: F = 0.96, ω = 0.04, S = 0.12, C = 0.08. All gates pass → Stable. IC/F = 0.96 — coherence is nearly maximal.</p>',
+    },
+    watch: {
+      name: 'Watch', color: 'text-yellow-400', gates: '0.038 ≤ ω < 0.30 (or Stable gates not all satisfied)', percent: '24.4%',
+      detail: '<p>Watch is the <strong>intermediate zone</strong>. A system enters Watch if drift is moderate (0.038 ≤ ω < 0.30) OR if any single Stable gate fails even with low drift.</p><p>Watch systems are "interesting" — they have enough structure to be meaningful but enough drift to be uncertain. Many real-world systems live here, including most composite particles and biological systems.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> A proton: F = 0.58, ω = 0.42... wait, that\'s actually Collapse. Better example: an iron atom with slightly heterogeneous channels: F = 0.93, ω = 0.07, S = 0.18, C = 0.12. S > 0.15 violates one Stable gate → Watch.</p>',
+    },
+    collapse: {
+      name: 'Collapse', color: 'text-red-400', gates: 'ω ≥ 0.30', percent: '63.1%',
+      detail: '<p>Collapse is the <strong>dominant regime</strong> — 63.1% of the Fisher manifold. A system enters Collapse when drift reaches ω ≥ 0.30, meaning 30%+ of the signal is lost.</p><p>Crucially, Collapse is <strong>not failure</strong>. Collapse is generative — <em>ruptura est fons constantiae</em> (rupture is the source of constancy). The axiom does not require that systems avoid collapse; it requires that what returns from collapse is real.</p><p>The Critical overlay (IC < 0.30) flags when integrity itself is dangerously low, regardless of regime.</p>',
+      example: '<p class="text-xs"><strong>Example:</strong> The quark→hadron transition: quarks have F ≈ 0.60, but hadrons show IC/F ratios below 0.04 due to the dead color channel. ω > 0.30 → Collapse regime. Yet atoms RESTORE coherence (§6 of orientation), demonstrating that return from collapse is possible and measurable.</p>',
+    },
+  };
+
+  document.querySelectorAll('.regime-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const r = (card as HTMLElement).dataset.regime!;
+      const data = regimes[r];
+      const panel = document.getElementById('regime-detail')!;
+
+      document.getElementById('regime-detail-title')!.innerHTML = `<span class="${data.color}">${data.name}</span> — ${data.percent} of Fisher space`;
+      document.getElementById('regime-detail-body')!.innerHTML = `
+        <div class="bg-kernel-950 rounded-lg p-3 font-mono text-xs mb-3">${data.gates}</div>
+        ${data.detail}
+        <div class="bg-kernel-950 rounded-lg p-3 mt-3">${data.example}</div>
+      `;
+      panel.classList.remove('hidden');
+
+      document.querySelectorAll('.regime-card').forEach((c, i) => {
+        if ((c as HTMLElement).dataset.regime === r) c.classList.add('ring-2', 'ring-kernel-500');
+        else c.classList.remove('ring-2', 'ring-kernel-500');
+      });
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  document.getElementById('regime-detail-close')!.addEventListener('click', () => {
+    document.getElementById('regime-detail')!.classList.add('hidden');
+    document.querySelectorAll('.regime-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // ── Five Words ─────────────────────────────────
+
+  interface WordData {
+    word: string;
+    latin: string;
+    role: string;
+    ledgerRole: string;
+    detail: string;
+    operationalDef: string;
+  }
+
+  const fiveWords: WordData[] = [
+    { word: 'Drift', latin: 'derivatio', role: 'What moved', ledgerRole: 'Debit D_ω',
+      detail: 'Drift names the salient change relative to the Contract. It is the primary indicator of collapse proximity — when drift ω ≥ 0.30, the system enters Collapse regime.',
+      operationalDef: 'D_ω = Γ(ω) = ω³/(1−ω+ε). Higher drift means higher cost in the ledger. Participates in all regime gates as the primary variable.' },
+    { word: 'Fidelity', latin: 'fidelitas', role: 'What persisted', ledgerRole: '—',
+      detail: 'Fidelity names what survived — the structure, warrant, or signal that persists through collapse. It is the kernel\'s F value, the anchor of the measurement.',
+      operationalDef: 'Retention of Contract-specified invariants. F = Σ wᵢcᵢ. Not directly debited or credited in the ledger — instead, it constrains ω (via ω = 1 − F) which IS debited.' },
+    { word: 'Roughness', latin: 'curvatura', role: 'Where/why it was bumpy', ledgerRole: 'Debit D_C',
+      detail: 'Roughness names where and why the transition was bumpy — friction, confounds, or seams that made the collapse non-smooth.',
+      operationalDef: 'D_C = α·C = 1.0 × C. Curvature measures the spread of channel values. High roughness means the system\'s coherence is uneven, costing integrity in the ledger.' },
+    { word: 'Return', latin: 'reditus', role: 'Credible re-entry', ledgerRole: 'Credit R·τ_R',
+      detail: 'Return names the credible re-entry — how the claim returns to legitimacy. This is the credit side of the ledger. If τ_R = ∞_rec (no return), zero credit is given.',
+      operationalDef: 'Typed credit R·τ_R in the ledger. τ_R is computed from the frozen contract + closures. If τ_R = ∞_rec, the credit is zero — recusatio est exitus primi ordinis.' },
+    { word: 'Integrity', latin: 'integritas', role: 'Does it hold together', ledgerRole: 'Verdict',
+      detail: 'Integrity is the verdict — does it hang together under the Contract? Unlike the other four words, Integrity is never asserted by the author. It is always READ from the reconciled ledger and stance.',
+      operationalDef: 'Read from the reconciled ledger: Δκ = R·τ_R − (D_ω + D_C). If |residual| ≤ tol_seam (0.005), the seam closes and integrity holds. The interpretive density I = eᵏ provides the unitless measure.' },
+  ];
+
+  const wordsGrid = document.getElementById('five-words-grid')!;
+
+  function renderFiveWords() {
+    wordsGrid.innerHTML = '';
+    fiveWords.forEach((w, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'word-card bg-kernel-900 border border-kernel-800 hover:border-kernel-600 rounded-xl p-3 text-center cursor-pointer transition group';
+      btn.dataset.index = String(i);
+      btn.innerHTML = `
+        <div class="text-lg font-bold text-kernel-100">${w.word}</div>
+        <div class="text-xs text-kernel-500 italic">${w.latin}</div>
+        <div class="text-xs text-kernel-400 mt-1">${w.role}</div>
+        <div class="text-[10px] text-kernel-600 mt-1">${w.ledgerRole}</div>
+      `;
+      btn.addEventListener('click', () => showWordDetail(i));
+      wordsGrid.appendChild(btn);
+    });
+  }
+
+  function showWordDetail(index: number) {
+    const w = fiveWords[index];
+    document.getElementById('word-detail-title')!.textContent = `${w.word} — ${w.latin}`;
+    document.getElementById('word-detail-body')!.innerHTML = `
+      <p>${w.detail}</p>
+      <div class="bg-kernel-950 rounded-lg p-3 mt-2">
+        <p class="text-xs text-kernel-400"><strong>Ledger Role:</strong> ${w.ledgerRole}</p>
+        <p class="text-xs text-kernel-400 mt-1"><strong>Operational:</strong> ${w.operationalDef}</p>
+      </div>
+    `;
+    document.getElementById('word-detail')!.classList.remove('hidden');
+
+    document.querySelectorAll('.word-card').forEach((c, i) => {
+      if (i === index) c.classList.add('ring-2', 'ring-kernel-500');
+      else c.classList.remove('ring-2', 'ring-kernel-500');
+    });
+
+    document.getElementById('word-detail')!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('word-detail-close')!.addEventListener('click', () => {
+    document.getElementById('word-detail')!.classList.add('hidden');
+    document.querySelectorAll('.word-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // ── Tier Architecture ──────────────────────────
+
+  interface TierData {
+    tier: string;
+    name: string;
+    color: string;
+    borderColor: string;
+    summary: string;
+    detail: string;
+    mutable: string;
+    examples: string;
+  }
+
+  const tiers: TierData[] = [
+    {
+      tier: 'Tier-1', name: 'The Kernel', color: 'text-amber-400', borderColor: 'border-amber-700 hover:border-amber-500',
+      summary: 'The mathematical function and its provable identities.',
+      detail: '<p>Tier-1 is the <strong>mathematical object</strong> itself — the kernel function K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC) and everything provable about it: 47 lemmas, 44 structural identities, 5 frozen constants, and the structural constants c* = 0.7822, c_trap = 0.3178.</p><p>Tier-1 is <strong>domain-independent</strong>. The kernel does not know whether its input is particle physics or consciousness data. All domain semantics live in Tier-2.</p>',
+      mutable: 'NEVER within a run. Promotion only through seam weld across runs.',
+      examples: '<p class="text-xs">F + ω = 1 (duality identity), IC ≤ F (integrity bound), IC = exp(κ) (log-integrity relation), S ≈ f(F,C) (statistical constraint), the 44 structural identities.</p>',
+    },
+    {
+      tier: 'Tier-0', name: 'Protocol', color: 'text-blue-400', borderColor: 'border-blue-700 hover:border-blue-500',
+      summary: 'Operational machinery that implements the kernel.',
+      detail: '<p>Tier-0 is the <strong>code</strong> — the implementation that evaluates the Tier-1 formulas, plus all operational machinery: embedding raw data into [0,1]ⁿ, computing the kernel, regime gates, seam calculus, contracts, schemas, SHA-256, and three-valued verdicts.</p><p>Key distinction: the code is Tier-0; what it computes is Tier-1. Implemented across three languages: <strong>Python</strong> (orchestration), <strong>C99</strong> (core spine), <strong>C++</strong> (accelerator with pybind11).</p>',
+      mutable: 'Configuration frozen per run. Code can be updated across runs.',
+      examples: '<p class="text-xs">kernel_optimized.py, frozen_contract.py, validator.py, cli.py, the C99 orchestration core (pipeline.c), the C++ accelerator.</p>',
+    },
+    {
+      tier: 'Tier-2', name: 'Expansion Space', color: 'text-green-400', borderColor: 'border-green-700 hover:border-green-500',
+      summary: '20 domain closures — freely extensible.',
+      detail: '<p>Tier-2 is the <strong>expansion space</strong> — domain closures that choose which real-world quantities become the trace vector c and weights w. Each closure maps a specific domain\'s data into the kernel\'s input format.</p><p>Currently 20 domains: from <strong>particle physics</strong> (31 particles, 8-channel trace) to <strong>consciousness studies</strong> (20 systems, coherence kernel) to <strong>finance</strong> (portfolio continuity, market microstructure). Freely extensible — add new domains by creating new closures and validating through Tier-0 against Tier-1.</p>',
+      mutable: 'Freely extensible. Validated before trust.',
+      examples: '<p class="text-xs">standard_model/ (31 particles, 27 theorems), atomic_physics/ (118 elements, 10,162 Tier-1 tests), consciousness_coherence/ (20 systems, 7 theorems), finance/ (portfolio, microstructure).</p>',
+    },
+  ];
+
+  const tierContainer = document.getElementById('tier-cards')!;
+
+  function renderTiers() {
+    tierContainer.innerHTML = '';
+    tiers.forEach((t, i) => {
+      const btn = document.createElement('button');
+      btn.className = `tier-card bg-kernel-900 border-2 ${t.borderColor} rounded-xl p-4 text-left cursor-pointer transition group`;
+      btn.dataset.index = String(i);
+      btn.innerHTML = `
+        <div class="text-xs text-kernel-500 mb-1">${t.tier}</div>
+        <div class="text-lg font-bold ${t.color} mb-2">${t.name}</div>
+        <div class="text-sm text-kernel-400">${t.summary}</div>
+        <div class="text-[10px] text-kernel-600 mt-2 group-hover:text-kernel-400 transition">Click to explore &rarr;</div>
+      `;
+      btn.addEventListener('click', () => showTierDetail(i));
+      tierContainer.appendChild(btn);
+    });
+  }
+
+  function showTierDetail(index: number) {
+    const t = tiers[index];
+    document.getElementById('tier-detail-title')!.innerHTML = `<span class="${t.color}">${t.tier}: ${t.name}</span>`;
+    document.getElementById('tier-detail-body')!.innerHTML = `
+      ${t.detail}
+      <div class="bg-kernel-950 rounded-lg p-3 mt-2">
+        <p class="text-xs text-kernel-400"><strong>Mutable?</strong> ${t.mutable}</p>
+      </div>
+      <div class="bg-kernel-950 rounded-lg p-3 mt-2">${t.examples}</div>
+    `;
+    document.getElementById('tier-detail')!.classList.remove('hidden');
+
+    document.querySelectorAll('.tier-card').forEach((c, i) => {
+      if (i === index) c.classList.add('ring-2', 'ring-kernel-500');
+      else c.classList.remove('ring-2', 'ring-kernel-500');
+    });
+
+    document.getElementById('tier-detail')!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('tier-detail-close')!.addEventListener('click', () => {
+    document.getElementById('tier-detail')!.classList.add('hidden');
+    document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('ring-2', 'ring-kernel-500'));
+  });
+
+  // ── Initialize everything ──────────────────────
+
+  renderCards();
+  renderRelationshipDiagram();
+  renderSpine();
+  renderFiveWords();
+  renderTiers();
+</script>
