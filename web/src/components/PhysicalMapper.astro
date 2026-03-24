@@ -1,0 +1,1058 @@
+---
+/**
+ * Physical Signature Mapper — Interactive entity identification
+ *
+ * Four modes:
+ *   1. Identify — input kernel values or trace, find nearest known entities
+ *   2. Interpret — explain what each invariant value means physically
+ *   3. Predict — when no close match, predict scale/structure/composition
+ *   4. Atlas — visual map of all reference entities across scales
+ */
+---
+
+<div id="physical-mapper" class="space-y-4">
+  <!-- Tab navigation -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-2">
+    <div class="flex flex-wrap gap-1" role="tablist">
+      <button class="pm-tab px-3 py-1.5 rounded text-sm transition" data-tab="identify" role="tab" aria-selected="true">
+        🔍 Identify
+      </button>
+      <button class="pm-tab px-3 py-1.5 rounded text-sm transition" data-tab="interpret" role="tab" aria-selected="false">
+        📖 Interpret
+      </button>
+      <button class="pm-tab px-3 py-1.5 rounded text-sm transition" data-tab="predict" role="tab" aria-selected="false">
+        🧪 Predict Unknown
+      </button>
+      <button class="pm-tab px-3 py-1.5 rounded text-sm transition" data-tab="atlas" role="tab" aria-selected="false">
+        🗺️ Entity Atlas
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ TAB 1: Identify ═══════════ -->
+  <div id="pm-identify" class="pm-panel space-y-4">
+    <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-lg font-semibold text-kernel-100 mb-3">Signature Identification</h3>
+      <p class="text-sm text-kernel-400 mb-4">
+        Enter kernel invariant values or a trace vector to find the closest known physical entities.
+      </p>
+
+      <!-- Input mode toggle -->
+      <div class="flex gap-2 mb-4">
+        <button id="pm-mode-kernel" class="pm-mode-btn px-3 py-1 rounded text-sm bg-kernel-600 text-kernel-100">
+          Kernel Values (F, ω, IC…)
+        </button>
+        <button id="pm-mode-trace" class="pm-mode-btn px-3 py-1 rounded text-sm bg-kernel-800 text-kernel-400">
+          Trace Vector (8 channels)
+        </button>
+        <button id="pm-mode-preset" class="pm-mode-btn px-3 py-1 rounded text-sm bg-kernel-800 text-kernel-400">
+          Reference Entity
+        </button>
+      </div>
+
+      <!-- Kernel input -->
+      <div id="pm-kernel-input" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+        <div>
+          <label class="text-xs text-kernel-500">F (Fidelity)</label>
+          <input type="number" id="pm-F" value="0.750" step="0.01" min="0" max="1"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100">
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">ω (Drift)</label>
+          <input type="number" id="pm-omega" value="0.250" step="0.01" min="0" max="1"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100" disabled>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">IC (Integrity)</label>
+          <input type="number" id="pm-IC" value="0.500" step="0.01" min="0" max="1"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100">
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">Δ (Gap = F − IC)</label>
+          <input type="number" id="pm-delta" value="0.250" step="0.01"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100" disabled>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">S (Entropy)</label>
+          <input type="number" id="pm-S" value="0.550" step="0.01" min="0" max="2"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100">
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">C (Curvature)</label>
+          <input type="number" id="pm-C" value="0.150" step="0.01" min="0" max="1"
+            class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100">
+        </div>
+      </div>
+
+      <!-- Trace input (hidden by default) -->
+      <div id="pm-trace-input" class="hidden mb-4">
+        <label class="text-xs text-kernel-500 mb-1 block">8-Channel Trace Vector (comma-separated)</label>
+        <div class="flex gap-2">
+          <input type="text" id="pm-trace-values" value="0.77, 0.82, 0.71, 0.88, 0.78, 0.76, 0.79, 0.65"
+            class="flex-1 bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100 font-mono">
+          <button id="pm-compute-trace" class="px-3 py-1 bg-kernel-600 hover:bg-kernel-500 rounded text-sm text-kernel-100 transition">
+            Compute
+          </button>
+        </div>
+        <p class="text-xs text-kernel-500 mt-1">Each value in [0, 1]. Equal weights assumed.</p>
+      </div>
+
+      <!-- Preset selector (hidden by default) -->
+      <div id="pm-preset-input" class="hidden mb-4">
+        <label class="text-xs text-kernel-500 mb-1 block">Select a Reference Entity</label>
+        <select id="pm-entity-select"
+          class="w-full bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-sm text-kernel-100">
+        </select>
+      </div>
+
+      <!-- Scale filter -->
+      <div class="flex gap-2 items-center mb-4">
+        <label class="text-xs text-kernel-500">Scale filter:</label>
+        <select id="pm-scale-filter"
+          class="bg-kernel-800 border border-kernel-600 rounded px-2 py-1 text-xs text-kernel-100">
+          <option value="all">All scales</option>
+          <option value="subatomic">Subatomic</option>
+          <option value="hadronic">Hadronic</option>
+          <option value="nuclear">Nuclear</option>
+          <option value="atomic">Atomic</option>
+          <option value="molecular">Molecular</option>
+          <option value="bulk">Bulk Material</option>
+          <option value="astronomical">Astronomical</option>
+          <option value="abstract">Abstract / Emergent</option>
+        </select>
+        <button id="pm-identify-btn" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 rounded text-sm font-medium text-white transition">
+          Identify ↵
+        </button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="pm-identify-results" class="space-y-3"></div>
+  </div>
+
+  <!-- ═══════════ TAB 2: Interpret ═══════════ -->
+  <div id="pm-interpret" class="pm-panel hidden space-y-4">
+    <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-lg font-semibold text-kernel-100 mb-3">Physical Interpretation</h3>
+      <p class="text-sm text-kernel-400 mb-4">
+        Click a kernel invariant to see its physical meaning across different scales.
+        Each number has a physical consequence.
+      </p>
+
+      <!-- Invariant quick-buttons -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="F">
+          F — Fidelity
+        </button>
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="omega">
+          ω — Drift
+        </button>
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="IC">
+          IC — Integrity
+        </button>
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="delta">
+          Δ — Heterogeneity Gap
+        </button>
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="S">
+          S — Entropy
+        </button>
+        <button class="pm-inv-btn px-3 py-1.5 rounded text-sm bg-kernel-700 hover:bg-kernel-600 text-kernel-100 transition" data-inv="C">
+          C — Curvature
+        </button>
+      </div>
+    </div>
+
+    <!-- Interpretation panel -->
+    <div id="pm-interpret-result" class="space-y-3"></div>
+  </div>
+
+  <!-- ═══════════ TAB 3: Predict Unknown ═══════════ -->
+  <div id="pm-predict" class="pm-panel hidden space-y-4">
+    <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-lg font-semibold text-kernel-100 mb-3">Predict Unknown Composition</h3>
+      <p class="text-sm text-kernel-400 mb-4">
+        Input a trace vector from an unknown or hypothetical system. The mapper will predict
+        its physical scale, structure, composition, and stability based on kernel similarity
+        to known entities. Novel signatures (high distance from all references) may indicate
+        unknown matter compositions.
+      </p>
+
+      <div class="grid grid-cols-4 gap-2 mb-4" id="pm-predict-channels">
+        <!-- 8 channel sliders generated by JS -->
+      </div>
+
+      <div class="flex gap-2 items-center">
+        <button id="pm-predict-random" class="px-3 py-1 bg-kernel-700 hover:bg-kernel-600 rounded text-sm text-kernel-400 transition">
+          Random Trace
+        </button>
+        <button id="pm-predict-novel" class="px-3 py-1 bg-kernel-700 hover:bg-kernel-600 rounded text-sm text-kernel-400 transition">
+          Novel Region
+        </button>
+        <button id="pm-predict-btn" class="px-4 py-1.5 bg-amber-600 hover:bg-amber-500 rounded text-sm font-medium text-white transition">
+          Predict Properties ↵
+        </button>
+      </div>
+    </div>
+
+    <!-- Prediction results -->
+    <div id="pm-predict-results" class="space-y-3"></div>
+  </div>
+
+  <!-- ═══════════ TAB 4: Entity Atlas ═══════════ -->
+  <div id="pm-atlas" class="pm-panel hidden space-y-4">
+    <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+      <h3 class="text-lg font-semibold text-kernel-100 mb-3">Entity Atlas</h3>
+      <p class="text-sm text-kernel-400 mb-2">
+        All reference entities plotted in kernel space. Hover for details. Click to load into Identify tab.
+      </p>
+
+      <!-- Axis selectors -->
+      <div class="flex gap-4 items-center mb-2">
+        <div>
+          <label class="text-xs text-kernel-500">X axis:</label>
+          <select id="pm-atlas-x" class="bg-kernel-800 border border-kernel-600 rounded px-1 py-0.5 text-xs text-kernel-100">
+            <option value="F" selected>F (Fidelity)</option>
+            <option value="omega">ω (Drift)</option>
+            <option value="IC">IC (Integrity)</option>
+            <option value="delta">Δ (Gap)</option>
+            <option value="S">S (Entropy)</option>
+            <option value="C">C (Curvature)</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">Y axis:</label>
+          <select id="pm-atlas-y" class="bg-kernel-800 border border-kernel-600 rounded px-1 py-0.5 text-xs text-kernel-100">
+            <option value="F">F (Fidelity)</option>
+            <option value="omega">ω (Drift)</option>
+            <option value="IC" selected>IC (Integrity)</option>
+            <option value="delta">Δ (Gap)</option>
+            <option value="S">S (Entropy)</option>
+            <option value="C">C (Curvature)</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-kernel-500">Color by:</label>
+          <select id="pm-atlas-color" class="bg-kernel-800 border border-kernel-600 rounded px-1 py-0.5 text-xs text-kernel-100">
+            <option value="scale" selected>Scale</option>
+            <option value="regime">Regime</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atlas canvas -->
+    <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+      <canvas id="pm-atlas-canvas" width="800" height="500" class="w-full rounded border border-kernel-700" style="max-height: 500px;"></canvas>
+      <div id="pm-atlas-tooltip" class="hidden absolute bg-kernel-800 border border-kernel-600 rounded px-3 py-2 text-xs text-kernel-200 shadow-lg z-10 max-w-sm pointer-events-none"></div>
+    </div>
+
+    <!-- Entity list -->
+    <div id="pm-atlas-list" class="space-y-2"></div>
+  </div>
+</div>
+
+<style>
+  .pm-tab[aria-selected="true"] {
+    background-color: rgb(var(--color-kernel-600));
+    color: rgb(var(--color-kernel-100));
+    font-weight: 500;
+  }
+  .pm-tab[aria-selected="false"] {
+    background-color: transparent;
+    color: rgb(var(--color-kernel-400));
+  }
+  .pm-tab:hover {
+    background-color: rgb(var(--color-kernel-700));
+    color: rgb(var(--color-kernel-100));
+  }
+  .pm-inv-btn.active {
+    background-color: rgb(var(--color-kernel-500));
+    font-weight: 600;
+  }
+  .pm-mode-btn.active {
+    background-color: rgb(var(--color-kernel-600));
+    color: rgb(var(--color-kernel-100));
+  }
+</style>
+
+<script>
+  import { computeKernel, classifyRegime, type KernelResult } from '../lib/kernel';
+  import {
+    PHYSICAL_ENTITIES,
+    SCALE_INFO,
+    findNearestEntities,
+    classifyScale,
+    interpretKernel,
+    predictProperties,
+    kernelDistance,
+    type PhysicalEntity,
+    type PhysicalScale,
+    type SignatureMatch,
+  } from '../lib/physical-signatures';
+
+  /* ─── Globals ─────────────────────────────────────────────── */
+
+  let currentMode = 'kernel';
+  let currentTab = 'identify';
+
+  /* ─── Helper: get entity kernel ───────────────────────────── */
+
+  function entityKernel(e: PhysicalEntity): KernelResult {
+    return computeKernel(e.c, e.w);
+  }
+
+  /* ─── Tab Switching ───────────────────────────────────────── */
+
+  document.querySelectorAll('.pm-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = (tab as HTMLElement).dataset.tab!;
+      currentTab = target;
+      document.querySelectorAll('.pm-tab').forEach(t => t.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      document.querySelectorAll('.pm-panel').forEach(p => (p as HTMLElement).classList.add('hidden'));
+      document.getElementById(`pm-${target}`)!.classList.remove('hidden');
+      if (target === 'atlas') renderAtlas();
+    });
+  });
+
+  /* ─── Input Mode Toggle ───────────────────────────────────── */
+
+  const modeKernel = document.getElementById('pm-mode-kernel')!;
+  const modeTrace = document.getElementById('pm-mode-trace')!;
+  const modePreset = document.getElementById('pm-mode-preset')!;
+
+  function setMode(mode: string) {
+    currentMode = mode;
+    [modeKernel, modeTrace, modePreset].forEach(b => {
+      b.classList.remove('bg-kernel-600', 'text-kernel-100');
+      b.classList.add('bg-kernel-800', 'text-kernel-400');
+    });
+    const active = mode === 'kernel' ? modeKernel : mode === 'trace' ? modeTrace : modePreset;
+    active.classList.remove('bg-kernel-800', 'text-kernel-400');
+    active.classList.add('bg-kernel-600', 'text-kernel-100');
+
+    document.getElementById('pm-kernel-input')!.classList.toggle('hidden', mode !== 'kernel');
+    document.getElementById('pm-trace-input')!.classList.toggle('hidden', mode !== 'trace');
+    document.getElementById('pm-preset-input')!.classList.toggle('hidden', mode !== 'preset');
+  }
+
+  modeKernel.addEventListener('click', () => setMode('kernel'));
+  modeTrace.addEventListener('click', () => setMode('trace'));
+  modePreset.addEventListener('click', () => setMode('preset'));
+
+  /* ─── Populate entity dropdown ────────────────────────────── */
+
+  const entitySelect = document.getElementById('pm-entity-select') as HTMLSelectElement;
+  const groupedEntities: Record<string, PhysicalEntity[]> = {};
+  PHYSICAL_ENTITIES.forEach(e => {
+    if (!groupedEntities[e.scale]) groupedEntities[e.scale] = [];
+    groupedEntities[e.scale].push(e);
+  });
+  for (const [scale, entities] of Object.entries(groupedEntities)) {
+    const group = document.createElement('optgroup');
+    group.label = SCALE_INFO[scale as PhysicalScale]?.label ?? scale;
+    entities.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.name;
+      opt.textContent = `${e.symbol ? e.symbol + ' ' : ''}${e.name}`;
+      group.appendChild(opt);
+    });
+    entitySelect.appendChild(group);
+  }
+
+  /* ─── F/omega coupling ────────────────────────────────────── */
+
+  const inputF = document.getElementById('pm-F') as HTMLInputElement;
+  const inputOmega = document.getElementById('pm-omega') as HTMLInputElement;
+  const inputIC = document.getElementById('pm-IC') as HTMLInputElement;
+  const inputDelta = document.getElementById('pm-delta') as HTMLInputElement;
+
+  inputF.addEventListener('input', () => {
+    const f = parseFloat(inputF.value) || 0;
+    inputOmega.value = (1 - f).toFixed(3);
+    const ic = parseFloat(inputIC.value) || 0;
+    inputDelta.value = Math.max(0, f - ic).toFixed(3);
+  });
+  inputIC.addEventListener('input', () => {
+    const f = parseFloat(inputF.value) || 0;
+    const ic = parseFloat(inputIC.value) || 0;
+    inputDelta.value = Math.max(0, f - ic).toFixed(3);
+  });
+
+  /* ─── Compute trace → kernel ──────────────────────────────── */
+
+  document.getElementById('pm-compute-trace')!.addEventListener('click', () => {
+    const raw = (document.getElementById('pm-trace-values') as HTMLInputElement).value;
+    const vals = raw.split(',').map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+    if (vals.length < 2) return;
+    const w = Array(vals.length).fill(1 / vals.length);
+    const kr = computeKernel(vals, w);
+    inputF.value = kr.F.toFixed(4);
+    inputOmega.value = kr.omega.toFixed(4);
+    inputIC.value = kr.IC.toFixed(4);
+    inputDelta.value = kr.delta.toFixed(4);
+    (document.getElementById('pm-S') as HTMLInputElement).value = kr.S.toFixed(4);
+    (document.getElementById('pm-C') as HTMLInputElement).value = kr.C.toFixed(4);
+    setMode('kernel');
+  });
+
+  /* ─── Entity preset → kernel ──────────────────────────────── */
+
+  entitySelect.addEventListener('change', () => {
+    const name = entitySelect.value;
+    const entity = PHYSICAL_ENTITIES.find(e => e.name === name);
+    if (!entity) return;
+    const kr = entityKernel(entity);
+    inputF.value = kr.F.toFixed(4);
+    inputOmega.value = kr.omega.toFixed(4);
+    inputIC.value = kr.IC.toFixed(4);
+    inputDelta.value = kr.delta.toFixed(4);
+    (document.getElementById('pm-S') as HTMLInputElement).value = kr.S.toFixed(4);
+    (document.getElementById('pm-C') as HTMLInputElement).value = kr.C.toFixed(4);
+  });
+
+  /* ─── Build kernel result from inputs ─────────────────────── */
+
+  function getInputKernel(): KernelResult {
+    const F = parseFloat(inputF.value) || 0;
+    const omega = 1 - F;
+    const IC = Math.min(parseFloat(inputIC.value) || 0, F);
+    const S = parseFloat((document.getElementById('pm-S') as HTMLInputElement).value) || 0;
+    const C = parseFloat((document.getElementById('pm-C') as HTMLInputElement).value) || 0;
+    const kappa = Math.log(Math.max(IC, 1e-15));
+    return {
+      F, omega, S, C, kappa, IC,
+      delta: Math.max(0, F - IC),
+      isHomogeneous: C < 0.001,
+    };
+  }
+
+  /* ─── Scale color mapping ─────────────────────────────────── */
+
+  const SCALE_COLORS: Record<PhysicalScale, string> = {
+    subatomic: '#a78bfa', hadronic: '#f87171', nuclear: '#fb923c',
+    atomic: '#fbbf24', molecular: '#4ade80', bulk: '#22d3ee',
+    astronomical: '#60a5fa', abstract: '#a3e635',
+  };
+
+  const REGIME_COLORS: Record<string, string> = {
+    STABLE: '#4ade80', WATCH: '#fbbf24', COLLAPSE: '#f87171',
+  };
+
+  /* ─── Format match quality badge ──────────────────────────── */
+
+  function qualityBadge(q: string): string {
+    const colors: Record<string, string> = {
+      exact: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50',
+      close: 'bg-green-500/20 text-green-300 border-green-500/50',
+      similar: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50',
+      approximate: 'bg-orange-500/20 text-orange-300 border-orange-500/50',
+      distant: 'bg-red-500/20 text-red-300 border-red-500/50',
+    };
+    return `<span class="text-xs px-1.5 py-0.5 rounded border ${colors[q] || colors.distant}">${q}</span>`;
+  }
+
+  /* ═══════════ TAB 1: IDENTIFY ═══════════ */
+
+  document.getElementById('pm-identify-btn')!.addEventListener('click', runIdentify);
+
+  function runIdentify() {
+    const target = getInputKernel();
+    const filterEl = document.getElementById('pm-scale-filter') as HTMLSelectElement;
+    const scaleFilter = filterEl.value === 'all' ? undefined : filterEl.value as PhysicalScale;
+    const matches = findNearestEntities(target, 10, scaleFilter);
+    const scaleClass = classifyScale(target);
+    const regime = classifyRegime(target);
+
+    const container = document.getElementById('pm-identify-results')!;
+
+    // Summary card
+    let html = `
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <div class="flex flex-wrap gap-4 text-sm mb-3">
+          <span class="text-kernel-400">Input: F=<span class="text-kernel-100">${target.F.toFixed(3)}</span>
+            ω=<span class="text-kernel-100">${target.omega.toFixed(3)}</span>
+            IC=<span class="text-kernel-100">${target.IC.toFixed(3)}</span>
+            Δ=<span class="text-kernel-100">${target.delta.toFixed(3)}</span>
+            S=<span class="text-kernel-100">${target.S.toFixed(3)}</span>
+            C=<span class="text-kernel-100">${target.C.toFixed(3)}</span></span>
+        </div>
+        <div class="flex flex-wrap gap-3 text-sm">
+          <span class="px-2 py-0.5 rounded ${regime.regime === 'STABLE' ? 'bg-emerald-500/20 text-emerald-300' : regime.regime === 'WATCH' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-red-500/20 text-red-300'}">
+            ${regime.regime}${regime.isCritical ? ' ⚠ CRITICAL' : ''}
+          </span>
+          <span class="px-2 py-0.5 rounded bg-kernel-700 ${SCALE_INFO[scaleClass.predictedScale]?.color || 'text-kernel-300'}">
+            Predicted scale: ${SCALE_INFO[scaleClass.predictedScale]?.label} (${(scaleClass.confidence * 100).toFixed(0)}%)
+          </span>
+        </div>
+      </div>
+    `;
+
+    // Match cards
+    html += `<div class="grid gap-2">`;
+    matches.forEach((m, i) => {
+      const kr = m.kernelResult;
+      const sc = SCALE_INFO[m.entity.scale];
+      html += `
+        <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-3 hover:border-kernel-500 transition">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-kernel-500 text-xs font-mono">#${i + 1}</span>
+              <span class="font-medium text-kernel-100">${m.entity.symbol ? m.entity.symbol + ' ' : ''}${m.entity.name}</span>
+              <span class="text-xs px-1.5 py-0.5 rounded bg-kernel-700 ${sc.color}">${sc.label}</span>
+              ${qualityBadge(m.matchQuality)}
+            </div>
+            <span class="text-xs text-kernel-500 font-mono">d = ${m.distance.toFixed(4)}</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 text-xs text-kernel-400 mb-2">
+            <span>Mass: <span class="text-kernel-300">${m.entity.mass}</span></span>
+            <span>Size: <span class="text-kernel-300">${m.entity.size}</span></span>
+            <span>Category: <span class="text-kernel-300">${m.entity.category}</span></span>
+          </div>
+          <p class="text-xs text-kernel-500 mb-2">${m.entity.composition}</p>
+          <div class="text-xs text-kernel-500">
+            <span class="text-kernel-400">Kernel:</span>
+            F=${kr.F.toFixed(3)} IC=${kr.IC.toFixed(3)} Δ=${kr.delta.toFixed(3)} S=${kr.S.toFixed(3)} C=${kr.C.toFixed(3)}
+          </div>
+          <details class="mt-2">
+            <summary class="text-xs text-kernel-500 cursor-pointer hover:text-kernel-300">Signature analysis →</summary>
+            <p class="text-xs text-kernel-400 mt-1">${m.entity.signatureNote}</p>
+            <p class="text-xs text-kernel-500 mt-1"><strong>Key channels:</strong> ${m.entity.keyChannels}</p>
+          </details>
+        </div>
+      `;
+    });
+    html += `</div>`;
+
+    container.innerHTML = html;
+  }
+
+  /* ═══════════ TAB 2: INTERPRET ═══════════ */
+
+  const INTERPRETATIONS: Record<string, { title: string; ranges: { range: string; physical: string; examples: string }[] }> = {
+    F: {
+      title: 'Fidelity (F) — What Survives Collapse',
+      ranges: [
+        { range: 'F > 0.90', physical: 'Highly coherent — nearly all structure preserved. Corresponds to stable equilibrium states: main-sequence stars, noble metals, balanced ecosystems, healthy neural coherence.', examples: 'Sun (0.90), Iron (0.77), Waking consciousness (0.86)' },
+        { range: '0.60 ≤ F ≤ 0.90', physical: 'Moderate coherence — significant structure retained but with measurable loss. Typical of compounds, transition states, and active systems.', examples: 'Proton (0.60), Gold (0.67), Silicon (0.44)' },
+        { range: '0.30 ≤ F < 0.60', physical: 'Low coherence — more structure lost than retained. Watch-to-collapse boundary. Systems here are transitional or stressed.', examples: 'QGP (0.28), Helium-4 nucleus (0.31)' },
+        { range: 'F < 0.30', physical: 'Deep collapse — overwhelmingly destructured. Transient states, cascading failures, or extreme conditions where most channels are suppressed.', examples: 'Black Monday 1987 (0.16), extreme disruption events' },
+      ],
+    },
+    omega: {
+      title: 'Drift (ω) — What Is Lost to Collapse',
+      ranges: [
+        { range: 'ω < 0.038', physical: 'Minimal drift — system is firmly in stable regime. Less than 4% of structure lost. Physically: equilibrium, balanced forces, maintained coherence.', examples: 'Main-sequence stars, noble metals, stable nuclei' },
+        { range: '0.038 ≤ ω < 0.30', physical: 'Watch regime — measurable drift but system still functional. Structure is degrading. Physically: radioactive decay, market volatility, climate shifts.', examples: 'Radioactive elements, volatile markets, white dwarfs' },
+        { range: 'ω ≥ 0.30', physical: 'Collapse regime — more than 30% of structure lost. Physically: deconfinement (QGP), market crashes, gravitational collapse, system failure.', examples: 'QGP (0.72), Black Monday (0.84), neutron star formation' },
+      ],
+    },
+    IC: {
+      title: 'Integrity (IC) — Multiplicative Coherence',
+      ranges: [
+        { range: 'IC > 0.70', physical: 'High multiplicative coherence — all channels contribute. No dead channels. Physically: well-ordered crystals, balanced ecosystems, comprehensive structural integrity.', examples: 'Iron-56 (0.72), Sun (0.88), Gold (0.54)' },
+        { range: '0.30 ≤ IC ≤ 0.70', physical: 'Moderate integrity — some channels weaker but none catastrophically dead. Heterogeneous but functional.', examples: 'Silicon (0.38), Lead-208 (0.58), water (0.12)' },
+        { range: 'IC < 0.30 (Critical)', physical: 'Critical — at least one channel near ε is destroying the geometric mean. This IS geometric slaughter. Physically: confinement (hadrons), noble gas inertness, fundamental particles with sparse channels.', examples: 'Proton (0.037), Neutron (0.009), Helium atom (<<0.01), Higgs boson (<<0.01)' },
+      ],
+    },
+    delta: {
+      title: 'Heterogeneity Gap (Δ = F − IC) — Channel Imbalance',
+      ranges: [
+        { range: 'Δ < 0.01', physical: 'Homogeneous: all channels nearly equal. Arithmetic mean ≈ geometric mean. Physically: pure single-phase materials, uniform fields.', examples: 'Homogeneous traces, pure metals at ideal conditions' },
+        { range: '0.01 ≤ Δ < 0.10', physical: 'Mild heterogeneity: slight channel spread. Physically: alloys, compound materials, slightly imbalanced systems.', examples: 'Mild steel (Fe + 0.2% C), balanced markets' },
+        { range: '0.10 ≤ Δ < 0.30', physical: 'Significant heterogeneity: some channels much stronger than others. Physically: complex compounds, multi-phase materials, systems with dominant properties.', examples: 'Semiconductors, white dwarfs, YBCO superconductor' },
+        { range: 'Δ > 0.30', physical: 'Severe heterogeneity (geometric slaughter): F is moderate but IC is crushed by dead channels. One zero channel destroys multiplicative coherence while the mean stays healthy. Physically: confinement, noble gases, sparse particles.', examples: 'Proton (Δ≈0.56), Helium atom (Δ≈0.24), Higgs boson (Δ≈0.72)' },
+      ],
+    },
+    S: {
+      title: 'Bernoulli Field Entropy (S) — Structural Uncertainty',
+      ranges: [
+        { range: 'S < 0.15', physical: 'Low entropy — channels are strongly polarized (near 0 or 1). Physically: highly ordered or highly destroyed systems. Both crystals and collapsed states can have low S.', examples: 'Pure crystals at 0 K, completely disrupted systems' },
+        { range: '0.15 ≤ S < 0.50', physical: 'Moderate entropy — channels distributed but not maximal. Most real matter lives here. Physically: typical compounds, biological systems, moderate complexity.', examples: 'Most elements, compounds, stars' },
+        { range: 'S ≥ 0.50', physical: 'High entropy — many channels near 0.5 (maximum per-channel uncertainty). Physically: disordered systems, phase boundaries, maximum complexity regions.', examples: 'Phase transitions, critical points, extreme heterogeneity' },
+      ],
+    },
+    C: {
+      title: 'Curvature (C) — Coupling to Uncontrolled Degrees of Freedom',
+      ranges: [
+        { range: 'C < 0.05', physical: 'Nearly flat — channels are uniform. Rank-1 (homogeneous) in the limit C→0. Physically: single-element systems, uniform fields, idealized conditions.', examples: 'Homogeneous traces, pure metals, uniform processes' },
+        { range: '0.05 ≤ C < 0.14', physical: 'Mild curvature — some channel spread but compatible with stability. Physically: most stable matter has mild curvature from compositional nuance.', examples: 'Stable elements, balanced systems' },
+        { range: 'C ≥ 0.14', physical: 'High curvature — significant channel spread, incompatible with stable regime. Physically: composite systems, heterogeneous materials, multi-phase regions.', examples: 'Neutron stars, complex compounds, disrupted systems' },
+      ],
+    },
+  };
+
+  document.querySelectorAll('.pm-inv-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inv = (btn as HTMLElement).dataset.inv!;
+      document.querySelectorAll('.pm-inv-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderInterpretation(inv);
+    });
+  });
+
+  function renderInterpretation(inv: string) {
+    const data = INTERPRETATIONS[inv];
+    if (!data) return;
+    const container = document.getElementById('pm-interpret-result')!;
+
+    let html = `
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-md font-semibold text-kernel-100 mb-3">${data.title}</h4>
+        <div class="space-y-3">
+    `;
+
+    data.ranges.forEach(r => {
+      html += `
+        <div class="border-l-2 border-kernel-600 pl-3">
+          <p class="text-sm font-mono text-kernel-300 mb-1">${r.range}</p>
+          <p class="text-sm text-kernel-400">${r.physical}</p>
+          <p class="text-xs text-kernel-500 mt-1">Examples: ${r.examples}</p>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+
+    // Add scale-comparison table
+    html += `
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-sm font-semibold text-kernel-100 mb-2">Reference Entities by ${data.title.split(' — ')[0]}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead><tr class="text-kernel-500 border-b border-kernel-700">
+              <th class="text-left py-1 px-2">Entity</th>
+              <th class="text-left py-1 px-2">Scale</th>
+              <th class="text-right py-1 px-2">${inv === 'delta' ? 'Δ' : inv === 'omega' ? 'ω' : inv.toUpperCase()}</th>
+              <th class="text-left py-1 px-2">Physical meaning</th>
+            </tr></thead>
+            <tbody>
+    `;
+
+    // Sort entities by the chosen invariant
+    const sorted = [...PHYSICAL_ENTITIES].map(e => {
+      const kr = entityKernel(e);
+      const val = inv === 'F' ? kr.F : inv === 'omega' ? kr.omega : inv === 'IC' ? kr.IC
+        : inv === 'delta' ? kr.delta : inv === 'S' ? kr.S : kr.C;
+      return { entity: e, val, kr };
+    }).sort((a, b) => b.val - a.val);
+
+    sorted.slice(0, 15).forEach(({ entity: e, val }) => {
+      const sc = SCALE_INFO[e.scale];
+      html += `
+        <tr class="border-b border-kernel-800 hover:bg-kernel-800/50">
+          <td class="py-1 px-2 text-kernel-200">${e.symbol ? e.symbol + ' ' : ''}${e.name}</td>
+          <td class="py-1 px-2 ${sc.color}">${sc.label}</td>
+          <td class="py-1 px-2 text-right font-mono text-kernel-300">${val.toFixed(4)}</td>
+          <td class="py-1 px-2 text-kernel-500">${e.signatureNote.slice(0, 80)}…</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table></div></div>`;
+    container.innerHTML = html;
+  }
+
+  /* ═══════════ TAB 3: PREDICT UNKNOWN ═══════════ */
+
+  // Build 8 channel sliders
+  const channelNames = ['Mass', 'Bonding', 'Radius', 'Affinity', 'Ionization', 'Thermal-A', 'Thermal-B', 'Density'];
+  const predictChannels = document.getElementById('pm-predict-channels')!;
+  channelNames.forEach((name, i) => {
+    const div = document.createElement('div');
+    div.className = 'space-y-0.5';
+    div.innerHTML = `
+      <label class="text-xs text-kernel-500">${name}</label>
+      <input type="range" class="pm-ch-slider w-full accent-kernel-400" data-ch="${i}" min="0" max="1" step="0.01" value="${(0.3 + Math.random() * 0.5).toFixed(2)}">
+      <span class="pm-ch-val text-xs font-mono text-kernel-400" data-ch="${i}">0.50</span>
+    `;
+    predictChannels.appendChild(div);
+  });
+
+  // Update value labels
+  predictChannels.querySelectorAll('.pm-ch-slider').forEach(slider => {
+    const s = slider as HTMLInputElement;
+    const ch = s.dataset.ch!;
+    const label = predictChannels.querySelector(`.pm-ch-val[data-ch="${ch}"]`) as HTMLElement;
+    label.textContent = parseFloat(s.value).toFixed(2);
+    s.addEventListener('input', () => { label.textContent = parseFloat(s.value).toFixed(2); });
+  });
+
+  // Random trace
+  document.getElementById('pm-predict-random')!.addEventListener('click', () => {
+    predictChannels.querySelectorAll('.pm-ch-slider').forEach(slider => {
+      const s = slider as HTMLInputElement;
+      s.value = (Math.random()).toFixed(2);
+      const label = predictChannels.querySelector(`.pm-ch-val[data-ch="${s.dataset.ch}"]`) as HTMLElement;
+      label.textContent = parseFloat(s.value).toFixed(2);
+    });
+  });
+
+  // Novel region: push channels to extremes
+  document.getElementById('pm-predict-novel')!.addEventListener('click', () => {
+    predictChannels.querySelectorAll('.pm-ch-slider').forEach(slider => {
+      const s = slider as HTMLInputElement;
+      // Alternate between near-0 and near-1 for maximum novelty
+      const idx = parseInt(s.dataset.ch!);
+      s.value = idx % 2 === 0 ? (0.85 + Math.random() * 0.15).toFixed(2) : (Math.random() * 0.08).toFixed(2);
+      const label = predictChannels.querySelector(`.pm-ch-val[data-ch="${s.dataset.ch}"]`) as HTMLElement;
+      label.textContent = parseFloat(s.value).toFixed(2);
+    });
+  });
+
+  function getPredictTrace(): number[] {
+    const channels: number[] = [];
+    predictChannels.querySelectorAll('.pm-ch-slider').forEach(slider => {
+      channels.push(parseFloat((slider as HTMLInputElement).value));
+    });
+    return channels;
+  }
+
+  document.getElementById('pm-predict-btn')!.addEventListener('click', () => {
+    const c = getPredictTrace();
+    const w = Array(c.length).fill(1 / c.length);
+    const kr = computeKernel(c, w);
+    const regime = classifyRegime(kr);
+    const interp = interpretKernel(kr, c);
+    const predicted = predictProperties(kr);
+    const nearest = findNearestEntities(kr, 5);
+
+    const container = document.getElementById('pm-predict-results')!;
+    const novelColor = interp.noveltyScore > 0.7 ? 'text-amber-400' : interp.noveltyScore > 0.3 ? 'text-yellow-400' : 'text-green-400';
+
+    let html = `
+      <!-- Kernel output -->
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="text-md font-semibold text-kernel-100">Kernel Analysis</h4>
+          <span class="px-2 py-0.5 rounded text-xs ${regime.regime === 'STABLE' ? 'bg-emerald-500/20 text-emerald-300' : regime.regime === 'WATCH' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-red-500/20 text-red-300'}">
+            ${regime.regime}${regime.isCritical ? ' ⚠ CRITICAL' : ''}
+          </span>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-sm text-center">
+          <div><span class="text-kernel-500 text-xs block">F</span><span class="text-kernel-100 font-mono">${kr.F.toFixed(4)}</span></div>
+          <div><span class="text-kernel-500 text-xs block">ω</span><span class="text-kernel-100 font-mono">${kr.omega.toFixed(4)}</span></div>
+          <div><span class="text-kernel-500 text-xs block">IC</span><span class="text-kernel-100 font-mono">${kr.IC.toFixed(4)}</span></div>
+          <div><span class="text-kernel-500 text-xs block">Δ</span><span class="text-kernel-100 font-mono">${kr.delta.toFixed(4)}</span></div>
+          <div><span class="text-kernel-500 text-xs block">S</span><span class="text-kernel-100 font-mono">${kr.S.toFixed(4)}</span></div>
+          <div><span class="text-kernel-500 text-xs block">C</span><span class="text-kernel-100 font-mono">${kr.C.toFixed(4)}</span></div>
+        </div>
+      </div>
+
+      <!-- Novelty assessment -->
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-md font-semibold text-kernel-100 mb-2">Novelty Assessment</h4>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="flex-1 bg-kernel-800 rounded-full h-3">
+            <div class="h-3 rounded-full transition-all" style="width: ${(interp.noveltyScore * 100).toFixed(0)}%; background: ${interp.noveltyScore > 0.7 ? '#f59e0b' : interp.noveltyScore > 0.3 ? '#eab308' : '#22c55e'}"></div>
+          </div>
+          <span class="${novelColor} text-sm font-medium">${(interp.noveltyScore * 100).toFixed(0)}% novel</span>
+        </div>
+        <p class="text-sm text-kernel-400">${interp.summary}</p>
+        ${interp.anomalies.length > 0 ? `<div class="mt-2 space-y-1">${interp.anomalies.map(a => `<p class="text-xs text-amber-400">⚠ ${a}</p>`).join('')}</div>` : ''}
+      </div>
+
+      <!-- Predicted properties -->
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-md font-semibold text-kernel-100 mb-3">Predicted Physical Properties</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+          <div>
+            <span class="text-kernel-500">Predicted Scale:</span>
+            <span class="text-kernel-200 ml-1">${SCALE_INFO[predicted.predictedScale]?.label} (${(predicted.confidence * 100).toFixed(0)}%)</span>
+          </div>
+          <div>
+            <span class="text-kernel-500">Mass range:</span>
+            <span class="text-kernel-200 ml-1">${predicted.massRange}</span>
+          </div>
+          <div>
+            <span class="text-kernel-500">Size range:</span>
+            <span class="text-kernel-200 ml-1">${predicted.sizeRange}</span>
+          </div>
+          <div>
+            <span class="text-kernel-500">Stability:</span>
+            <span class="text-kernel-200 ml-1">${predicted.stabilityEstimate}</span>
+          </div>
+          <div class="sm:col-span-2">
+            <span class="text-kernel-500">Likely composition:</span>
+            <span class="text-kernel-200 ml-1">${predicted.likelyComposition}</span>
+          </div>
+          <div class="sm:col-span-2">
+            <span class="text-kernel-500">Structure:</span>
+            <span class="text-kernel-200 ml-1">${predicted.likelyStructure}</span>
+          </div>
+        </div>
+        <p class="text-xs text-kernel-500 mt-2">Based on: ${predicted.basis.join(', ')}</p>
+      </div>
+
+      <!-- Structural interpretation -->
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-md font-semibold text-kernel-100 mb-3">Structural Interpretation</h4>
+        <div class="space-y-2 text-sm">
+          <div><span class="text-kernel-500">Structure:</span> <span class="text-kernel-300">${interp.structureVerdict}</span></div>
+          <div><span class="text-kernel-500">Stability:</span> <span class="text-kernel-300">${interp.stabilityVerdict}</span></div>
+          <div><span class="text-kernel-500">Scale:</span> <span class="text-kernel-300">${interp.scaleVerdict.replace(/\*\*/g, '')}</span></div>
+          ${interp.compositionHints.length > 0 ? `
+            <div>
+              <span class="text-kernel-500">Composition hints:</span>
+              <ul class="list-disc list-inside mt-1 text-kernel-400 text-xs">
+                ${interp.compositionHints.map(h => `<li>${h}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Nearest matches -->
+      <div class="bg-kernel-900/50 border border-kernel-700 rounded-lg p-4">
+        <h4 class="text-md font-semibold text-kernel-100 mb-3">Nearest Known Entities</h4>
+        <div class="space-y-2">
+          ${nearest.map((m, i) => `
+            <div class="flex items-center justify-between text-sm border-b border-kernel-800 pb-1">
+              <div class="flex items-center gap-2">
+                <span class="text-kernel-500 text-xs font-mono">#${i + 1}</span>
+                <span class="text-kernel-200">${m.entity.symbol ? m.entity.symbol + ' ' : ''}${m.entity.name}</span>
+                <span class="text-xs ${SCALE_INFO[m.entity.scale].color}">${m.entity.scale}</span>
+                ${qualityBadge(m.matchQuality)}
+              </div>
+              <span class="text-xs font-mono text-kernel-500">d=${m.distance.toFixed(4)}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  });
+
+  /* ═══════════ TAB 4: ENTITY ATLAS ═══════════ */
+
+  function renderAtlas() {
+    const canvas = document.getElementById('pm-atlas-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const xSel = (document.getElementById('pm-atlas-x') as HTMLSelectElement).value;
+    const ySel = (document.getElementById('pm-atlas-y') as HTMLSelectElement).value;
+    const colorBy = (document.getElementById('pm-atlas-color') as HTMLSelectElement).value;
+
+    // Compute all kernel results
+    const data = PHYSICAL_ENTITIES.map(e => {
+      const kr = entityKernel(e);
+      const regime = classifyRegime(kr);
+      return { entity: e, kr, regime };
+    });
+
+    // Get invariant value
+    function getValue(kr: KernelResult, field: string): number {
+      switch (field) {
+        case 'F': return kr.F;
+        case 'omega': return kr.omega;
+        case 'IC': return kr.IC;
+        case 'delta': return kr.delta;
+        case 'S': return kr.S;
+        case 'C': return kr.C;
+        default: return kr.F;
+      }
+    }
+
+    // Clear
+    const W = canvas.width;
+    const H = canvas.height;
+    const pad = 50;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0a0a1a';
+    ctx.fillRect(0, 0, W, H);
+
+    // Axes
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, pad);
+    ctx.lineTo(pad, H - pad);
+    ctx.lineTo(W - pad, H - pad);
+    ctx.stroke();
+
+    // Labels
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(xSel === 'omega' ? 'ω' : xSel === 'delta' ? 'Δ' : xSel.toUpperCase(), W / 2, H - 10);
+    ctx.save();
+    ctx.translate(15, H / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(ySel === 'omega' ? 'ω' : ySel === 'delta' ? 'Δ' : ySel.toUpperCase(), 0, 0);
+    ctx.restore();
+
+    // Tick marks
+    ctx.textAlign = 'center';
+    ctx.font = '10px monospace';
+    for (let i = 0; i <= 4; i++) {
+      const v = i / 4;
+      const x = pad + v * (W - 2 * pad);
+      const y = H - pad - v * (H - 2 * pad);
+      ctx.fillStyle = '#475569';
+      ctx.fillText(v.toFixed(1), x, H - pad + 15);
+      ctx.fillText(v.toFixed(1), pad - 20, y + 4);
+      // Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.moveTo(x, pad); ctx.lineTo(x, H - pad);
+      ctx.moveTo(pad, y); ctx.lineTo(W - pad, y);
+      ctx.stroke();
+    }
+
+    // Plot entities
+    const plotW = W - 2 * pad;
+    const plotH = H - 2 * pad;
+
+    // Store positions for hover detection
+    const positions: { x: number; y: number; entity: PhysicalEntity; kr: KernelResult; regime: ReturnType<typeof classifyRegime> }[] = [];
+
+    data.forEach(({ entity, kr, regime }) => {
+      const xVal = getValue(kr, xSel);
+      const yVal = getValue(kr, ySel);
+      const px = pad + xVal * plotW;
+      const py = H - pad - yVal * plotH;
+
+      const color = colorBy === 'scale'
+        ? SCALE_COLORS[entity.scale]
+        : REGIME_COLORS[regime.regime] || '#94a3b8';
+
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      positions.push({ x: px, y: py, entity, kr, regime });
+    });
+
+    // Legend
+    const legendItems = colorBy === 'scale'
+      ? Object.entries(SCALE_COLORS)
+      : Object.entries(REGIME_COLORS);
+
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'left';
+    legendItems.forEach(([label, color], i) => {
+      const lx = W - pad - 100;
+      const ly = pad + 15 + i * 18;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(lx, ly, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(label, lx + 10, ly + 4);
+    });
+
+    // Hover tooltip
+    const tooltip = document.getElementById('pm-atlas-tooltip')!;
+    canvas.onmousemove = (evt) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (evt.clientX - rect.left) * scaleX;
+      const my = (evt.clientY - rect.top) * scaleY;
+
+      let found: typeof positions[0] | null = null;
+      let bestDist = 15;  // px threshold
+      for (const p of positions) {
+        const d = Math.sqrt((mx - p.x) ** 2 + (my - p.y) ** 2);
+        if (d < bestDist) { bestDist = d; found = p; }
+      }
+
+      if (found) {
+        tooltip.classList.remove('hidden');
+        tooltip.style.left = (evt.clientX + 15) + 'px';
+        tooltip.style.top = (evt.clientY - 10) + 'px';
+        tooltip.innerHTML = `
+          <strong class="text-kernel-100">${found.entity.symbol ?? ''} ${found.entity.name}</strong>
+          <span class="text-kernel-500 ml-2">${found.entity.scale}</span><br>
+          <span class="text-kernel-400">${found.entity.category}</span><br>
+          <span class="font-mono text-kernel-300">F=${found.kr.F.toFixed(3)} IC=${found.kr.IC.toFixed(3)} Δ=${found.kr.delta.toFixed(3)}</span><br>
+          <span class="text-kernel-500">${found.entity.mass}</span>
+        `;
+      } else {
+        tooltip.classList.add('hidden');
+      }
+    };
+
+    canvas.onmouseleave = () => tooltip.classList.add('hidden');
+
+    // Click to load into Identify
+    canvas.onclick = (evt) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mx = (evt.clientX - rect.left) * scaleX;
+      const my = (evt.clientY - rect.top) * scaleY;
+
+      let found: typeof positions[0] | null = null;
+      let bestDist = 15;
+      for (const p of positions) {
+        const d = Math.sqrt((mx - p.x) ** 2 + (my - p.y) ** 2);
+        if (d < bestDist) { bestDist = d; found = p; }
+      }
+
+      if (found) {
+        // Set kernel inputs and switch to identify tab
+        inputF.value = found.kr.F.toFixed(4);
+        inputOmega.value = found.kr.omega.toFixed(4);
+        inputIC.value = found.kr.IC.toFixed(4);
+        inputDelta.value = found.kr.delta.toFixed(4);
+        (document.getElementById('pm-S') as HTMLInputElement).value = found.kr.S.toFixed(4);
+        (document.getElementById('pm-C') as HTMLInputElement).value = found.kr.C.toFixed(4);
+
+        // Switch tab
+        const identifyTab = document.querySelector('.pm-tab[data-tab="identify"]')!;
+        identifyTab.dispatchEvent(new Event('click'));
+        runIdentify();
+      }
+    };
+
+    // Re-render on axis/color change
+    document.getElementById('pm-atlas-x')!.onchange = renderAtlas;
+    document.getElementById('pm-atlas-y')!.onchange = renderAtlas;
+    document.getElementById('pm-atlas-color')!.onchange = renderAtlas;
+
+    // Entity list by scale
+    const listContainer = document.getElementById('pm-atlas-list')!;
+    let listHtml = '';
+    for (const [scale, info] of Object.entries(SCALE_INFO)) {
+      const scaleEntities = data.filter(d => d.entity.scale === scale);
+      if (scaleEntities.length === 0) continue;
+      listHtml += `
+        <details class="bg-kernel-900/50 border border-kernel-700 rounded-lg">
+          <summary class="p-3 cursor-pointer hover:bg-kernel-800/50 transition">
+            <span class="${info.color} font-medium">${info.label}</span>
+            <span class="text-kernel-500 text-xs ml-2">${scaleEntities.length} entities · ${info.sizeRange} · ${info.description}</span>
+          </summary>
+          <div class="p-3 pt-0 grid gap-1">
+            ${scaleEntities.map(({ entity: e, kr, regime }) => `
+              <div class="flex items-center justify-between text-xs border-b border-kernel-800 py-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-kernel-200 font-medium">${e.symbol ?? '—'}</span>
+                  <span class="text-kernel-300">${e.name}</span>
+                  <span class="text-kernel-500">${e.category}</span>
+                </div>
+                <div class="flex items-center gap-2 font-mono text-kernel-400">
+                  <span>F=${kr.F.toFixed(3)}</span>
+                  <span>IC=${kr.IC.toFixed(4)}</span>
+                  <span>Δ=${kr.delta.toFixed(3)}</span>
+                  <span class="px-1 py-0.5 rounded text-[10px] ${regime.regime === 'STABLE' ? 'bg-emerald-500/20 text-emerald-300' : regime.regime === 'WATCH' ? 'bg-yellow-500/20 text-yellow-300' : 'bg-red-500/20 text-red-300'}">${regime.regime}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </details>
+      `;
+    }
+    listContainer.innerHTML = listHtml;
+  }
+
+  /* ─── Initial render ──────────────────────────────────────── */
+
+  // Show default interpretation for F
+  renderInterpretation('F');
+  document.querySelector('.pm-inv-btn[data-inv="F"]')!.classList.add('active');
+</script>
