@@ -105,7 +105,7 @@ CORNER_PROBES = [
 # ═══════════════════════════════════════════════════════════════════
 
 
-def _compute_kernel_from_trace(c: list[float]) -> dict[str, float]:
+def _compute_kernel_from_trace(c: list[float]) -> dict[str, float | str]:
     """Compute kernel outputs from a raw trace vector using the kernel directly."""
     from umcp.kernel_optimized import compute_kernel_outputs
 
