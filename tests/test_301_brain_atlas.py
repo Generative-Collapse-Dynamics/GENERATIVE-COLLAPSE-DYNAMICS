@@ -47,7 +47,7 @@ def all_results() -> list[BAKernelResult]:
 
 class TestEntityCatalog:
     def test_entity_count(self):
-        assert len(BA_ENTITIES) == 35
+        assert len(BA_ENTITIES) == 52
 
     def test_channel_count(self):
         assert N_BA_CHANNELS == 8
@@ -68,9 +68,18 @@ class TestEntityCatalog:
     def test_category_counts(self):
         from collections import Counter
 
+        expected = {
+            "cortical": 8,
+            "subcortical": 7,
+            "limbic": 7,
+            "brainstem": 7,
+            "cerebellar": 6,
+            "white_matter": 8,
+            "specialized": 9,
+        }
         counts = Counter(e.category for e in BA_ENTITIES)
-        for cat in counts:
-            assert counts[cat] == 5, f"{cat} has {counts[cat]} entities, expected 5"
+        for cat, exp in expected.items():
+            assert counts[cat] == exp, f"{cat} has {counts[cat]} entities, expected {exp}"
 
     @pytest.mark.parametrize("entity", BA_ENTITIES, ids=lambda e: e.name)
     def test_trace_vector_shape(self, entity):
@@ -275,4 +284,4 @@ class TestKernelResult:
         assert "regime" in d
 
     def test_all_results_count(self, all_results):
-        assert len(all_results) == 35
+        assert len(all_results) == 52

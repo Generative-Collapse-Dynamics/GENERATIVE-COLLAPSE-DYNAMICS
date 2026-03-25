@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
-    "astro": "^5.0.0"
+    "@types/three": "^0.183.1",
+    "astro": "^5.0.0",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.0",

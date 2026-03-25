@@ -1,6 +1,6 @@
 """Brain Atlas Closure — Clinical Neuroscience Domain.
 
-Tier-2 closure mapping 35 brain anatomical structures through the GCD kernel,
+Tier-2 closure mapping 52 brain anatomical structures through the GCD kernel,
 derived from the HoliAtlas (Manjón et al. 2026, Scientific Reports 16:9457)
 and NextBrain (Iglesias et al. 2025, Nature) ultra-high-resolution MRI brain
 atlas projects.
@@ -26,20 +26,24 @@ Channels (8, equal weights w_i = 1/8):
   6  connectivity_degree     — number of structural connections (1 = hub)
   7  resolution_dependence   — gain from ultra-high vs standard resolution (1 = maximal gain)
 
-35 entities across 7 anatomical categories:
-  Cortical (5): frontal_cortex, temporal_cortex, parietal_cortex,
-                occipital_cortex, insular_cortex
-  Subcortical (5): caudate, putamen, globus_pallidus, thalamus,
-                   subthalamic_nucleus
-  Limbic (5): hippocampus_ca1, hippocampus_ca23, amygdala_lateral,
-              amygdala_basal, cingulate_cortex
-  Brainstem (5): midbrain, pons, medulla, substantia_nigra, red_nucleus
-  Cerebellar (5): cerebellum_anterior, cerebellum_posterior, vermis,
-                  dentate_nucleus, cerebellar_wm
-  White Matter (5): corpus_callosum, corticospinal_tract, arcuate_fasciculus,
-                    uncinate_fasciculus, fornix
-  Specialized (5): hypothalamus, thalamic_pulvinar, lateral_geniculate,
-                   medial_geniculate, mammillothalamic_tract
+52 entities across 7 anatomical categories:
+  Cortical (8): frontal_cortex, temporal_cortex, parietal_cortex,
+                occipital_cortex, insular_cortex, entorhinal_cortex,
+                prefrontal_dorsolateral, somatosensory_cortex
+  Subcortical (7): caudate, putamen, globus_pallidus, thalamus,
+                   subthalamic_nucleus, nucleus_accumbens, claustrum
+  Limbic (7): hippocampus_ca1, hippocampus_ca23, amygdala_lateral,
+              amygdala_basal, cingulate_cortex, septal_nuclei, mammillary_body
+  Brainstem (7): midbrain, pons, medulla, substantia_nigra, red_nucleus,
+                 locus_coeruleus, raphe_nuclei
+  Cerebellar (6): cerebellum_anterior, cerebellum_posterior, vermis,
+                  dentate_nucleus, cerebellar_wm, cerebellar_peduncles
+  White Matter (8): corpus_callosum, corticospinal_tract, arcuate_fasciculus,
+                    uncinate_fasciculus, fornix, internal_capsule,
+                    anterior_commissure, cingulum_bundle
+  Specialized (9): hypothalamus, thalamic_pulvinar, lateral_geniculate,
+                   medial_geniculate, mammillothalamic_tract, pineal_gland,
+                   choroid_plexus, area_postrema, suprachiasmatic_nucleus
 
 6 theorems (T-BA-1 through T-BA-6) + 3 systems (atlas comparison,
 segmentation protocol fusion, clinical diagnostic sensitivity).
@@ -589,6 +593,217 @@ BA_ENTITIES: tuple[BrainAtlasEntity, ...] = (
         0.50,
         0.95,
     ),
+    # ── NEW: Additional Cortical (3) ─────────────────────────────
+    BrainAtlasEntity(
+        "entorhinal_cortex",
+        "cortical",
+        0.12,
+        0.79,
+        0.68,
+        0.70,
+        0.80,
+        0.92,
+        0.78,
+        0.80,
+    ),
+    BrainAtlasEntity(
+        "prefrontal_dorsolateral",
+        "cortical",
+        0.60,
+        0.82,
+        0.72,
+        0.80,
+        0.88,
+        0.65,
+        0.90,
+        0.25,
+    ),
+    BrainAtlasEntity(
+        "somatosensory_cortex",
+        "cortical",
+        0.50,
+        0.83,
+        0.74,
+        0.75,
+        0.90,
+        0.50,
+        0.82,
+        0.28,
+    ),
+    # ── NEW: Additional Subcortical (2) ──────────────────────────
+    BrainAtlasEntity(
+        "nucleus_accumbens",
+        "subcortical",
+        0.04,
+        0.82,
+        0.78,
+        0.45,
+        0.88,
+        0.75,
+        0.80,
+        0.88,
+    ),
+    BrainAtlasEntity(
+        "claustrum",
+        "subcortical",
+        0.03,
+        0.72,
+        0.65,
+        0.55,
+        0.85,
+        0.40,
+        0.90,
+        0.92,
+    ),
+    # ── NEW: Additional Limbic (2) ───────────────────────────────
+    BrainAtlasEntity(
+        "septal_nuclei",
+        "limbic",
+        0.03,
+        0.74,
+        0.65,
+        0.50,
+        0.82,
+        0.70,
+        0.65,
+        0.90,
+    ),
+    BrainAtlasEntity(
+        "mammillary_body",
+        "limbic",
+        0.02,
+        0.80,
+        0.78,
+        0.30,
+        0.90,
+        0.82,
+        0.60,
+        0.93,
+    ),
+    # ── NEW: Additional Brainstem (2) ────────────────────────────
+    BrainAtlasEntity(
+        "locus_coeruleus",
+        "brainstem",
+        0.01,
+        0.70,
+        0.72,
+        0.20,
+        0.80,
+        0.88,
+        0.75,
+        0.95,
+    ),
+    BrainAtlasEntity(
+        "raphe_nuclei",
+        "brainstem",
+        0.02,
+        0.72,
+        0.70,
+        0.25,
+        0.78,
+        0.85,
+        0.70,
+        0.93,
+    ),
+    # ── NEW: Additional Cerebellar (1) ───────────────────────────
+    BrainAtlasEntity(
+        "cerebellar_peduncles",
+        "cerebellar",
+        0.15,
+        0.82,
+        0.85,
+        0.40,
+        0.88,
+        0.45,
+        0.70,
+        0.50,
+    ),
+    # ── NEW: Additional White Matter (3) ─────────────────────────
+    BrainAtlasEntity(
+        "internal_capsule",
+        "white_matter",
+        0.22,
+        0.84,
+        0.88,
+        0.35,
+        0.90,
+        0.72,
+        0.80,
+        0.45,
+    ),
+    BrainAtlasEntity(
+        "anterior_commissure",
+        "white_matter",
+        0.04,
+        0.76,
+        0.82,
+        0.15,
+        0.92,
+        0.35,
+        0.45,
+        0.78,
+    ),
+    BrainAtlasEntity(
+        "cingulum_bundle",
+        "white_matter",
+        0.10,
+        0.78,
+        0.84,
+        0.30,
+        0.85,
+        0.68,
+        0.62,
+        0.60,
+    ),
+    # ── NEW: Additional Specialized (4) ──────────────────────────
+    BrainAtlasEntity(
+        "pineal_gland",
+        "specialized",
+        0.01,
+        0.78,
+        0.82,
+        0.15,
+        0.95,
+        0.30,
+        0.25,
+        0.92,
+    ),
+    BrainAtlasEntity(
+        "choroid_plexus",
+        "specialized",
+        0.05,
+        0.80,
+        0.88,
+        0.20,
+        0.85,
+        0.35,
+        0.30,
+        0.75,
+    ),
+    BrainAtlasEntity(
+        "area_postrema",
+        "specialized",
+        0.005,
+        0.68,
+        0.65,
+        0.10,
+        0.80,
+        0.55,
+        0.40,
+        0.95,
+    ),
+    BrainAtlasEntity(
+        "suprachiasmatic_nucleus",
+        "specialized",
+        0.005,
+        0.65,
+        0.60,
+        0.20,
+        0.85,
+        0.60,
+        0.50,
+        0.95,
+    ),
 )
 
 
@@ -655,7 +870,7 @@ def compute_ba_kernel(entity: BrainAtlasEntity) -> BAKernelResult:
 
 
 def compute_all_entities() -> list[BAKernelResult]:
-    """Compute kernel outputs for all 35 brain atlas entities."""
+    """Compute kernel outputs for all 52 brain atlas entities."""
     return [compute_ba_kernel(e) for e in BA_ENTITIES]
 
 

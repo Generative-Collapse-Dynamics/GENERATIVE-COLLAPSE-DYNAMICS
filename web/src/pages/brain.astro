@@ -17,7 +17,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout
   title="Brain Anatomy — GCD"
-  description="Deep-dive into brain structure, function, and cognition. 35 anatomical structures analyzed through the GCD kernel with interactive 3D brain model, neural pathway mapping, and cognition theory."
+  description="Deep-dive into brain structure, function, and cognition. 52 anatomical structures analyzed through the GCD kernel with interactive 3D brain model, neural pathway mapping, and cognition theory."
 >
 <div class="max-w-6xl mx-auto space-y-14 pb-20">
 
@@ -27,7 +27,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <header class="border-b border-kernel-800 pb-8">
     <h1 class="text-4xl font-bold text-kernel-100 mb-3">Brain Anatomy</h1>
     <p class="text-kernel-400 text-lg max-w-3xl">
-      35 brain structures mapped through the GCD kernel. Every region measured
+      52 brain structures mapped through the GCD kernel. Every region measured
       across 8 channels — volumetric fraction, segmentation accuracy, multimodal
       contrast, structural heterogeneity, bilateral symmetry, clinical sensitivity,
       connectivity degree, and resolution dependence. Computed live in your browser.
@@ -38,7 +38,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="flex flex-wrap gap-2 mt-4 text-xs">
       <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">HoliAtlas 2026</span>
       <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">NextBrain 2025</span>
-      <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">35 Structures</span>
+      <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">52 Structures</span>
       <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">8 Channels</span>
       <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">7 Categories</span>
       <span class="px-2 py-1 rounded bg-kernel-800 text-kernel-400 border border-kernel-700">6 Theorems Proven</span>
@@ -77,9 +77,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </p>
 
     <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
+      <!-- View Toggle -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex gap-2">
+          <button id="btn-view-2d" class="px-3 py-1.5 text-xs rounded border border-amber-600 bg-amber-950/30 text-amber-400 font-bold transition">2D Sagittal</button>
+          <button id="btn-view-3d" class="px-3 py-1.5 text-xs rounded border border-kernel-600 bg-kernel-800 text-kernel-400 font-bold transition hover:border-amber-600 hover:text-amber-400">3D Rotate</button>
+        </div>
+        <button id="btn-reset-view" class="px-2 py-1 text-[10px] rounded border border-kernel-700 text-kernel-500 hover:text-kernel-300 transition hidden">Reset View</button>
+      </div>
+
       <div class="flex flex-col lg:flex-row gap-6">
-        <!-- SVG Brain -->
-        <div class="flex-1 relative" style="min-height: 480px;">
+        <!-- SVG Brain (2D view) -->
+        <div id="brain-2d-container" class="flex-1 relative" style="min-height: 480px;">
           <svg id="brain-svg" viewBox="0 0 800 600" class="w-full h-full" style="max-height: 520px;">
             <!-- Brain Outline (sagittal view) -->
             <defs>
@@ -245,6 +254,88 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <circle id="r-mgn" class="brain-region" data-region="medial_geniculate" data-cat="specialized"
               cx="460" cy="355" r="6" fill="#f4364720" stroke="#f43647" stroke-width="1.5" style="cursor:pointer" />
 
+            <!-- ── NEW: Additional Cortical ── -->
+            <!-- Entorhinal Cortex (medial temporal) -->
+            <ellipse id="r-entorhinal" class="brain-region" data-region="entorhinal_cortex" data-cat="cortical"
+              cx="310" cy="410" rx="18" ry="12" fill="#3b82f620" stroke="#3b82f6" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Dorsolateral Prefrontal Cortex -->
+            <path id="r-dlpfc" class="brain-region" data-region="prefrontal_dorsolateral" data-cat="cortical"
+              d="M220,140 C250,120 310,105 350,100 C345,120 335,145 320,165 C290,160 255,155 220,140 Z"
+              fill="#3b82f620" stroke="#3b82f6" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Somatosensory Cortex -->
+            <path id="r-somatosensory" class="brain-region" data-region="somatosensory_cortex" data-cat="cortical"
+              d="M410,90 C420,95 435,110 440,130 C435,145 425,165 415,180 C405,165 400,140 400,120 C400,105 405,95 410,90 Z"
+              fill="#3b82f620" stroke="#3b82f6" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional Subcortical ── -->
+            <!-- Nucleus Accumbens -->
+            <circle id="r-nacc" class="brain-region" data-region="nucleus_accumbens" data-cat="subcortical"
+              cx="310" cy="290" r="8" fill="#a855f720" stroke="#a855f7" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Claustrum -->
+            <path id="r-claustrum" class="brain-region" data-region="claustrum" data-cat="subcortical"
+              d="M300,270 C303,280 305,295 303,310 C300,300 298,290 297,280 Z"
+              fill="#a855f720" stroke="#a855f7" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional Limbic ── -->
+            <!-- Septal Nuclei -->
+            <circle id="r-septal" class="brain-region" data-region="septal_nuclei" data-cat="limbic"
+              cx="320" cy="265" r="7" fill="#22c55e20" stroke="#22c55e" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Mammillary Body -->
+            <circle id="r-mammillary" class="brain-region" data-region="mammillary_body" data-cat="limbic"
+              cx="395" cy="380" r="6" fill="#22c55e40" stroke="#22c55e" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional Brainstem ── -->
+            <!-- Locus Coeruleus (tiny but critical) -->
+            <circle id="r-lc" class="brain-region" data-region="locus_coeruleus" data-cat="brainstem"
+              cx="440" cy="455" r="5" fill="#f59e0b40" stroke="#f59e0b" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Raphe Nuclei (midline column) -->
+            <path id="r-raphe" class="brain-region" data-region="raphe_nuclei" data-cat="brainstem"
+              d="M410,440 C412,450 412,465 410,480 C408,465 408,450 410,440 Z"
+              fill="#f59e0b40" stroke="#f59e0b" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional Cerebellar ── -->
+            <!-- Cerebellar Peduncles -->
+            <ellipse id="r-cereb-ped" class="brain-region" data-region="cerebellar_peduncles" data-cat="cerebellar"
+              cx="485" cy="450" rx="12" ry="8" fill="#06b6d420" stroke="#06b6d4" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional White Matter ── -->
+            <!-- Internal Capsule -->
+            <path id="r-intcap" class="brain-region" data-region="internal_capsule" data-cat="white_matter"
+              d="M340,240 C345,260 348,280 345,310 C342,280 340,260 340,240 Z"
+              fill="#ec489920" stroke="#ec4899" stroke-width="2" style="cursor:pointer" />
+
+            <!-- Anterior Commissure -->
+            <ellipse id="r-antcomm" class="brain-region" data-region="anterior_commissure" data-cat="white_matter"
+              cx="350" cy="280" rx="18" ry="4" fill="#ec489920" stroke="#ec4899" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Cingulum Bundle (arc below cingulate) -->
+            <path id="r-cingulum" class="brain-region" data-region="cingulum_bundle" data-cat="white_matter"
+              d="M260,215 C310,205 370,202 420,205 C370,212 310,215 260,215 Z"
+              fill="#ec489920" stroke="#ec4899" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- ── NEW: Additional Specialized ── -->
+            <!-- Pineal Gland -->
+            <circle id="r-pineal" class="brain-region" data-region="pineal_gland" data-cat="specialized"
+              cx="480" cy="295" r="5" fill="#f4364740" stroke="#f43647" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Choroid Plexus (within ventricle) -->
+            <path id="r-choroid" class="brain-region" data-region="choroid_plexus" data-cat="specialized"
+              d="M370,250 C380,248 395,250 405,255 C395,258 380,258 370,255 Z"
+              fill="#f4364720" stroke="#f43647" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Area Postrema (floor of 4th ventricle) -->
+            <circle id="r-ap" class="brain-region" data-region="area_postrema" data-cat="specialized"
+              cx="410" cy="490" r="4" fill="#f4364740" stroke="#f43647" stroke-width="1.5" style="cursor:pointer" />
+
+            <!-- Suprachiasmatic Nucleus -->
+            <circle id="r-scn" class="brain-region" data-region="suprachiasmatic_nucleus" data-cat="specialized"
+              cx="365" cy="360" r="4" fill="#f4364740" stroke="#f43647" stroke-width="1.5" style="cursor:pointer" />
+
             <!-- ── LABELS ── -->
             <g class="text-[10px] fill-kernel-500 font-mono" style="pointer-events:none">
               <!-- Cortical labels -->
@@ -288,6 +379,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <text x="480" y="310" text-anchor="middle" fill="#f43647" font-size="7">Pulv</text>
               <text x="488" y="340" text-anchor="middle" fill="#f43647" font-size="7">LGN</text>
               <text x="478" y="358" text-anchor="middle" fill="#f43647" font-size="7">MGN</text>
+
+              <!-- New structure labels -->
+              <text x="310" y="425" text-anchor="middle" fill="#3b82f6" font-size="7">Entorh.</text>
+              <text x="260" y="130" text-anchor="middle" fill="#3b82f6" font-size="7">dlPFC</text>
+              <text x="445" y="135" text-anchor="middle" fill="#3b82f6" font-size="7">S1</text>
+              <text x="295" y="285" text-anchor="middle" fill="#a855f7" font-size="7">NAcc</text>
+              <text x="285" y="275" text-anchor="middle" fill="#a855f7" font-size="7">Claust.</text>
+              <text x="305" y="262" text-anchor="middle" fill="#22c55e" font-size="7">Sept.</text>
+              <text x="407" y="385" text-anchor="middle" fill="#22c55e" font-size="7">MB</text>
+              <text x="455" y="455" text-anchor="middle" fill="#f59e0b" font-size="7">LC</text>
+              <text x="398" y="465" text-anchor="middle" fill="#f59e0b" font-size="7">Raphe</text>
+              <text x="485" y="445" text-anchor="middle" fill="#06b6d4" font-size="7">Ped.</text>
+              <text x="495" y="293" text-anchor="middle" fill="#f43647" font-size="7">Pineal</text>
+              <text x="350" y="370" text-anchor="middle" fill="#f43647" font-size="7">SCN</text>
             </g>
 
             <!-- Crosshair cursor / selection indicator -->
@@ -308,11 +413,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
         </div>
 
+        <!-- 3D Brain (Three.js view - hidden by default) -->
+        <div id="brain-3d-container" class="flex-1 relative hidden" style="min-height: 480px;">
+          <canvas id="brain-3d-canvas" class="w-full h-full rounded"></canvas>
+          <div class="absolute bottom-2 left-2 text-[10px] text-kernel-600">Drag to rotate · Scroll to zoom · Click a region</div>
+        </div>
+
         <!-- Region Detail Panel -->
         <div id="region-detail" class="w-full lg:w-80 bg-kernel-950 border border-kernel-700 rounded-lg p-4 space-y-3">
           <div id="region-placeholder" class="text-center text-kernel-500 py-10">
             <p class="text-sm">Click a brain region to see its kernel analysis</p>
-            <p class="text-xs mt-2 text-kernel-600">35 structures across 7 categories</p>
+            <p class="text-xs mt-2 text-kernel-600">52 structures across 7 categories</p>
           </div>
           <div id="region-info" class="hidden space-y-3">
             <h3 id="region-name" class="text-lg font-bold text-kernel-100"></h3>
@@ -1099,6 +1210,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <script>
   import { computeKernel, classifyRegime, bernoulliEntropy } from '../lib/kernel';
   import { EPSILON } from '../lib/constants';
+  import { Brain3D } from '../components/Brain3D';
 
   // ── Brain Atlas Entity Data (mirrors brain_atlas_closure.py) ────
 
@@ -1169,6 +1281,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     { name: 'lateral_geniculate', category: 'specialized', channels: [0.04,0.85,0.82,0.35,0.90,0.45,0.60,0.90], displayName: 'Lateral Geniculate (LGN)', clinicalNote: 'Visual relay: retina → V1. 6 layers (magno/parvo/koniocellular). Requires ultra-high res.' },
     { name: 'medial_geniculate', category: 'specialized', channels: [0.03,0.84,0.80,0.30,0.89,0.40,0.55,0.90], displayName: 'Medial Geniculate (MGN)', clinicalNote: 'Auditory relay: cochlear nuclei → A1. Tonotopic organization. Very small (~5mm).' },
     { name: 'mammillothalamic_tract', category: 'specialized', channels: [0.02,0.75,0.78,0.15,0.82,0.60,0.50,0.95], displayName: 'Mammillothalamic Tract', clinicalNote: 'Papez circuit link: mammillary body → anterior thalamus. Thinnest measurable tract. Highest resolution_dependence (0.95).' },
+    // ── NEW: Additional Cortical (3) ─────────────────────────────
+    { name: 'entorhinal_cortex', category: 'cortical', channels: [0.12,0.79,0.68,0.70,0.80,0.92,0.78,0.80], displayName: 'Entorhinal Cortex', clinicalNote: 'Gateway to hippocampus. Grid cells for spatial navigation. Earliest Alzheimer\'s pathology — Braak stage I/II.' },
+    { name: 'prefrontal_dorsolateral', category: 'cortical', channels: [0.60,0.82,0.72,0.80,0.88,0.65,0.90,0.25], displayName: 'Dorsolateral Prefrontal', clinicalNote: 'Working memory, cognitive control, planning. Peak myelination ~age 25. Schizophrenia hypofrontality target.' },
+    { name: 'somatosensory_cortex', category: 'cortical', channels: [0.50,0.83,0.74,0.75,0.90,0.50,0.82,0.28], displayName: 'Somatosensory Cortex', clinicalNote: 'Primary sensory cortex (S1). Somatotopic homunculus. Penfield mapping. Brodmann areas 1, 2, 3.' },
+    // ── NEW: Additional Subcortical (2) ──────────────────────────
+    { name: 'nucleus_accumbens', category: 'subcortical', channels: [0.04,0.82,0.78,0.45,0.88,0.75,0.80,0.88], displayName: 'Nucleus Accumbens', clinicalNote: 'Reward circuit hub. Dopamine target. Addiction, motivation, pleasure. Ventral striatum component.' },
+    { name: 'claustrum', category: 'subcortical', channels: [0.03,0.72,0.65,0.55,0.85,0.40,0.90,0.92], displayName: 'Claustrum', clinicalNote: 'Thinnest brain structure. Proposed consciousness integrator (Crick & Koch). Highest connectivity per volume.' },
+    // ── NEW: Additional Limbic (2) ───────────────────────────────
+    { name: 'septal_nuclei', category: 'limbic', channels: [0.03,0.74,0.65,0.50,0.82,0.70,0.65,0.90], displayName: 'Septal Nuclei', clinicalNote: 'Pleasure/reward processing. Cholinergic projection to hippocampus. Limbic-cortical relay.' },
+    { name: 'mammillary_body', category: 'limbic', channels: [0.02,0.80,0.78,0.30,0.90,0.82,0.60,0.93], displayName: 'Mammillary Body', clinicalNote: 'Papez circuit node. Memory consolidation. Wernicke-Korsakoff target. Tiny but clinically critical.' },
+    // ── NEW: Additional Brainstem (2) ────────────────────────────
+    { name: 'locus_coeruleus', category: 'brainstem', channels: [0.01,0.70,0.72,0.20,0.80,0.88,0.75,0.95], displayName: 'Locus Coeruleus', clinicalNote: 'Primary norepinephrine source. Arousal, attention, stress response. ~50,000 neurons total. Earliest Alzheimer\'s tau pathology.' },
+    { name: 'raphe_nuclei', category: 'brainstem', channels: [0.02,0.72,0.70,0.25,0.78,0.85,0.70,0.93], displayName: 'Raphe Nuclei', clinicalNote: 'Primary serotonin (5-HT) source. Mood, sleep, appetite regulation. SSRI antidepressant target.' },
+    // ── NEW: Additional Cerebellar (1) ───────────────────────────
+    { name: 'cerebellar_peduncles', category: 'cerebellar', channels: [0.15,0.82,0.85,0.40,0.88,0.45,0.70,0.50], displayName: 'Cerebellar Peduncles', clinicalNote: 'Three fiber bundles (superior/middle/inferior) connecting cerebellum to brainstem. Input/output highways.' },
+    // ── NEW: Additional White Matter (3) ─────────────────────────
+    { name: 'internal_capsule', category: 'white_matter', channels: [0.22,0.84,0.88,0.35,0.90,0.72,0.80,0.45], displayName: 'Internal Capsule', clinicalNote: 'Major white matter pathway between cortex and brainstem/spinal cord. Lacunar stroke target. Motor fibers concentrated.' },
+    { name: 'anterior_commissure', category: 'white_matter', channels: [0.04,0.76,0.82,0.15,0.92,0.35,0.45,0.78], displayName: 'Anterior Commissure', clinicalNote: 'Interhemispheric connection for temporal/olfactory cortex. Smaller than corpus callosum. Phylogenetically older.' },
+    { name: 'cingulum_bundle', category: 'white_matter', channels: [0.10,0.78,0.84,0.30,0.85,0.68,0.62,0.60], displayName: 'Cingulum Bundle', clinicalNote: 'C-shaped white matter tract beneath cingulate. Connects frontal, parietal, temporal lobes. Depression & OCD pathway.' },
+    // ── NEW: Additional Specialized (4) ──────────────────────────
+    { name: 'pineal_gland', category: 'specialized', channels: [0.01,0.78,0.82,0.15,0.95,0.30,0.25,0.92], displayName: 'Pineal Gland', clinicalNote: 'Melatonin production. Circadian rhythm master clock adjunct. Calcifies with age. Descartes\' "seat of the soul."' },
+    { name: 'choroid_plexus', category: 'specialized', channels: [0.05,0.80,0.88,0.20,0.85,0.35,0.30,0.75], displayName: 'Choroid Plexus', clinicalNote: 'CSF production (500 mL/day). Blood-CSF barrier. Immune surveillance. Found in all four ventricles.' },
+    { name: 'area_postrema', category: 'specialized', channels: [0.005,0.68,0.65,0.10,0.80,0.55,0.40,0.95], displayName: 'Area Postrema', clinicalNote: 'Chemoreceptor trigger zone. Vomiting reflex. Circumventricular organ — no blood-brain barrier. Smallest mapped structure.' },
+    { name: 'suprachiasmatic_nucleus', category: 'specialized', channels: [0.005,0.65,0.60,0.20,0.85,0.60,0.50,0.95], displayName: 'Suprachiasmatic Nucleus', clinicalNote: 'Master circadian clock. ~20,000 neurons. Light-entrained via retinohypothalamic tract. Controls sleep-wake cycle.' },
   ];
 
   // ── Compute all kernel results ──────────────────────────────────
@@ -1251,6 +1387,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     regionEls.forEach(el => {
       el.style.opacity = el.dataset.region === regionName ? '1' : '0.4';
     });
+
+    // Sync 3D view if active
+    if (brain3d && currentView === '3d') {
+      brain3d.selectRegion(regionName);
+    }
   }
 
   regionEls.forEach(el => {
@@ -1264,6 +1405,59 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     el.addEventListener('mouseleave', () => {
       el.style.filter = '';
     });
+  });
+
+  // ── View Toggle: 2D / 3D ───────────────────────────────────────
+
+  const btn2d = document.getElementById('btn-view-2d')!;
+  const btn3d = document.getElementById('btn-view-3d')!;
+  const btnReset = document.getElementById('btn-reset-view')!;
+  const container2d = document.getElementById('brain-2d-container')!;
+  const container3d = document.getElementById('brain-3d-container')!;
+  const canvas3d = document.getElementById('brain-3d-canvas') as HTMLCanvasElement;
+
+  let brain3d: Brain3D | null = null;
+  let currentView: '2d' | '3d' = '2d';
+
+  function setView(view: '2d' | '3d') {
+    currentView = view;
+    const active = 'px-3 py-1.5 text-xs rounded border border-amber-600 bg-amber-950/30 text-amber-400 font-bold transition';
+    const inactive = 'px-3 py-1.5 text-xs rounded border border-kernel-600 bg-kernel-800 text-kernel-400 font-bold transition hover:border-amber-600 hover:text-amber-400';
+
+    if (view === '2d') {
+      container2d.classList.remove('hidden');
+      container3d.classList.add('hidden');
+      btnReset.classList.add('hidden');
+      btn2d.className = active;
+      btn3d.className = inactive;
+    } else {
+      container2d.classList.add('hidden');
+      container3d.classList.remove('hidden');
+      btnReset.classList.remove('hidden');
+      btn2d.className = inactive;
+      btn3d.className = active;
+
+      // Lazy-init Brain3D
+      if (!brain3d) {
+        brain3d = new Brain3D({
+          canvas: canvas3d,
+          container: container3d,
+          onRegionClick: (name: string) => selectRegion(name),
+        });
+      }
+    }
+  }
+
+  btn2d.addEventListener('click', () => setView('2d'));
+  btn3d.addEventListener('click', () => setView('3d'));
+  btnReset.addEventListener('click', () => {
+    if (brain3d) {
+      brain3d.resetView();
+      brain3d.clearSelection();
+    }
+    regionEls.forEach(el => { el.style.opacity = '1'; });
+    regionPlaceholder.classList.remove('hidden');
+    regionDetail.classList.add('hidden');
   });
 
   // ── §2: Kernel Atlas Table ──────────────────────────────────────
