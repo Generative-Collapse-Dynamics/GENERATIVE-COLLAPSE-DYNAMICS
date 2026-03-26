@@ -5,36 +5,31 @@
  *
  * Displays domain overview with kernel metrics,
  * domain comparison, and domain-level aggregations.
- * Uses pre-computed data generated at build time.
+ * Clickable rows expand to show channel detail, identity checks,
+ * and budget analysis per domain.
  */
 ---
 
 <div id="ledger-viewer" class="space-y-4">
-  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6">
-    <h2 class="text-xl font-bold text-kernel-100 mb-2">Domain Overview &amp; Ledger</h2>
-    <p class="text-kernel-400 text-sm">
-      Overview of all 20 closure domains with kernel metrics,
-      regime classification, and cross-domain comparison.
-    </p>
-  </div>
-
   <!-- Quick compute -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-    <h3 class="text-sm font-bold text-kernel-300 mb-3">Quick Domain Kernel</h3>
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Quick Domain Selector</h3>
     <p class="text-kernel-500 text-xs mb-2">
-      Select a preset domain trace or enter custom values to compute kernel invariants.
+      Click a domain to see its kernel invariants. Click any row in the table below
+      to expand full channel analysis, identity verification, and budget reconciliation.
     </p>
     <div class="flex flex-wrap gap-2 mb-3" id="domain-presets"></div>
     <div class="grid grid-cols-6 gap-2 mt-2" id="domain-invariants"></div>
   </div>
 
-  <!-- Domain table -->
+  <!-- Domain table with expandable rows -->
   <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
-    <h3 class="text-sm font-bold text-kernel-300 mb-3">All 20 Domains — Kernel Summary</h3>
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">All 20 Domains — Click Row to Expand</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-xs font-mono" id="domain-table">
         <thead>
           <tr class="text-kernel-500 border-b border-kernel-700">
+            <th class="text-left p-1.5"></th>
             <th class="text-left p-1.5">Domain</th>
             <th class="text-right p-1.5">F</th>
             <th class="text-right p-1.5">ω</th>
@@ -49,6 +44,9 @@
         <tbody id="domain-tbody"></tbody>
       </table>
     </div>
+    <p class="text-xs text-kernel-600 mt-2 italic">
+      Click any row to expand: trace channels, identity verification, and seam budget analysis.
+    </p>
   </div>
 
   <!-- Regime distribution -->
@@ -56,10 +54,18 @@
     <h3 class="text-sm font-bold text-kernel-300 mb-3">Cross-Domain Regime Distribution</h3>
     <div id="domain-regime-bars"></div>
   </div>
+
+  <!-- Domain ranking -->
+  <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-4">
+    <h3 class="text-sm font-bold text-kernel-300 mb-3">Domain Rankings</h3>
+    <div id="domain-rankings" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+  </div>
 </div>
 
 <script>
   import { computeKernel, classifyRegime, type KernelResult } from '../lib/kernel';
+
+  const EPSILON = 1e-8;
 
   // Domain representative traces (characteristic values from each closure)
   const domainTraces: Record<string, { name: string; c: number[]; desc: string }> = {
@@ -86,18 +92,21 @@
   };
 
   // Compute all domains
-  type DomainResult = { id: string; name: string; desc: string; kernel: KernelResult; regime: string; isCritical: boolean };
+  type DomainResult = { id: string; name: string; desc: string; c: number[]; kernel: KernelResult; regime: string; isCritical: boolean };
   const results: DomainResult[] = [];
 
   for (const [id, d] of Object.entries(domainTraces)) {
     const w = Array.from({length: d.c.length}, () => 1.0 / d.c.length);
     const kernel = computeKernel(d.c, w);
     const regime = classifyRegime(kernel);
-    results.push({ id, name: d.name, desc: d.desc, kernel, regime: regime.regime, isCritical: regime.isCritical });
+    results.push({ id, name: d.name, desc: d.desc, c: d.c, kernel, regime: regime.regime, isCritical: regime.isCritical });
   }
 
   // Sort by fidelity descending
   results.sort((a, b) => b.kernel.F - a.kernel.F);
+
+  // Track which domain row is expanded
+  let expandedDomain: string | null = null;
 
   // Render domain presets
   function renderPresets() {
@@ -148,9 +157,107 @@
     `).join('');
   }
 
+  // Generate expanded row content for a domain
+  function buildExpandedRow(r: DomainResult, colSpan: number): string {
+    // Identity checks
+    const id1 = Math.abs(r.kernel.F + r.kernel.omega - 1);
+    const id2 = r.kernel.IC <= r.kernel.F + 1e-10;
+    const id3 = Math.abs(r.kernel.IC - Math.exp(r.kernel.kappa));
+    const icf = r.kernel.IC / r.kernel.F;
+
+    // Channel bars
+    const chBars = r.c.map((v, i) => {
+      const pct = (v * 100).toFixed(0);
+      const barColor = v > 0.8 ? 'bg-green-600' : v > 0.5 ? 'bg-amber-600' : 'bg-red-600';
+      return `
+        <div class="flex items-center gap-2 text-[10px]">
+          <span class="text-kernel-500 w-10 text-right">c<sub>${i+1}</sub></span>
+          <div class="flex-1 bg-kernel-800 rounded h-3 overflow-hidden">
+            <div class="${barColor} h-full" style="width:${pct}%"></div>
+          </div>
+          <span class="text-kernel-400 w-10 font-mono">${v.toFixed(3)}</span>
+        </div>
+      `;
+    }).join('');
+
+    // Seam budget approximation (using omega and C)
+    const gamma = Math.pow(r.kernel.omega, 3) / (1 - r.kernel.omega + EPSILON);
+    const dc = 1.0 * r.kernel.C;
+    const totalDebit = gamma + dc;
+
+    return `
+      <tr class="detail-row" data-detail-for="${r.id}">
+        <td colspan="${colSpan}" class="p-0">
+          <div class="bg-kernel-950 border-t border-b border-kernel-700 p-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-bold text-kernel-200">${r.name} — ${r.desc}</h4>
+              <span class="text-xs text-kernel-500">${r.c.length} channels, equal weights</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Channel Values -->
+              <div>
+                <div class="text-xs text-kernel-500 font-semibold mb-2">Channel Values</div>
+                <div class="space-y-1">${chBars}</div>
+                <div class="mt-2 text-[10px] text-kernel-600">
+                  min = ${Math.min(...r.c).toFixed(3)} · max = ${Math.max(...r.c).toFixed(3)} · spread = ${(Math.max(...r.c) - Math.min(...r.c)).toFixed(3)}
+                </div>
+              </div>
+              <!-- Identity Checks -->
+              <div>
+                <div class="text-xs text-kernel-500 font-semibold mb-2">Identity Verification</div>
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="${id1 < 1e-10 ? 'text-emerald-400' : 'text-red-400'}">${id1 < 1e-10 ? '✓' : '✕'}</span>
+                    <span class="text-kernel-300">F + ω = 1</span>
+                    <span class="text-kernel-500 font-mono ml-auto">|res| = ${id1.toExponential(1)}</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="${id2 ? 'text-emerald-400' : 'text-red-400'}">${id2 ? '✓' : '✕'}</span>
+                    <span class="text-kernel-300">IC ≤ F</span>
+                    <span class="text-kernel-500 font-mono ml-auto">Δ = ${r.kernel.delta.toFixed(6)}</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="${id3 < 1e-10 ? 'text-emerald-400' : 'text-red-400'}">${id3 < 1e-10 ? '✓' : '✕'}</span>
+                    <span class="text-kernel-300">IC = exp(κ)</span>
+                    <span class="text-kernel-500 font-mono ml-auto">|res| = ${id3.toExponential(1)}</span>
+                  </div>
+                </div>
+                <div class="mt-3 text-[10px] text-kernel-600 bg-kernel-800/50 rounded p-2">
+                  IC/F = ${icf.toFixed(4)} — ${icf > 0.95 ? 'nearly homogeneous' : icf > 0.7 ? 'moderate heterogeneity' : icf > 0.4 ? 'significant heterogeneity' : 'severe heterogeneity (geometric slaughter)'}
+                </div>
+              </div>
+              <!-- Budget Snapshot -->
+              <div>
+                <div class="text-xs text-kernel-500 font-semibold mb-2">Budget Snapshot</div>
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between text-kernel-400">
+                    <span class="text-red-400">D<sub>ω</sub> = Γ(ω)</span>
+                    <span class="font-mono">${gamma.toFixed(6)}</span>
+                  </div>
+                  <div class="flex justify-between text-kernel-400">
+                    <span class="text-red-400">D<sub>C</sub> = α·C</span>
+                    <span class="font-mono">${dc.toFixed(6)}</span>
+                  </div>
+                  <div class="flex justify-between text-kernel-400 border-t border-kernel-700 pt-1">
+                    <span class="text-red-400 font-semibold">Total Debit</span>
+                    <span class="font-mono">${totalDebit.toFixed(6)}</span>
+                  </div>
+                </div>
+                <div class="mt-2 text-[10px] text-kernel-600 bg-kernel-800/50 rounded p-2">
+                  For the seam to close, credit R·τ<sub>R</sub> must bring |Δκ| within tol = 0.005
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
   // Render domain table
   function renderTable() {
     const tbody = document.getElementById('domain-tbody')!;
+    const colSpan = 10;
     tbody.innerHTML = results.map(r => {
       const regimeColors: Record<string, { bg: string; text: string }> = {
         'STABLE': { bg: 'bg-green-900/20', text: 'text-green-400' },
@@ -159,9 +266,12 @@
       };
       const rc = regimeColors[r.regime] || { bg: '', text: '' };
       const icf = r.kernel.IC / r.kernel.F;
+      const isExpanded = expandedDomain === r.id;
 
       return `
-        <tr class="border-b border-kernel-800 hover:bg-kernel-800/30 transition ${rc.bg}">
+        <tr class="domain-row border-b border-kernel-800 hover:bg-kernel-800/30 transition cursor-pointer ${rc.bg}"
+            data-domain="${r.id}">
+          <td class="p-1.5 text-kernel-500 domain-chevron" style="width:20px">${isExpanded ? '▾' : '▸'}</td>
           <td class="p-1.5 text-kernel-300">${r.name}</td>
           <td class="text-right p-1.5">${r.kernel.F.toFixed(4)}</td>
           <td class="text-right p-1.5">${r.kernel.omega.toFixed(4)}</td>
@@ -172,8 +282,22 @@
           <td class="text-center p-1.5 ${rc.text}">${r.regime}${r.isCritical ? ' ⚠' : ''}</td>
           <td class="text-center p-1.5 ${icf > 0.9 ? 'text-green-400' : icf > 0.5 ? 'text-amber-400' : 'text-red-400'}">${icf.toFixed(3)}</td>
         </tr>
+        ${isExpanded ? buildExpandedRow(r, colSpan) : ''}
       `;
     }).join('');
+
+    // Attach click handlers to domain rows
+    tbody.querySelectorAll('.domain-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const id = (row as HTMLElement).dataset.domain!;
+        if (expandedDomain === id) {
+          expandedDomain = null;
+        } else {
+          expandedDomain = id;
+        }
+        renderTable();
+      });
+    });
   }
 
   // Render regime bars
@@ -197,9 +321,45 @@
     `;
   }
 
+  // Render domain rankings
+  function renderRankings() {
+    const container = document.getElementById('domain-rankings')!;
+
+    // Top by F
+    const byF = [...results].sort((a, b) => b.kernel.F - a.kernel.F);
+    // Worst by IC/F (most heterogeneous)
+    const byICF = [...results].sort((a, b) => (a.kernel.IC / a.kernel.F) - (b.kernel.IC / b.kernel.F));
+    // By delta (largest gap)
+    const byDelta = [...results].sort((a, b) => b.kernel.delta - a.kernel.delta);
+
+    function rankList(title: string, items: DomainResult[], metric: (r: DomainResult) => string, color: string) {
+      return `
+        <div class="bg-kernel-800/50 rounded p-3">
+          <div class="text-xs font-bold ${color} mb-2">${title}</div>
+          <div class="space-y-1">
+            ${items.slice(0, 5).map((r, i) => `
+              <div class="flex items-center gap-2 text-[10px]">
+                <span class="text-kernel-600 w-3">${i + 1}.</span>
+                <span class="text-kernel-300">${r.name}</span>
+                <span class="text-kernel-500 font-mono ml-auto">${metric(r)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      ${rankList('Highest Fidelity', byF, r => `F=${r.kernel.F.toFixed(4)}`, 'text-green-400')}
+      ${rankList('Largest Gap (Δ)', byDelta, r => `Δ=${r.kernel.delta.toFixed(4)}`, 'text-amber-400')}
+      ${rankList('Most Heterogeneous (IC/F)', byICF, r => `IC/F=${(r.kernel.IC / r.kernel.F).toFixed(4)}`, 'text-red-400')}
+    `;
+  }
+
   // Initialize
   renderPresets();
   renderTable();
   renderRegimeBars();
+  renderRankings();
   if (results.length > 0) showDomainDetail(results[0].id);
 </script>

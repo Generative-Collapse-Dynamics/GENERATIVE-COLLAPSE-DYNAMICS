@@ -309,7 +309,7 @@
 <script>
   import {
     computeKernel, classifyRegime, computeSeamBudget, verifyIdentities,
-    gammaOmega, bernoulliEntropy, computeTauRStar, PRESETS,
+    gammaOmega, bernoulliEntropy, computeTauRStar, PRESETS, DOMAIN_PRESETS,
     sweepChannel, sweepHomogeneous, entropyCurve, gammaCurve, heatmap2D,
   } from '../lib/kernel';
   import type { KernelResult, SweepPoint } from '../lib/kernel';
@@ -442,25 +442,76 @@
 
   /* ─── Presets ──────────────────────────────────────────────── */
 
+  function loadPreset(c: number[], w: number[], name: string) {
+    channelValues = [...c];
+    weightValues = [...w];
+    nChannels = channelValues.length;
+    document.getElementById('active-preset-label')!.textContent = name;
+    renderInputs();
+    populateChannelSelectors();
+    compute();
+  }
+
   function renderPresets() {
     const container = document.getElementById('preset-buttons')!;
     container.innerHTML = '';
-    for (const [key, preset] of Object.entries(PRESETS)) {
+
+    // Core presets row
+    const coreLabel = document.createElement('div');
+    coreLabel.className = 'w-full text-[10px] text-kernel-600 uppercase tracking-wider font-semibold mb-0.5';
+    coreLabel.textContent = 'Core';
+    container.appendChild(coreLabel);
+
+    for (const [, preset] of Object.entries(PRESETS)) {
       const btn = document.createElement('button');
       btn.className = 'text-xs px-3 py-1.5 bg-kernel-800 text-kernel-300 rounded-lg hover:bg-kernel-700 hover:text-kernel-100 transition border border-kernel-700/50';
       btn.textContent = preset.name;
-      btn.addEventListener('click', () => {
-        channelValues = [...preset.c];
-        weightValues = [...preset.w];
-        nChannels = channelValues.length;
-        document.getElementById('active-preset-label')!.textContent = preset.name;
-        renderInputs();
-        populateChannelSelectors();
-        compute();
-      });
+      btn.addEventListener('click', () => loadPreset(preset.c, preset.w, preset.name));
       container.appendChild(btn);
     }
+
+    // Domain presets — categorized
+    const cats: Record<string, { label: string; presets: typeof DOMAIN_PRESETS }> = {
+      standard_model: { label: 'Standard Model', presets: [] },
+      astro: { label: 'Astrophysics', presets: [] },
+      atom_nuc: { label: 'Atomic & Nuclear', presets: [] },
+      neuro_bio: { label: 'Neuro & Bio', presets: [] },
+      other: { label: 'Finance, Semiotics & More', presets: [] },
+      probes: { label: 'Corner Probes', presets: [] },
+    };
+    for (const dp of DOMAIN_PRESETS) {
+      const d = dp.domain.toLowerCase();
+      if (d === 'standard_model') cats.standard_model.presets.push(dp);
+      else if (['astronomy', 'weyl', 'spacetime_memory'].includes(d)) cats.astro.presets.push(dp);
+      else if (['atomic_physics', 'nuclear_physics'].includes(d)) cats.atom_nuc.presets.push(dp);
+      else if (['consciousness', 'clinical', 'evolution'].includes(d)) cats.neuro_bio.presets.push(dp);
+      else if (d === 'corner_probe') cats.probes.presets.push(dp);
+      else cats.other.presets.push(dp);
+    }
+
+    for (const [, cat] of Object.entries(cats)) {
+      if (cat.presets.length === 0) continue;
+      const catLabel = document.createElement('div');
+      catLabel.className = 'w-full text-[10px] text-kernel-600 uppercase tracking-wider font-semibold mt-2 mb-0.5';
+      catLabel.textContent = cat.label;
+      container.appendChild(catLabel);
+
+      for (const dp of cat.presets) {
+        const btn = document.createElement('button');
+        btn.className = 'text-xs px-3 py-1.5 bg-kernel-800 text-kernel-300 rounded-lg hover:bg-kernel-700 hover:text-kernel-100 transition border border-kernel-700/50';
+        btn.textContent = dp.name;
+        btn.title = dp.description || dp.name;
+        btn.addEventListener('click', () => loadPreset(dp.c, dp.w, dp.name));
+        container.appendChild(btn);
+      }
+    }
   }
+
+  // Listen for external preset load events (from calculator.astro domain grid)
+  document.addEventListener('load-preset', ((e: CustomEvent) => {
+    const { c, w, name } = e.detail;
+    loadPreset(c, w, name);
+  }) as EventListener);
 
   /* ─── Input Rendering ──────────────────────────────────────── */
 

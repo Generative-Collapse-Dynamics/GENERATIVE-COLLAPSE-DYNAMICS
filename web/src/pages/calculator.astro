@@ -7,13 +7,108 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
 <BaseLayout title="Structure Explorer — GCD Kernel Research Tool">
   <div class="max-w-6xl mx-auto">
     <!-- Hero -->
-    <div class="mb-8">
+    <div class="mb-6">
       <h1 class="text-3xl font-bold text-kernel-100 mb-2">Structure Explorer</h1>
       <p class="text-kernel-400 text-lg leading-relaxed">
         Interactive research tool for the GCD kernel K: [0,1]<sup>n</sup> × Δ<sup>n</sup> → (F, ω, S, C, κ, IC).
-        Five analysis modes let you compute invariants, sweep channels for sensitivity,
-        map regime landscapes, verify identities, and explore seam budgets.
+        Nine analysis modes let you compute invariants, sweep channels, map regime landscapes,
+        verify identities, explore seam budgets, compose domains, batch-compare, and run orientation proofs.
       </p>
+    </div>
+
+    <!-- ═══════ TOOL MAP — What's Available ═══════ -->
+    <div class="mb-6 bg-kernel-900/50 border border-kernel-700/50 rounded-xl p-5">
+      <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-3">All 9 Analysis Tools — Click to Jump</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2 text-xs">
+        <div class="space-y-2">
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Core Tools</div>
+          <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="compute">
+            <span class="text-green-400 font-bold">◉ Kernel Compute</span>
+            <div class="text-kernel-500 mt-0.5">Trace vector → 6 invariants + regime + identities</div>
+          </a>
+          <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="sweep">
+            <span class="text-amber-400 font-bold">〰 Sensitivity Sweep</span>
+            <div class="text-kernel-500 mt-0.5">Vary one channel 0→1, chart all 6 outputs</div>
+          </a>
+          <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="phase">
+            <span class="text-purple-400 font-bold">◧ Phase Diagram</span>
+            <div class="text-kernel-500 mt-0.5">2D heatmap of regime landscape across two channels</div>
+          </a>
+        </div>
+        <div class="space-y-2">
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Verification</div>
+          <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="identity">
+            <span class="text-cyan-400 font-bold">≡ Identity Lab</span>
+            <div class="text-kernel-500 mt-0.5">Verify 3 algebraic identities + S+κ curves</div>
+          </a>
+          <a href="#structure-explorer" class="tool-jump block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="seam">
+            <span class="text-red-400 font-bold">⊢ Seam Budget</span>
+            <div class="text-kernel-500 mt-0.5">Full debit/credit breakdown + Γ(ω) chart</div>
+          </a>
+          <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="orientation">
+            <span class="text-emerald-400 font-bold">✓ Orientation Proofs</span>
+            <div class="text-kernel-500 mt-0.5">Live computation of all 10 structural receipts</div>
+          </a>
+        </div>
+        <div class="space-y-2">
+          <div class="text-kernel-500 font-semibold uppercase text-[10px] tracking-wider">Cross-Domain</div>
+          <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="composition">
+            <span class="text-blue-400 font-bold">⊕ Composition</span>
+            <div class="text-kernel-500 mt-0.5">Compose two systems — F arithmetic, IC geometric</div>
+          </a>
+          <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="batch">
+            <span class="text-orange-400 font-bold">▦ Batch Compare</span>
+            <div class="text-kernel-500 mt-0.5">Side-by-side comparison of multiple domains</div>
+          </a>
+          <a href="#advanced-explorer" class="tool-jump-adv block bg-kernel-800/60 rounded-lg p-2.5 hover:bg-kernel-700/60 transition no-underline border border-kernel-700/30" data-mode="taustar">
+            <span class="text-pink-400 font-bold">τ τ_R* Surface</span>
+            <div class="text-kernel-500 mt-0.5">Thermodynamic return heatmap over (ω, C)</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ DOMAIN PRESETS — Organized by Category ═══════ -->
+    <div class="mb-6 bg-kernel-900/50 border border-kernel-700/50 rounded-xl p-5">
+      <h2 class="text-sm font-bold text-amber-400/80 uppercase tracking-wider mb-1">Domain Presets — 35 Pre-Loaded Systems</h2>
+      <p class="text-xs text-kernel-500 mb-3">Click any preset to load it into the Kernel Compute tool below.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs" id="domain-preset-grid">
+        <!-- Core -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Core Kernels</div>
+          <div class="space-y-1" id="cat-core"></div>
+        </div>
+        <!-- Particles -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Standard Model</div>
+          <div class="space-y-1" id="cat-sm"></div>
+        </div>
+        <!-- Astrophysics -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Astrophysics</div>
+          <div class="space-y-1" id="cat-astro"></div>
+        </div>
+        <!-- Atomic / Nuclear -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Atomic & Nuclear</div>
+          <div class="space-y-1" id="cat-atom"></div>
+        </div>
+        <!-- Neuro / Bio -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Neuroscience & Biology</div>
+          <div class="space-y-1" id="cat-neuro"></div>
+        </div>
+        <!-- Finance / Semiotics -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Finance, Semiotics & More</div>
+          <div class="space-y-1" id="cat-other"></div>
+        </div>
+        <!-- Special points -->
+        <div>
+          <div class="text-kernel-600 font-semibold uppercase text-[10px] tracking-wider mb-1.5">Corner Probes & Special Points</div>
+          <div class="space-y-1" id="cat-special"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Quick reference -->
@@ -81,3 +176,106 @@ import AdvancedExplorer from '../components/AdvancedExplorer.astro';
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  import { PRESETS, DOMAIN_PRESETS, computeKernel, classifyRegime } from '../lib/kernel';
+
+  // ── Categorize domain presets ──────────────────────────────
+  const categories: Record<string, { container: string; items: typeof DOMAIN_PRESETS }> = {
+    core: { container: 'cat-core', items: [] },
+    sm: { container: 'cat-sm', items: [] },
+    astro: { container: 'cat-astro', items: [] },
+    atom: { container: 'cat-atom', items: [] },
+    neuro: { container: 'cat-neuro', items: [] },
+    other: { container: 'cat-other', items: [] },
+    special: { container: 'cat-special', items: [] },
+  };
+
+  // Add the 6 core PRESETS as domain-style entries
+  for (const [key, p] of Object.entries(PRESETS)) {
+    categories.core.items.push({ name: p.name, domain: 'core', c: p.c, w: p.w, description: '' });
+  }
+
+  // Categorize the 29 DOMAIN_PRESETS
+  for (const dp of DOMAIN_PRESETS) {
+    const d = dp.domain.toLowerCase();
+    if (d === 'standard_model') categories.sm.items.push(dp);
+    else if (d === 'astronomy' || d === 'weyl' || d === 'spacetime_memory') categories.astro.items.push(dp);
+    else if (d === 'atomic_physics' || d === 'nuclear_physics') categories.atom.items.push(dp);
+    else if (d === 'consciousness' || d === 'clinical' || d === 'evolution') categories.neuro.items.push(dp);
+    else if (d === 'corner_probe') categories.special.items.push(dp);
+    else categories.other.items.push(dp);
+  }
+
+  function renderDomainPresets() {
+    const regimeColor: Record<string, string> = {
+      STABLE: 'border-green-700/50 text-green-400',
+      WATCH: 'border-amber-700/50 text-amber-400',
+      COLLAPSE: 'border-red-700/50 text-red-400',
+    };
+
+    for (const [, cat] of Object.entries(categories)) {
+      const el = document.getElementById(cat.container);
+      if (!el || cat.items.length === 0) continue;
+
+      el.innerHTML = cat.items.map(dp => {
+        const k = computeKernel(dp.c, dp.w);
+        const r = classifyRegime(k);
+        const rc = regimeColor[r.regime] || 'border-kernel-700/50 text-kernel-400';
+        return `
+          <button class="dp-btn w-full text-left px-2.5 py-1.5 rounded border ${rc} bg-kernel-800/40 hover:bg-kernel-700/50 transition flex items-center justify-between gap-2"
+            data-c="${JSON.stringify(dp.c)}" data-w="${JSON.stringify(dp.w)}" data-name="${dp.name}">
+            <span class="truncate">${dp.name}</span>
+            <span class="text-kernel-600 text-[10px] font-mono shrink-0">F=${k.F.toFixed(2)}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // Attach click handlers — load into StructureExplorer
+    document.querySelectorAll('.dp-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        const c = JSON.parse(el.dataset.c || '[]');
+        const w = JSON.parse(el.dataset.w || '[]');
+        const name = el.dataset.name || 'Custom';
+
+        // Dispatch a custom event that StructureExplorer can listen for
+        document.dispatchEvent(new CustomEvent('load-preset', {
+          detail: { c, w, name }
+        }));
+
+        // Scroll to explorer
+        document.getElementById('structure-explorer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  renderDomainPresets();
+
+  // ── Tool Map jump links ────────────────────────────────────
+  document.querySelectorAll('.tool-jump').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const mode = (link as HTMLElement).dataset.mode;
+      if (mode) {
+        // Click the corresponding mode tab in StructureExplorer
+        setTimeout(() => {
+          const tab = document.querySelector(`#mode-tabs [data-mode="${mode}"]`) as HTMLElement;
+          tab?.click();
+        }, 300);
+      }
+    });
+  });
+
+  document.querySelectorAll('.tool-jump-adv').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const mode = (link as HTMLElement).dataset.mode;
+      if (mode) {
+        setTimeout(() => {
+          const tab = document.querySelector(`#adv-mode-tabs [data-adv-mode="${mode}"]`) as HTMLElement;
+          tab?.click();
+        }, 300);
+      }
+    });
+  });
+</script>
