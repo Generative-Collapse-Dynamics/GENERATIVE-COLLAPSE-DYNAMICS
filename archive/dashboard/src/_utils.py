@@ -12,6 +12,12 @@ Contains:
 # pyright: reportUnknownArgumentType=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportMissingTypeStubs=false
+# pyright: reportMissingImports=false
+# pyright: reportUntypedFunctionDecorator=false
+# pyright: reportUnusedImport=false
+# pyright: reportGeneralTypeIssues=false
+# pyright: reportReturnType=false
+# pyright: reportUntypedBaseClass=false
 
 from __future__ import annotations
 
@@ -20,7 +26,29 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from umcp.dashboard._deps import _cache_data, np, pd, st
+from ._deps import _cache_data, np, pd, st
+
+__all__ = [
+    "KERNEL_SYMBOLS", "NAV_CATEGORIES", "NAV_CATEGORY_ICONS",
+    "REGIME_COLORS", "STATUS_COLORS", "THEMES",
+    "_cache_data", "_ensure_closures_path",
+    "classify_regime", "detect_anomalies", "format_bytes",
+    "get_regime_color", "get_repo_root", "get_trend_indicator",
+    "inject_custom_css", "load_casepacks", "load_closures",
+    "load_contracts", "load_ledger", "metric_row",
+    "page_header", "regime_badge", "section_divider",
+]
+
+__all__ = [
+    "KERNEL_SYMBOLS", "NAV_CATEGORIES", "NAV_CATEGORY_ICONS",
+    "REGIME_COLORS", "STATUS_COLORS", "THEMES",
+    "_cache_data", "_ensure_closures_path",
+    "classify_regime", "detect_anomalies", "format_bytes",
+    "get_regime_color", "get_repo_root", "get_trend_indicator",
+    "inject_custom_css", "load_casepacks", "load_closures",
+    "load_contracts", "load_ledger", "metric_row",
+    "page_header", "regime_badge", "section_divider",
+]
 
 # Import UMCP core modules
 try:
@@ -165,7 +193,7 @@ def get_repo_root() -> Path:
     return Path.cwd()
 
 
-@_cache_data(ttl=60)
+@_cache_data(ttl=60)  # type: ignore[misc]
 def load_ledger() -> Any:
     """Load the return log ledger as a DataFrame."""
     if pd is None:
@@ -184,9 +212,9 @@ def load_ledger() -> Any:
     # Uses canonical tau_R_display for consistent formatting.
     if "tau_R" in df.columns:
         try:
-            from .measurement_engine import tau_R_display
+            from umcp.measurement_engine import tau_R_display
         except ImportError:
-            from umcp.measurement_engine import tau_R_display  # type: ignore[no-redef]
+            tau_R_display = str  # type: ignore[assignment]  # type: ignore[assignment]
 
         df["tau_R"] = df["tau_R"].apply(tau_R_display)
 
@@ -198,7 +226,7 @@ def load_ledger() -> Any:
     return df
 
 
-@_cache_data(ttl=60)
+@_cache_data(ttl=60)  # type: ignore[misc]
 def load_casepacks() -> list[dict[str, Any]]:
     """Load casepack information with extended metadata."""
     repo_root = get_repo_root()
@@ -273,7 +301,7 @@ def load_casepacks() -> list[dict[str, Any]]:
     return casepacks
 
 
-@_cache_data(ttl=60)
+@_cache_data(ttl=60)  # type: ignore[misc]
 def load_contracts() -> list[dict[str, Any]]:
     """Load contract information with extended metadata."""
     repo_root = get_repo_root()
@@ -305,7 +333,7 @@ def load_contracts() -> list[dict[str, Any]]:
     return contracts
 
 
-@_cache_data(ttl=60)
+@_cache_data(ttl=60)  # type: ignore[misc]
 def load_closures() -> list[dict[str, Any]]:
     """Load closure information."""
     repo_root = get_repo_root()

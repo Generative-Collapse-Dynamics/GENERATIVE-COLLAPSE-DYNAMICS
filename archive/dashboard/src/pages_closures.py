@@ -20,8 +20,8 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
-from umcp.dashboard._deps import go, st
-from umcp.dashboard._utils import (
+from ._deps import go, st
+from ._utils import (
     format_bytes,
     load_closures,
 )

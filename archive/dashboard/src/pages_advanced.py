@@ -11,8 +11,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from umcp.dashboard._deps import go, make_subplots, np, pd, px, st
-from umcp.dashboard._utils import (
+from ._deps import go, make_subplots, np, pd, px, st
+from ._utils import (
     REGIME_COLORS,
     get_repo_root,
 )

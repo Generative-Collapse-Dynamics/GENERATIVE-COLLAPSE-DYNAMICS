@@ -2,7 +2,7 @@
 Shared dependency imports for UMCP Dashboard.
 
 Centralizes optional visualization dependency handling so every
-page module can do: ``from umcp.dashboard._deps import st, pd, px, ...``
+page module can do: ``from ._deps import st, pd, px, ...``
 """
 # pyright: reportUnknownMemberType=false
 # pyright: reportUnknownVariableType=false

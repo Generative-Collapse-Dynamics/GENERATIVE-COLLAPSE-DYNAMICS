@@ -10,8 +10,8 @@ Atomic Physics, Standard Model, Materials Science, Security.
 
 from __future__ import annotations
 
-from umcp.dashboard._deps import go, np, pd, st
-from umcp.dashboard._utils import (
+from ._deps import go, np, pd, st
+from ._utils import (
     _ensure_closures_path,
 )
 from umcp.frozen_contract import EPSILON

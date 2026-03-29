@@ -14,8 +14,8 @@ import sys
 from datetime import datetime, timedelta
 from typing import Any
 
-from umcp.dashboard._deps import HAS_VIZ_DEPS, go, make_subplots, np, pd, px, st
-from umcp.dashboard._utils import (
+from ._deps import HAS_VIZ_DEPS, go, make_subplots, np, pd, px, st
+from ._utils import (
     KERNEL_SYMBOLS,
     REGIME_COLORS,
     STATUS_COLORS,

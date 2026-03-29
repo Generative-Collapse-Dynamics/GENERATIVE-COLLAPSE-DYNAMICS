@@ -4,6 +4,14 @@
   "pythonPath": "/usr/local/bin/python",
   "reportMissingImports": "warning",
   "reportMissingModuleSource": "none",
+  "exclude": [
+    "**/archive",
+    "**/build",
+    "**/build_integrated",
+    "archive",
+    "build",
+    "build_integrated", "**/node_modules", "**/__pycache__", "**/.*", ".venv"
+  ],
   "extraPaths": [
     "src",
     "closures",

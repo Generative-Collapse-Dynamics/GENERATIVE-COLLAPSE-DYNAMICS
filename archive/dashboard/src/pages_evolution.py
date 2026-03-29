@@ -20,8 +20,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from umcp.dashboard._deps import go, np, pd, st
-from umcp.dashboard._utils import _ensure_closures_path
+from ._deps import go, np, pd, st
+from ._utils import _ensure_closures_path
 from umcp.frozen_contract import EPSILON
 
 # ═════════════════════════════════════════════════════════════════════

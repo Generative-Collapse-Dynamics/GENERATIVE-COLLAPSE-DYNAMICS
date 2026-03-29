@@ -12,8 +12,8 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-from umcp.dashboard._deps import pd, st
-from umcp.dashboard._utils import (
+from ._deps import pd, st
+from ._utils import (
     classify_regime,
     detect_anomalies,
     load_ledger,

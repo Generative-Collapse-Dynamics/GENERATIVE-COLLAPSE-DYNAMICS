@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from umcp.dashboard._deps import go, np, pd, st
+from ._deps import go, np, pd, st
 
 # ============================================================================
 # Page 1: τ_R* Thermodynamic Diagnostic

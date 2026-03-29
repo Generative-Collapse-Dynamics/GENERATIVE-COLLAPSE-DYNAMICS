@@ -48,6 +48,10 @@ Package structure:
 # pyright: reportUnknownArgumentType=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportMissingTypeStubs=false
+# pyright: reportMissingImports=false
+# pyright: reportMissingModuleSource=false
+# pyright: reportPrivateImportUsage=false
+# pyright: reportUntypedFunctionDecorator=false
 
 from __future__ import annotations
 
@@ -58,8 +62,8 @@ from pathlib import Path
 from typing import Any
 
 # ── Shared deps & utilities ──────────────────────────────────────────────────
-from umcp.dashboard._deps import HAS_VIZ_DEPS, st
-from umcp.dashboard._utils import (
+from ._deps import HAS_VIZ_DEPS, st
+from ._utils import (
     KERNEL_SYMBOLS,
     NAV_CATEGORIES,
     NAV_CATEGORY_ICONS,
@@ -92,7 +96,7 @@ except ImportError:
     __version__ = "2.3.0"
 
 # ── Page render functions (lazy-imported from submodules) ────────────────────
-from umcp.dashboard.pages_advanced import (
+from .pages_advanced import (
     render_canon_explorer_page,
     render_domain_overview_page,
     render_geometry_page,
@@ -102,14 +106,14 @@ from umcp.dashboard.pages_advanced import (
     render_precision_page,
     render_unified_geometry_view,
 )
-from umcp.dashboard.pages_analysis import (
+from .pages_analysis import (
     render_comparison_page,
     render_exports_page,
     render_formula_builder_page,
     render_time_series_page,
 )
-from umcp.dashboard.pages_closures import render_closure_explorer_page
-from umcp.dashboard.pages_core import (
+from .pages_closures import render_closure_explorer_page
+from .pages_core import (
     render_casepacks_page,
     render_closures_page,
     render_contracts_page,
@@ -119,34 +123,34 @@ from umcp.dashboard.pages_core import (
     render_overview_page,
     render_regime_page,
 )
-from umcp.dashboard.pages_diagnostic import (
+from .pages_diagnostic import (
     render_epistemic_page,
     render_insights_page,
     render_tau_r_star_page,
 )
-from umcp.dashboard.pages_evolution import (
+from .pages_evolution import (
     render_awareness_manifold_page,
     render_brain_kernel_page,
     render_cognitive_traversal_page,
     render_evolution_kernel_page,
 )
-from umcp.dashboard.pages_exploration import (
+from .pages_exploration import (
     render_everyday_physics_page,
     render_orientation_page,
     render_rosetta_page,
 )
-from umcp.dashboard.pages_interactive import (
+from .pages_interactive import (
     render_batch_validation_page,
     render_live_runner_page,
     render_test_templates_page,
     render_work_template_page,
 )
-from umcp.dashboard.pages_management import (
+from .pages_management import (
     render_api_integration_page,
     render_bookmarks_page,
     render_notifications_page,
 )
-from umcp.dashboard.pages_physics import (
+from .pages_physics import (
     GCD_AXIOMS,
     GCD_REGIMES,
     GCD_SYMBOLS,
@@ -159,7 +163,7 @@ from umcp.dashboard.pages_physics import (
     render_physics_interface_page,
     translate_to_gcd,
 )
-from umcp.dashboard.pages_science import (
+from .pages_science import (
     render_astronomy_page,
     render_atomic_physics_page,
     render_cosmology_page,

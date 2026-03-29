@@ -12,8 +12,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from umcp.dashboard._deps import go, make_subplots, np, pd, px, st
-from umcp.dashboard._utils import (
+from ._deps import go, make_subplots, np, pd, px, st
+from ._utils import (
     classify_regime,
     get_regime_color,
 )

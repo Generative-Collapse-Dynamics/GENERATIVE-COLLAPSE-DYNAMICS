@@ -15,15 +15,15 @@ import sys
 from datetime import datetime
 from typing import Any
 
-from umcp.dashboard._deps import np, pd, st
-from umcp.dashboard._utils import (
+from ._deps import np, pd, st
+from ._utils import (
     STATUS_COLORS,
     classify_regime,
     get_regime_color,
     get_repo_root,
     load_casepacks,
 )
-from umcp.dashboard.pages_physics import render_gcd_panel, translate_to_gcd
+from .pages_physics import render_gcd_panel, translate_to_gcd
 
 # Import optimized kernel computer for real computation
 try:
