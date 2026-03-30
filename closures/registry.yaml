@@ -492,6 +492,38 @@ registry:
         frozen_params:
           epsilon: 1.0e-8
         reference: "DOI:10.1038/s41467-026-68530-0"
+      - name: "quantum_material_simulation"
+        path: "closures/quantum_mechanics/quantum_material_simulation.py"
+        description: >
+          Quantum material simulation closure: 12 simulation conditions × 8
+          channels → Tier-1 invariants. Maps INS spectra benchmarks from
+          Lee et al. (arXiv:2603.15608, March 2026) for KCuF3,
+          CsCoX3, and XX chain through ground_state_fidelity,
+          spectral_weight_accuracy, peak_position_accuracy,
+          entanglement_witness, two_tangle, circuit_fidelity,
+          structural_similarity, transport_coherence.
+          7 theorems (T-QSM-1 through T-QSM-7).
+        contract: "QM.INTSTACK.v1"
+        inputs: ["simulation_condition_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "heterogeneity_gap", "regime"]
+        channels:
+          - "ground_state_fidelity"
+          - "spectral_weight_accuracy"
+          - "peak_position_accuracy"
+          - "entanglement_witness"
+          - "two_tangle"
+          - "circuit_fidelity"
+          - "structural_similarity"
+          - "transport_coherence"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 7
+        cross_references:
+          - "closures/quantum_mechanics/entanglement.py"
+          - "closures/quantum_mechanics/wavefunction_collapse.py"
+        reference: "arXiv:2603.15608"
 
     nuclear_physics:
       - name: "nuclide_binding"
