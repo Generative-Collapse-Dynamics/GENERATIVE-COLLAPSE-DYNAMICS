@@ -166,4 +166,4 @@ class TestStructural:
 
     def test_seizure_largest_delta(self, all_results):
         deltas = {r.name: r.F - r.IC for r in all_results}
-        assert max(deltas, key=deltas.get) == "Epileptic_seizure"
+        assert max(deltas, key=lambda x: deltas[x]) == "Epileptic_seizure"
