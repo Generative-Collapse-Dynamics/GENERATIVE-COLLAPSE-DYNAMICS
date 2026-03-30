@@ -471,6 +471,27 @@ registry:
         frozen_params:
           epsilon: 1.0e-8
         reference: "DOI:10.5281/zenodo.17509488"
+      - name: "polariton_topological_photonics"
+        path: "closures/quantum_mechanics/polariton_topological_photonics.py"
+        description: >
+          Polariton topological photonics independent derivation:
+          6 theorems mapping Widmann et al. Nat. Commun. 17 (2026)
+          polariton Hofstadter ladder to GCD kernel invariants.
+          12 entities (3 topological, 3 trivial, 4 transitional,
+          2 extreme), 8-channel trace (gauge_flux,
+          polarization_splitting, non_reciprocity, winding_number,
+          edge_localization, polariton_coherence, coupling_ratio,
+          detuning).
+        contract: "QM.INTSTACK.v1"
+        inputs: ["gauge_flux", "polarization_splitting",
+                 "non_reciprocity", "winding_number",
+                 "edge_localization", "polariton_coherence",
+                 "coupling_ratio", "detuning"]
+        outputs: ["F", "omega", "IC", "kappa", "regime",
+                  "heterogeneity_gap", "weakest_channel", "strongest_channel"]
+        frozen_params:
+          epsilon: 1.0e-8
+        reference: "DOI:10.1038/s41467-026-68530-0"
 
     nuclear_physics:
       - name: "nuclide_binding"
@@ -1155,6 +1176,30 @@ registry:
           - "closures/awareness_cognition/awareness_kernel.py"
           - "closures/evolution/brain_kernel.py"
           - "src/umcp/kernel_optimized.py"
+      - name: "neural_criticality"
+        path: "closures/clinical_neuroscience/neural_criticality.py"
+        description: "Neural criticality closure: 12 brain states × 8 criticality-specific channels → Tier-1 invariants. Maps healthy waking, sleep, pathological, and extreme states through branching ratio, power-law exponent, long-range correlation, spectral slope, susceptibility, correlation length, entropy rate, dynamic range. 6 theorems (T-NCR-1 through T-NCR-6). Motivated by PRL March 2026: brain operates near but not at the critical point."
+        contract: "UMA.INTSTACK.v1"
+        inputs: ["brain_state_criticality_profiles"]
+        outputs: ["F", "omega", "S", "C", "kappa", "IC", "heterogeneity_gap", "regime"]
+        channels:
+          - "branching_ratio"
+          - "power_law_exponent"
+          - "long_range_correlation"
+          - "spectral_slope"
+          - "susceptibility"
+          - "correlation_length"
+          - "entropy_rate"
+          - "dynamic_range"
+        frozen_params:
+          epsilon: 1.0e-8
+          n_channels: 8
+          n_entities: 12
+          n_theorems: 6
+        cross_references:
+          - "closures/clinical_neuroscience/neurocognitive_kernel.py"
+          - "closures/consciousness_coherence/coherence_kernel.py"
+          - "closures/consciousness_coherence/altered_states.py"
 
     awareness_cognition:
       - name: "awareness_kernel"
@@ -1237,10 +1282,10 @@ extensions:
     quantum_mechanics:
       archetype: multi-subsystem
       channels: 8
-      entities: 74
-      theorems: 41
+      entities: 86
+      theorems: 47
       tier1_bootstrap: true
-      theorem_prefix: "T_TERS/T_QDM/T_FQHE/T_PCM/T_TB"
+      theorem_prefix: "T_TERS/T_QDM/T_FQHE/T_PCM/T_TB/T_PTP"
       note: "Multiple theorem series from independent subsystem derivations"
     finance:
       archetype: kernel-centric
@@ -1316,11 +1361,11 @@ extensions:
     clinical_neuroscience:
       archetype: kernel-centric
       channels: 10
-      entities: 97
-      theorems: 28
+      entities: 109
+      theorems: 34
       tier1_bootstrap: false
       theorem_prefix: "TCN"
-      note: "97 entities across 6 closure files including brain atlas (35 entities, 6 theorems)"
+      note: "109 entities across 7 closure files including neural criticality (12 entities, 6 theorems T-NCR-1–6)"
     spacetime_memory:
       archetype: kernel-centric
       channels: 8
