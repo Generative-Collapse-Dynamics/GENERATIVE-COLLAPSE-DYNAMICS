@@ -1,7 +1,7 @@
 """Tests for topological persistence closure (continuity theory domain).
 
-Validates 12 topological space entities, 8-channel trace construction,
-Tier-1 kernel identities, and 6 theorems (T-TP-1 through T-TP-6).
+Validates 17 topological space entities, 8-channel trace construction,
+Tier-1 kernel identities, and 7 theorems (T-TP-1 through T-TP-7).
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ from closures.continuity_theory.topological_persistence import (
     verify_t_tp_4,
     verify_t_tp_5,
     verify_t_tp_6,
+    verify_t_tp_7,
 )
 
 
@@ -35,7 +36,7 @@ def all_results() -> list[TPKernelResult]:
 
 class TestEntityCatalog:
     def test_entity_count(self):
-        assert len(TP_ENTITIES) == 12
+        assert len(TP_ENTITIES) == 17
 
     def test_channel_count(self):
         assert N_TP_CHANNELS == 8
@@ -43,7 +44,7 @@ class TestEntityCatalog:
 
     def test_all_categories_present(self):
         cats = {e.category for e in TP_ENTITIES}
-        assert cats == {"surface", "manifold", "knot", "fractal"}
+        assert cats == {"surface", "genus_series", "manifold", "knot", "fractal"}
 
     @pytest.mark.parametrize("entity", TP_ENTITIES, ids=lambda e: e.name)
     def test_trace_vector_shape(self, entity):
@@ -90,6 +91,9 @@ class TestTheorems:
 
     def test_t_tp_6(self, all_results):
         assert verify_t_tp_6(all_results)["passed"]
+
+    def test_t_tp_7(self, all_results):
+        assert verify_t_tp_7(all_results)["passed"]
 
     def test_all_theorems_pass(self):
         for t in verify_all_theorems():

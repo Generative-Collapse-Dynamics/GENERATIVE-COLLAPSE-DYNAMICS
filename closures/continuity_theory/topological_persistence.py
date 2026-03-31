@@ -1,26 +1,31 @@
 """Topological Persistence Closure — Continuity Theory Domain.
 
-Tier-2 closure mapping 12 topological spaces through the GCD kernel.
+Tier-2 closure mapping 16 topological spaces through the GCD kernel.
 Each space is characterized by 8 channels drawn from algebraic topology
 and topological data analysis.
 
 Channels (8, equal weights w_i = 1/8):
   0  euler_characteristic    — χ normalized to [0,1] via (χ + 2) / 6
-  1  genus                   — topological genus (normalized, 0 = sphere)
+  1  genus                   — topological genus (normalized g/4, capped at 1.0)
   2  betti_0                 — connected components (normalized)
-  3  betti_1                 — 1-dimensional holes / loops (normalized)
+  3  betti_1                 — 1-dimensional holes / loops (normalized, capped at 1.0)
   4  betti_2                 — 2-dimensional voids (normalized)
-  5  fundamental_group_rank  — π₁ rank (normalized, 0 = simply connected)
+  5  fundamental_group_rank  — π₁ rank (normalized, capped at 1.0)
   6  orientability           — 1 = orientable, ε = non-orientable
   7  compactness             — 1 = compact, lower = non-compact
 
-12 entities across 4 categories:
+16 entities across 5 categories:
   Surfaces (4): sphere, torus, Klein_bottle, projective_plane
-  Manifolds (3): Mobius_strip, genus_2_surface, real_line
+  Genus series (4): genus_3_surface, genus_4_surface, genus_5_surface, genus_10_surface
+  Manifolds (2): Mobius_strip, real_line
   Knots (2): trefoil_knot_complement, figure_eight_complement
   Fractals (3): Cantor_set, Sierpinski_triangle, Menger_sponge
 
-6 theorems (T-TP-1 through T-TP-6).
+Note: sphere = genus-0, torus = genus-1, and genus_2_surface (now in genus
+series as the anchor) complete the low-genus range. The genus series extends
+to genus-10 to capture the full progression of topological complexity.
+
+7 theorems (T-TP-1 through T-TP-7).
 """
 
 from __future__ import annotations
@@ -82,29 +87,41 @@ class TopologicalEntity:
         )
 
 
-# Normalization notes:
-# euler_characteristic: (χ_raw + 2) / 6 maps χ ∈ [-2, 4] → [0, 1]
-#   sphere χ=2 → 0.667, torus χ=0 → 0.333, genus-2 χ=-2 → 0.0
-# genus: g/4 (capped at 1.0)
-# betti_n: normalized by max relevant value
-# fundamental_group_rank: rank/4 (capped at 1.0)
+# Normalization notes (updated for genus series up to g=10):
+# euler_characteristic: (χ_raw + 18) / 22 maps χ ∈ [-18, 4] → [0, 1]
+#   sphere χ=2 → 20/22=0.909, torus χ=0 → 18/22=0.818, genus-2 χ=-2 → 16/22=0.727
+#   genus-3 χ=-4 → 0.636, genus-4 χ=-6 → 0.545, genus-5 χ=-8 → 0.455
+#   genus-10 χ=-18 → 0.0; Klein χ=0 → 0.818; proj plane χ=1 → 0.864
+# genus: g/10 (genus-10 = 1.0)
+# betti_1: 2g/20 = g/10 (matches genus normalization for orientable surfaces)
+# fundamental_group_rank: rank/20 (same scale as betti_1)
+# betti_0, betti_2, orientability, compactness: unchanged
 TP_ENTITIES: tuple[TopologicalEntity, ...] = (
-    # Surfaces
-    TopologicalEntity("sphere", "surface", 0.667, 0.00, 1.0, 0.00, 1.0, 0.00, 1.0, 1.0),
-    TopologicalEntity("torus", "surface", 0.333, 0.25, 1.0, 0.50, 1.0, 0.50, 1.0, 1.0),
-    TopologicalEntity("Klein_bottle", "surface", 0.333, 0.25, 1.0, 0.25, 0.00, 0.50, EPSILON, 1.0),
-    TopologicalEntity("projective_plane", "surface", 0.500, 0.00, 1.0, 0.00, 0.00, 0.25, EPSILON, 1.0),
-    # Manifolds
-    TopologicalEntity("Mobius_strip", "manifold", 0.333, 0.00, 1.0, 0.25, 0.00, 0.25, EPSILON, 1.0),
-    TopologicalEntity("genus_2_surface", "manifold", 0.000, 0.50, 1.0, 1.00, 1.0, 1.00, 1.0, 1.0),
-    TopologicalEntity("real_line", "manifold", 0.500, 0.00, 1.0, 0.00, 0.00, 0.00, 1.0, EPSILON),
-    # Knot complements (3-manifolds)
-    TopologicalEntity("trefoil_knot_complement", "knot", 0.333, 0.25, 1.0, 0.25, 0.00, 0.50, 1.0, 0.50),
-    TopologicalEntity("figure_eight_complement", "knot", 0.333, 0.25, 1.0, 0.25, 0.00, 0.50, 1.0, 0.50),
-    # Fractals
-    TopologicalEntity("Cantor_set", "fractal", 0.333, 0.00, 0.50, 0.00, 0.00, 0.00, 1.0, 1.0),
-    TopologicalEntity("Sierpinski_triangle", "fractal", 0.333, 0.00, 1.0, 0.75, 0.00, 0.75, 1.0, 1.0),
-    TopologicalEntity("Menger_sponge", "fractal", 0.333, 0.00, 1.0, 0.90, 0.00, 0.90, 1.0, 1.0),
+    # ── Surfaces (closed, genus 0–1) ─────────────────────────────────
+    TopologicalEntity("sphere", "surface", 0.909, 0.00, 1.0, 0.00, 1.0, 0.00, 1.0, 1.0),
+    TopologicalEntity("torus", "surface", 0.818, 0.10, 1.0, 0.10, 1.0, 0.10, 1.0, 1.0),
+    TopologicalEntity("Klein_bottle", "surface", 0.818, 0.10, 1.0, 0.10, 0.00, 0.10, EPSILON, 1.0),
+    TopologicalEntity("projective_plane", "surface", 0.864, 0.00, 1.0, 0.00, 0.00, 0.05, EPSILON, 1.0),
+    # ── Genus series (closed orientable, genus 2–10) ────────────────
+    # χ = 2−2g → norm (χ+18)/22
+    # genus: g/10; β₁ = 2g → 2g/20 = g/10; π₁ rank = 2g → 2g/20
+    # sphere (g=0) and torus (g=1) are in surfaces above
+    TopologicalEntity("genus_2_surface", "genus_series", 0.727, 0.20, 1.0, 0.20, 1.0, 0.20, 1.0, 1.0),
+    TopologicalEntity("genus_3_surface", "genus_series", 0.636, 0.30, 1.0, 0.30, 1.0, 0.30, 1.0, 1.0),
+    TopologicalEntity("genus_4_surface", "genus_series", 0.545, 0.40, 1.0, 0.40, 1.0, 0.40, 1.0, 1.0),
+    TopologicalEntity("genus_5_surface", "genus_series", 0.455, 0.50, 1.0, 0.50, 1.0, 0.50, 1.0, 1.0),
+    TopologicalEntity("genus_7_surface", "genus_series", 0.273, 0.70, 1.0, 0.70, 1.0, 0.70, 1.0, 1.0),
+    TopologicalEntity("genus_10_surface", "genus_series", 0.000, 1.00, 1.0, 1.00, 1.0, 1.00, 1.0, 1.0),
+    # ── Manifolds ─────────────────────────────────────────────────────
+    TopologicalEntity("Mobius_strip", "manifold", 0.818, 0.00, 1.0, 0.05, 0.00, 0.05, EPSILON, 1.0),
+    TopologicalEntity("real_line", "manifold", 0.864, 0.00, 1.0, 0.00, 0.00, 0.00, 1.0, EPSILON),
+    # ── Knot complements (3-manifolds) ───────────────────────────────
+    TopologicalEntity("trefoil_knot_complement", "knot", 0.818, 0.05, 1.0, 0.05, 0.00, 0.10, 1.0, 0.50),
+    TopologicalEntity("figure_eight_complement", "knot", 0.818, 0.05, 1.0, 0.05, 0.00, 0.10, 1.0, 0.50),
+    # ── Fractals ──────────────────────────────────────────────────────
+    TopologicalEntity("Cantor_set", "fractal", 0.818, 0.00, 0.50, 0.00, 0.00, 0.00, 1.0, 1.0),
+    TopologicalEntity("Sierpinski_triangle", "fractal", 0.818, 0.00, 1.0, 0.375, 0.00, 0.375, 1.0, 1.0),
+    TopologicalEntity("Menger_sponge", "fractal", 0.818, 0.00, 1.0, 0.45, 0.00, 0.45, 1.0, 1.0),
 )
 
 
@@ -189,13 +206,28 @@ def verify_t_tp_1(results: list[TPKernelResult]) -> dict:
 
 
 def verify_t_tp_2(results: list[TPKernelResult]) -> dict:
-    """T-TP-2: Genus-2 surface has highest F among all entities —
-    richest topological structure with maximal Betti numbers and genus.
+    """T-TP-2: Genus series shows monotonic F increase with genus.
+
+    As topological complexity (genus) increases, more channels are
+    populated → F (arithmetic mean) rises monotonically.
     """
-    g2 = next(r for r in results if r.name == "genus_2_surface")
-    max_F = max(r.F for r in results)
-    passed = abs(g2.F - max_F) < 0.02
-    return {"name": "T-TP-2", "passed": bool(passed), "genus2_F": g2.F, "max_F": float(max_F)}
+    genus_names = [
+        "torus",  # g=1
+        "genus_2_surface",  # g=2
+        "genus_3_surface",  # g=3
+        "genus_4_surface",  # g=4
+        "genus_5_surface",  # g=5
+        "genus_7_surface",  # g=7
+        "genus_10_surface",  # g=10
+    ]
+    by_name = {r.name: r for r in results}
+    f_vals = [by_name[n].F for n in genus_names]
+    monotonic = all(f_vals[i] < f_vals[i + 1] for i in range(len(f_vals) - 1))
+    return {
+        "name": "T-TP-2",
+        "passed": bool(monotonic),
+        "genus_F_values": f_vals,
+    }
 
 
 def verify_t_tp_3(results: list[TPKernelResult]) -> dict:
@@ -255,6 +287,36 @@ def verify_t_tp_6(results: list[TPKernelResult]) -> dict:
     }
 
 
+def verify_t_tp_7(results: list[TPKernelResult]) -> dict:
+    """T-TP-7: Genus confinement — at high genus, euler characteristic
+    channel hits ε causing geometric slaughter.
+
+    genus-10 has the highest F in the domain but the lowest IC/F among
+    the genus series, because euler_char = (2−2·10+18)/22 = 0.0 → ε.
+    This is topological confinement: analogous to QCD color confinement
+    where one dead channel destroys multiplicative coherence.
+    """
+    by_name = {r.name: r for r in results}
+    g10 = by_name["genus_10_surface"]
+    g5 = by_name["genus_5_surface"]
+    # genus-10 has highest F in genus series
+    genus_series = [r for r in results if r.category == "genus_series"]
+    highest_F = max(r.F for r in genus_series)
+    g10_highest = abs(g10.F - highest_F) < 1e-10
+    # genus-10 IC/F is crushed (< 0.15) despite high F
+    g10_crushed = (g10.IC / g10.F) < 0.15
+    # genus-5 IC/F is healthy (> 0.90)
+    g5_healthy = (g5.IC / g5.F) > 0.90
+    passed = g10_highest and g10_crushed and g5_healthy
+    return {
+        "name": "T-TP-7",
+        "passed": bool(passed),
+        "g10_F": g10.F,
+        "g10_IC_F": g10.IC / g10.F,
+        "g5_IC_F": g5.IC / g5.F,
+    }
+
+
 def verify_all_theorems() -> list[dict]:
     """Run all T-TP theorems."""
     results = compute_all_entities()
@@ -265,6 +327,7 @@ def verify_all_theorems() -> list[dict]:
         verify_t_tp_4(results),
         verify_t_tp_5(results),
         verify_t_tp_6(results),
+        verify_t_tp_7(results),
     ]
 
 
