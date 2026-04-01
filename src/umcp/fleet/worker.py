@@ -150,7 +150,10 @@ class Worker:
 
             # Poll for work
             if not self._drain and self._info.active_jobs < self._config.capacity and self._scheduler:
-                job = self._scheduler.poll(self.worker_id)
+                try:
+                    job = self._scheduler.poll(self.worker_id)
+                except Exception:
+                    job = None
                 if job:
                     self._execute(job)
 

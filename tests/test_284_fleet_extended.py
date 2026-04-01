@@ -297,7 +297,7 @@ class TestWorkerExtended:
         """Worker executes a job when scheduler provides one."""
         job = Job(target="casepacks/hello_world")
         mock_sched = MagicMock()
-        mock_sched.poll.side_effect = [job, None, None, None, None]
+        mock_sched.poll.side_effect = [job, None, None, None, None, None, None, None, None, None]
 
         with patch.object(Worker, "_run_validation") as mock_run:
             mock_run.return_value = JobResult(
@@ -315,7 +315,7 @@ class TestWorkerExtended:
         """Worker handles exceptions during job execution."""
         job = Job(target="casepacks/hello_world")
         mock_sched = MagicMock()
-        mock_sched.poll.side_effect = [job, None, None, None]
+        mock_sched.poll.side_effect = [job, None, None, None, None, None, None, None, None, None]
 
         with patch.object(Worker, "_run_validation", side_effect=RuntimeError("boom")):
             w = Worker("test-w9", scheduler=mock_sched, config=WorkerConfig(poll_interval_s=0.05))
