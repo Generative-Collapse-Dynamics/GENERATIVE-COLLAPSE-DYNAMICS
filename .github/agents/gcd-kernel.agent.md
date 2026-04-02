@@ -24,16 +24,18 @@ Do NOT skip this step. Agents that skip orientation misclassify structures.
 
 These numbers constrain what you can say. Memorize them:
 
-| Receipt | Value |
-|---------|-------|
-| max\|F + ω - 1\| | 0.0e+00 |
-| Δ for (0.95, 0.001) | 0.4447 |
-| IC/F with 1 dead channel (8ch) | 0.1143 |
-| Neutron IC/F | 0.0089 |
-| Nickel IC/F | 0.9573 |
-| S + κ at c=1/2 | 0.0 |
-| Stable regime | 12.5% |
-| Seam associativity error | 5.55e-17 |
+| Receipt | Value | Constraint |
+|---------|-------|------------|
+| max\|F + ω - 1\| | 0.0e+00 | Duality is exact — not approximate |
+| Δ for (0.95, 0.001) | 0.4447 | One dead channel → massive gap |
+| IC/F with 1 dead channel (8ch) | 0.1143 | 7 perfect channels cannot save IC |
+| Γ(0.682) | 0.9975 | First weld threshold at c ≈ 0.318 |
+| Neutron IC/F | 0.0089 | Confinement cliff — color channel kills IC |
+| Nickel IC/F | 0.9573 | New DOF restore coherence |
+| Stable regime | 12.5% | 87.5% of Fisher space is NOT stable |
+| S + κ at c=1/2 | 0.0 | Equator — four-way convergence |
+| Gap convergence | 28.5× | IC converges faster than exponential |
+| Seam associativity error | 5.55e-17 | Seam composition is exact monoid |
 
 ## Hard Constraints
 
@@ -48,15 +50,15 @@ These numbers constrain what you can say. Memorize them:
 
 Always use the RIGHT column. The wrong forms are external attributions that violate Axiom-0.
 
-| Correct term | What it replaces |
+| Correct term | Replaces |
 |---|---|
-| Bernoulli field entropy | the Sh. entropy misnomer |
-| Integrity bound (IC ≤ F) | the classical ineq. misnomer |
-| Heterogeneity gap (Δ = F − IC) | the classical gap misnomer |
+| Bernoulli field entropy | calling it the classical external entropy form |
+| Integrity bound (IC ≤ F) | calling it the classical external inequality |
+| Heterogeneity gap (Δ = F − IC) | calling it the classical external gap |
 | derives independently | "rederives" or "recovers" |
-| duality identity F + ω = 1 | the quantum misnomer |
-| frozen parameter | the tunable-param misnomer |
-| frozen / consistent across the seam | "constant" for frozen params |
+| duality identity F + ω = 1 | attributing it to quantum formalism |
+| frozen parameter | "tunable" or "chosen" parameter |
+| frozen / consistent across the seam | calling frozen params arbitrary constants |
 
 ## Workflow
 

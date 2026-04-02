@@ -62,9 +62,15 @@ _kernel = OptimizedKernelComputer(epsilon=EPSILON)
 # ---------------------------------------------------------------------------
 
 
-def _kernel_to_dict(k: KernelOutputs) -> dict[str, Any]:
-    """Convert KernelOutputs to a clean dict for MCP response."""
-    return {
+def _kernel_to_dict(k: KernelOutputs, *, include_regime: bool = False) -> dict[str, Any]:
+    """Convert KernelOutputs to a clean dict for MCP response.
+
+    Note: k.regime is the heterogeneity descriptor (homogeneous/coherent/
+    heterogeneous/fragmented) — NOT the canonical Stable/Watch/Collapse label.
+    Pass include_regime=True to also run the 4-gate classifier and include
+    the canonical regime label in the output.
+    """
+    out: dict[str, Any] = {
         "F": k.F,
         "omega": k.omega,
         "S": k.S,
@@ -72,10 +78,15 @@ def _kernel_to_dict(k: KernelOutputs) -> dict[str, Any]:
         "kappa": k.kappa,
         "IC": k.IC,
         "heterogeneity_gap": k.heterogeneity_gap,
-        "regime": k.regime,
+        "heterogeneity_regime": k.regime,  # coherent/homogeneous/heterogeneous/fragmented
         "is_homogeneous": k.is_homogeneous,
         "computation_mode": k.computation_mode,
     }
+    if include_regime:
+        canonical = classify_regime(k.omega, k.F, k.S, k.C, k.IC, DEFAULT_THRESHOLDS)
+        out["regime"] = canonical.value
+        out["is_critical"] = bool(DEFAULT_THRESHOLDS.I_critical_max > k.IC)
+    return out
 
 
 def _parse_vector(raw: list[float], name: str) -> np.ndarray:
@@ -124,7 +135,7 @@ def compute_kernel(
         w = np.full(n, 1.0 / n)
 
     result = _kernel.compute(c, w)
-    return _kernel_to_dict(result)
+    return _kernel_to_dict(result, include_regime=True)
 
 
 @mcp.tool()
@@ -155,7 +166,7 @@ def classify_regime_tool(
     """
     thresholds = DEFAULT_THRESHOLDS
     regime = classify_regime(omega, F, S, C, IC, thresholds)
-    is_critical = thresholds.I_critical_max > IC
+    is_critical = bool(thresholds.I_critical_max > IC)
 
     return {
         "regime": regime.value,
@@ -468,7 +479,7 @@ def compute_kernel_batch(
             msg = f"trace_vectors[{i}] length ({len(c)}) != expected ({n})"
             raise ValueError(msg)
         k = _kernel.compute(c, w)
-        results.append(_kernel_to_dict(k))
+        results.append(_kernel_to_dict(k, include_regime=True))
 
     # Summary statistics
     f_values = [r["F"] for r in results]
