@@ -93,12 +93,13 @@ def verify_t_sec_5(results: list[SKKernelResult]) -> dict:
     """
     min_channels = [float(np.min(e.trace_vector())) for e in SK_ENTITIES]
     ic_values = [r.IC for r in results]
-    rho, _p = sp_stats.spearmanr(min_channels, ic_values)
+    result = sp_stats.spearmanr(min_channels, ic_values)
+    rho = float(result.statistic)  # type: ignore[union-attr]
     passed = rho > 0.5
     return {
         "name": "T-SEC-5",
         "passed": bool(passed),
-        "spearman_rho": float(rho),
+        "spearman_rho": rho,
     }
 
 

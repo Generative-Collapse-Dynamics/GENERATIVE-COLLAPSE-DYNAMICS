@@ -14,7 +14,7 @@
 [![Theorems: 252](https://img.shields.io/badge/theorems-252_proven-ff69b4.svg)](closures/)
 [![Identities: 44](https://img.shields.io/badge/identities-44_verified-9cf.svg)](scripts/)
 
-### [**Try the Interactive Web Calculator →**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/calculator)
+## [**Try the Interactive Web Calculator →**](https://calebpruett927.github.io/GENERATIVE-COLLAPSE-DYNAMICS/calculator)
 
 Explore the GCD kernel live in your browser — no installation required. Compute Tier-1 invariants, verify algebraic identities, visualize regime phase diagrams, compose systems, run orientation proofs, and analyze 29 cross-domain entities from subatomic particles to cosmological memory.
 
