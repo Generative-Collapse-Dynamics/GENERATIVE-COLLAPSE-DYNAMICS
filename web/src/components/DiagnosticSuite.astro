@@ -517,6 +517,21 @@
   let channelValues = [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.25];
   const selectedComps = new Set<number>();
 
+  /** Build a flat array from PRESETS (object) + DOMAIN_PRESETS (array). */
+  function getAllPresets() {
+    const core = Object.values(PRESETS).map(p => ({
+      name: p.name, c: [...p.c] as number[], w: [...p.w] as number[],
+      domain: 'core', description: '',
+    }));
+    return [
+      ...core,
+      ...DOMAIN_PRESETS.map(dp => ({
+        name: dp.name, c: [...dp.c], w: [...dp.w],
+        domain: dp.domain, description: dp.description,
+      })),
+    ];
+  }
+
   const CHANNEL_COLORS = [
     '#f59e0b', '#3b82f6', '#34d399', '#ef4444',
     '#a855f7', '#22d3ee', '#f472b6', '#84cc16',
@@ -540,15 +555,79 @@
   function populatePresets() {
     const sel = document.getElementById('diag-preset-select') as HTMLSelectElement;
     if (!sel) return;
-    sel.innerHTML = '<option value="">— pick preset —</option>';
-    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
-    for (let i = 0; i < allPresets.length; i++) {
-      const o = document.createElement('option');
-      o.value = String(i);
-      const p = allPresets[i];
-      o.textContent = p.name;
-      sel.appendChild(o);
+    sel.innerHTML = '';
+
+    // Convert PRESETS object to flat array
+    const corePresets = Object.values(PRESETS).map(p => ({
+      name: p.name, c: [...p.c], w: [...p.w], domain: 'core', description: '',
+    }));
+
+    // Build organized groups: label → preset[]
+    const groups: [string, typeof corePresets][] = [
+      ['Core Kernels', corePresets],
+    ];
+
+    // Group DOMAIN_PRESETS by domain
+    const domainLabels: Record<string, string> = {
+      standard_model: 'Standard Model',
+      nuclear_physics: 'Nuclear Physics',
+      astronomy: 'Astrophysics',
+      weyl: 'Cosmology',
+      finance: 'Finance',
+      consciousness_coherence: 'Consciousness',
+      clinical_neuroscience: 'Clinical Neuro',
+      evolution: 'Evolution',
+      kinematics: 'Kinematics',
+      dynamic_semiotics: 'Semiotics',
+      quantum_mechanics: 'Quantum Mechanics',
+      spacetime_memory: 'Spacetime Memory',
+      qm: 'Quantum Mechanics',
+      thermo: 'Thermodynamics',
+      materials: 'Materials Science',
+      semiotics: 'Computational Semiotics',
+      biology: 'Biology',
+      spacetime: 'Spacetime / Cosmology',
+      neuro: 'Neuroscience',
+      corner: 'Corner Probes',
+      corner_probe: 'Corner Probes',
+    };
+
+    const domainBuckets = new Map<string, typeof corePresets>();
+    for (const dp of DOMAIN_PRESETS) {
+      const d = dp.domain.toLowerCase();
+      const label = domainLabels[d] || d;
+      if (!domainBuckets.has(label)) domainBuckets.set(label, []);
+      domainBuckets.get(label)!.push({
+        name: dp.name, c: [...dp.c], w: [...dp.w], domain: dp.domain, description: dp.description,
+      });
     }
+    for (const [label, items] of domainBuckets) {
+      groups.push([label, items]);
+    }
+
+    // Build a flat lookup array (for index-based selection) and render optgroups
+    const allPresets: { name: string; c: number[]; w: number[]; domain: string; description: string }[] = [];
+
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = `— pick preset (${corePresets.length + DOMAIN_PRESETS.length} systems) —`;
+    sel.appendChild(defaultOpt);
+
+    for (const [label, items] of groups) {
+      if (items.length === 0) continue;
+      const grp = document.createElement('optgroup');
+      grp.label = label;
+      for (const p of items) {
+        const o = document.createElement('option');
+        o.value = String(allPresets.length);
+        o.textContent = p.name;
+        if (p.description) o.title = p.description;
+        grp.appendChild(o);
+        allPresets.push(p);
+      }
+      sel.appendChild(grp);
+    }
+
     sel.addEventListener('change', () => {
       const idx = parseInt(sel.value);
       if (isNaN(idx)) return;
@@ -948,7 +1027,7 @@
   function renderCompSelector() {
     const el = document.getElementById('comp-selector');
     if (!el) return;
-    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
+    const allPresets = getAllPresets();
     el.innerHTML = allPresets.map((p, i) => `
       <span class="comp-chip ${selectedComps.has(i) ? 'selected' : ''}" data-idx="${i}">${p.name}</span>
     `).join('');
@@ -969,7 +1048,7 @@
   }
 
   function runComparison() {
-    const allPresets = [...PRESETS, ...DOMAIN_PRESETS];
+    const allPresets = getAllPresets();
     const selected = [...selectedComps].sort().map(i => allPresets[i]).filter(Boolean);
     if (selected.length < 2) return;
 
