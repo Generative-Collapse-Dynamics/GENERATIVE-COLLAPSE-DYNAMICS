@@ -94,7 +94,7 @@ const base = import.meta.env.BASE_URL;
           Entropy is <em>asymptotically determined</em> by fidelity and curvature via the Central Limit Theorem. This is not an algebraic identity but a statistical one — it tightens with increasing channel count n.
           Together with the three algebraic identities, this reduces the kernel's 6 outputs to <strong class="text-kernel-200">3 effective degrees of freedom: F, κ, C</strong>.
         </p>
-        <div class="mt-3 grid grid-cols-3 gap-3">
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-kernel-950 rounded p-3 text-center">
             <div class="text-xl font-bold text-amber-400">6</div>
             <div class="text-[10px] text-kernel-500">Total outputs</div>
@@ -258,7 +258,7 @@ const base = import.meta.env.BASE_URL;
         <p class="text-kernel-400 text-sm mb-3">
           Seam chains compose <em>associatively</em> with an identity element (zero seam). Verified to |error| = 5.55 × 10<sup>−17</sup>.
         </p>
-        <div class="grid grid-cols-3 gap-3 mb-3">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
           <div class="bg-kernel-950 border border-kernel-700 rounded p-3 text-center">
             <div class="text-sm font-mono text-cyan-400">A ∘ (B ∘ C) = (A ∘ B) ∘ C</div>
             <div class="text-[10px] text-kernel-500 mt-1">Associativity</div>
@@ -304,7 +304,7 @@ const base = import.meta.env.BASE_URL;
       <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-4">
         <h3 class="text-lg font-bold text-kernel-200 mb-4">The Three Ranks</h3>
         <p class="text-kernel-400 text-sm mb-4">Click each rank to see its algebraic properties, physical meaning, and examples.</p>
-        <div class="grid grid-cols-3 gap-3" id="rank-cards"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="rank-cards"></div>
         <div id="rank-detail" class="hidden mt-4 bg-kernel-950 border border-kernel-600 rounded-lg p-5">
           <div class="flex justify-between items-start mb-3">
             <h4 class="text-base font-bold text-kernel-200" id="rank-title"></h4>
@@ -319,7 +319,7 @@ const base = import.meta.env.BASE_URL;
         <p class="text-kernel-400 text-sm mb-3">
           Regardless of input dimensionality n (number of channels), the kernel compresses to at most 3 effective degrees of freedom. This is verified by PCA on random traces:
         </p>
-        <div class="grid grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div class="bg-kernel-950 rounded p-3 text-center">
             <div class="text-sm font-mono text-kernel-300">n = 4</div>
             <div class="text-lg font-bold text-orange-400">rank = 3</div>

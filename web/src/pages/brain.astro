@@ -452,7 +452,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <span id="region-category" class="text-xs px-2 py-0.5 rounded border"></span>
 
             <!-- Kernel invariants -->
-            <div class="grid grid-cols-3 gap-2 mt-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3">
               <div class="bg-kernel-900 rounded p-2 text-center">
                 <div class="text-xs text-kernel-500">F</div>
                 <div id="detail-F" class="text-lg font-mono text-kernel-100"></div>
@@ -525,7 +525,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- Results -->
         <div class="w-full lg:w-72 space-y-3">
           <span class="text-xs text-kernel-500 font-bold uppercase tracking-wider">Kernel Output</span>
-          <div class="grid grid-cols-3 gap-2 mt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
             <div class="bg-kernel-950 rounded p-2 text-center">
               <div class="text-[10px] text-kernel-500">F</div>
               <div id="pg-F" class="text-lg font-mono text-kernel-100">—</div>
@@ -979,7 +979,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           coherence (IC) becomes exponentially harder — adding a 5th item while
           keeping 4 others active causes IC to drop below the conscious threshold.
         </p>
-        <div class="grid grid-cols-4 gap-2" id="wm-demo">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="wm-demo">
           <div class="bg-kernel-950 border border-kernel-800 rounded p-2 text-center">
             <div class="text-xs text-kernel-500">1 item</div>
             <div class="font-mono text-sm text-green-400" id="wm-1">—</div>
@@ -1258,7 +1258,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             enabling 35% detection gain over standard MRI.</p>
           <p class="text-kernel-500 italic">Detection gain from subfields: <span class="text-red-400">+35%</span></p>
         </div>
-        <div class="mt-3 grid grid-cols-4 gap-1" id="ad-targets"></div>
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-1" id="ad-targets"></div>
       </div>
 
       <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-5">
@@ -1271,7 +1271,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             ultra-high resolution — pBrain achieves Dice = 0.89 for deep GM.</p>
           <p class="text-kernel-500 italic">Detection gain from subfields: <span class="text-purple-400">+40%</span></p>
         </div>
-        <div class="mt-3 grid grid-cols-3 gap-1" id="pd-targets"></div>
+        <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-1" id="pd-targets"></div>
       </div>
 
       <div class="bg-kernel-900 border border-kernel-700 rounded-lg p-5">
@@ -1915,7 +1915,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     return `<div class="bg-kernel-900 border ${col.border}/30 rounded p-3">
       <div class="text-xs font-bold ${col.text} capitalize">${cat.replace('_', ' ')}</div>
       <div class="text-[10px] text-kernel-500 mt-1">n = ${catR.length}</div>
-      <div class="grid grid-cols-3 gap-1 mt-2">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-2">
         <div><span class="text-[9px] text-kernel-600">⟨F⟩</span><div class="text-xs font-mono text-kernel-300">${avgF.toFixed(3)}</div></div>
         <div><span class="text-[9px] text-kernel-600">⟨IC⟩</span><div class="text-xs font-mono text-kernel-300">${avgIC.toFixed(3)}</div></div>
         <div><span class="text-[9px] text-kernel-600">⟨Δ⟩</span><div class="text-xs font-mono text-amber-400">${avgDelta.toFixed(3)}</div></div>

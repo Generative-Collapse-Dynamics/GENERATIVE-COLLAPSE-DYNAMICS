@@ -156,6 +156,18 @@ const navGroups = [
         .mobile-toggle { display: none !important; }
         #mobile-menu { display: none !important; }
       }
+
+      /* ── Mobile-first utilities ────────────────────────── */
+      @media (max-width: 640px) {
+        /* Tighter padding on small screens */
+        .main-px { padding-left: 1rem; padding-right: 1rem; }
+        .nav-px  { padding-left: 1rem; padding-right: 1rem; }
+        .ftr-px  { padding-left: 1rem; padding-right: 1rem; }
+        /* Force tables to scroll horizontally */
+        table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        /* Shrink oversized monospace a bit */
+        pre, code { font-size: 0.8rem; }
+      }
     </style>
   </head>
   <body class="bg-kernel-950 text-kernel-100 min-h-screen antialiased">
@@ -166,7 +178,7 @@ const navGroups = [
 
     <!-- Navigation -->
     <nav class="sticky top-0 z-40 border-b border-kernel-800/60 bg-kernel-950/80 backdrop-blur-xl" aria-label="Main navigation">
-      <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-6 nav-px h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href={base} class="flex items-center gap-2 group" aria-label="GCD home">
           <span class="text-xl font-bold tracking-tight text-kernel-100 group-hover:text-amber-400 transition-colors">GCD</span>
@@ -235,13 +247,13 @@ const navGroups = [
     </nav>
 
     <!-- Main content -->
-    <main id="main-content" class="max-w-7xl mx-auto px-6 py-12" role="main">
+    <main id="main-content" class="max-w-7xl mx-auto px-6 main-px py-8 sm:py-12" role="main">
       <slot />
     </main>
 
     <!-- Footer -->
     <footer class="border-t border-kernel-800/40 mt-32" role="contentinfo">
-      <div class="max-w-7xl mx-auto px-6 py-16">
+      <div class="max-w-7xl mx-auto px-6 ftr-px py-10 sm:py-16">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           <!-- Brand -->
           <div class="md:col-span-1">

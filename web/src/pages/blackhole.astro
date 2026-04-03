@@ -50,10 +50,10 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- SCENARIO CONTROLS                                          -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div class="bg-kernel-900/80 border border-kernel-700 rounded-lg p-5 mb-6 sticky top-0 z-30 backdrop-blur-md" id="control-panel">
-      <div class="flex flex-wrap items-end gap-5">
+    <div class="bg-kernel-900/80 border border-kernel-700 rounded-lg p-4 sm:p-5 mb-6 sticky top-16 z-30 backdrop-blur-md" id="control-panel">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-end gap-3 sm:gap-5">
         <!-- Scenario Selector -->
-        <div class="flex-1 min-w-[200px]">
+        <div class="sm:col-span-2 lg:col-span-1">
           <label class="text-[11px] text-kernel-400 uppercase tracking-wider block mb-1.5">Scenario</label>
           <select id="scenario-select" class="w-full bg-kernel-800 border border-kernel-600 text-kernel-200 rounded px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none">
             <option value="stellar">Stellar Black Hole (3–20 M☉)</option>
@@ -67,7 +67,7 @@ const base = import.meta.env.BASE_URL;
         </div>
 
         <!-- Spin Parameter -->
-        <div class="w-40">
+        <div>
           <label class="text-[11px] text-kernel-400 uppercase tracking-wider block mb-1.5">Spin a*</label>
           <div class="flex items-center gap-2">
             <input id="spin-slider" type="range" min="0" max="0.998" step="0.001" value="0.700"
@@ -77,7 +77,7 @@ const base = import.meta.env.BASE_URL;
         </div>
 
         <!-- Observer Distance -->
-        <div class="w-36">
+        <div>
           <label class="text-[11px] text-kernel-400 uppercase tracking-wider block mb-1.5">Distance d</label>
           <div class="flex items-center gap-2">
             <input id="dist-slider" type="range" min="0.1" max="10" step="0.1" value="1.0"
@@ -87,7 +87,7 @@ const base = import.meta.env.BASE_URL;
         </div>
 
         <!-- Live Readout -->
-        <div class="bg-kernel-800/60 border border-kernel-700 rounded px-3 py-1.5 min-w-[180px]">
+        <div class="bg-kernel-800/60 border border-kernel-700 rounded px-3 py-1.5 sm:col-span-2 lg:col-span-1">
           <div class="text-[10px] text-kernel-500 uppercase tracking-wider mb-0.5">Active Entity Kernel</div>
           <div class="flex gap-3 text-xs font-mono">
             <span class="text-green-400" id="ro-F">F=—</span>
@@ -114,32 +114,32 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- SECTION NAV                                                -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <nav id="section-nav" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 mb-6">
+    <nav id="section-nav" class="bg-kernel-900 border border-kernel-700 rounded-lg p-3 sm:p-4 mb-6 scroll-mt-24">
       <div class="text-[11px] text-kernel-500 uppercase tracking-wider mb-2">Sections</div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <a href="#sec-translation" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">0 · Translation Table</a>
-        <a href="#sec-well" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">1 · 3D Gravity Well</a>
-        <a href="#sec-infall" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">2 · Infall Simulator</a>
-        <a href="#sec-surface" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">3 · Budget Surface</a>
-        <a href="#sec-entities" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">4 · Entity Cards</a>
-        <a href="#sec-arrow" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">5 · Arrow of Time</a>
-        <a href="#sec-tidal" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">6 · Tidal Force</a>
-        <a href="#sec-lensing" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">7 · Lensing</a>
-        <a href="#sec-framedrag" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">8 · Frame-Dragging</a>
-        <a href="#sec-penrose" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">9 · Penrose Process</a>
-        <a href="#sec-proper" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">10 · Time Dilation</a>
-        <a href="#sec-gw" class="text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">11 · Precession & GW</a>
+      <div class="flex flex-nowrap sm:flex-wrap gap-2 text-xs overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
+        <a href="#sec-translation" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">0 · Translation</a>
+        <a href="#sec-well" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">1 · Gravity Well</a>
+        <a href="#sec-infall" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">2 · Infall</a>
+        <a href="#sec-surface" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">3 · Surface</a>
+        <a href="#sec-entities" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">4 · Entities</a>
+        <a href="#sec-arrow" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">5 · Arrow</a>
+        <a href="#sec-tidal" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">6 · Tidal</a>
+        <a href="#sec-lensing" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">7 · Lensing</a>
+        <a href="#sec-framedrag" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">8 · Frame-Drag</a>
+        <a href="#sec-penrose" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">9 · Penrose</a>
+        <a href="#sec-proper" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">10 · Time Dil.</a>
+        <a href="#sec-gw" class="whitespace-nowrap text-kernel-300 hover:text-kernel-100 bg-kernel-800 px-2.5 py-1 rounded border border-kernel-700 hover:border-kernel-500 transition">11 · GW</a>
       </div>
     </nav>
 
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §0  GR ↔ GCD Translation Table                             -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-translation" class="bg-kernel-900 border border-kernel-700 rounded-lg p-5 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-3">
+    <div id="sec-translation" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-5 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-3">
         <span class="text-xs font-mono text-kernel-500">§0</span>
-        <h2 class="text-lg font-bold text-kernel-200">GR ↔ GCD Translation</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Translatio inter campos</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">GR ↔ GCD Translation</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Translatio inter campos</span>
       </div>
       <details>
         <summary class="text-xs text-kernel-400 cursor-pointer hover:text-kernel-200 mb-3 select-none">
@@ -182,11 +182,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §1  3D Gravity Well (WebGL)                                -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-well" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-well" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§1</span>
-        <h2 class="text-lg font-bold text-kernel-200">3D Gravity Well</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Puteus gravitatis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">3D Gravity Well</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Puteus gravitatis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The budget surface Γ(ω) rendered as a 3D funnel. The center plunges toward the event
@@ -212,11 +212,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §2  Gravitational Infall                                   -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-infall" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-infall" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§2</span>
-        <h2 class="text-lg font-bold text-kernel-200">Gravitational Infall</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Casus gravitatis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Gravitational Infall</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Casus gravitatis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         Slide ω toward 1.0 to fall toward the event horizon. Drift cost Γ, tidal force d²Γ/dω²,
@@ -253,11 +253,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §3  Budget Surface Heatmap                                 -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-surface" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-surface" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§3</span>
-        <h2 class="text-lg font-bold text-kernel-200">Budget Surface</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Superficies impensae</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Budget Surface</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Superficies impensae</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The full cost landscape over (ω, C). Height = Γ(ω) + α·C. Objects deeper in the
@@ -289,11 +289,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §4  Entity Kernel Comparison                               -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-entities" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-entities" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§4</span>
-        <h2 class="text-lg font-bold text-kernel-200">Entity Kernel Comparison</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Comparatio entium</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Entity Kernel Comparison</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Comparatio entium</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         Each spacetime entity passes through the GCD kernel K: [0,1]ⁿ × Δⁿ → (F, ω, S, C, κ, IC).
@@ -306,11 +306,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §5  Arrow of Time                                          -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-arrow" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-arrow" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§5</span>
-        <h2 class="text-lg font-bold text-kernel-200">Arrow of Time</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Sagitta temporis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Arrow of Time</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Sagitta temporis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         Ascent cost vs. descent cost as a function of depth. Near the horizon, escape cost
@@ -325,11 +325,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §6  Tidal Force                                            -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-tidal" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-tidal" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§6</span>
-        <h2 class="text-lg font-bold text-kernel-200">Tidal Force</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Vis discerptionis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Tidal Force</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Vis discerptionis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The second derivative d²Γ/dω² measures the rate of change of the gravitational field —
@@ -344,11 +344,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §7  Gravitational Lensing                                  -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-lensing" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-lensing" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§7</span>
-        <h2 class="text-lg font-bold text-kernel-200">Gravitational Lensing</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Deflexio luminis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Gravitational Lensing</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Deflexio luminis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The heterogeneity gap Δ = F − IC determines lensing morphology. Small Δ produces an
@@ -366,11 +366,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §8  Frame-Dragging                                         -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-framedrag" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-framedrag" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§8</span>
-        <h2 class="text-lg font-bold text-kernel-200">Frame-Dragging</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Tractio referentiae — Lense-Thirring</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Frame-Dragging</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Tractio referentiae — Lense-Thirring</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         A spinning black hole drags the local inertial frame. In GCD, ω_drag = a*·Γ(ω)/(1+Γ)²
@@ -385,11 +385,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §9  Penrose Process                                        -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-penrose" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-penrose" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§9</span>
-        <h2 class="text-lg font-bold text-kernel-200">Penrose Process — Energy Extraction</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Processus Penrose</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Penrose Process — Energy Extraction</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Processus Penrose</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The Penrose process extracts rotational energy from a spinning black hole's ergosphere.
@@ -405,11 +405,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §10  Proper Time Dilation & Entropy                        -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-proper" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-proper" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§10</span>
-        <h2 class="text-lg font-bold text-kernel-200">Proper Time Dilation & Entropy</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Moratio temporis proprii</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Proper Time Dilation & Entropy</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Moratio temporis proprii</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         The proper-to-coordinate time ratio dτ/dt approaches zero at the horizon — clocks freeze
@@ -429,11 +429,11 @@ const base = import.meta.env.BASE_URL;
     <!-- ═══════════════════════════════════════════════════════════ -->
     <!-- §11  Orbital Precession & GW Strain                        -->
     <!-- ═══════════════════════════════════════════════════════════ -->
-    <div id="sec-gw" class="bg-kernel-900 border border-kernel-700 rounded-lg p-6 mb-6 scroll-mt-24">
-      <div class="flex items-baseline gap-3 mb-1">
+    <div id="sec-gw" class="bg-kernel-900 border border-kernel-700 rounded-lg p-4 sm:p-6 mb-6 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-1">
         <span class="text-xs font-mono text-kernel-500">§11</span>
-        <h2 class="text-lg font-bold text-kernel-200">Orbital Precession & Gravitational Waves</h2>
-        <span class="text-[10px] italic text-kernel-500 ml-auto">Praecessio et undae gravitatis</span>
+        <h2 class="text-base sm:text-lg font-bold text-kernel-200">Orbital Precession & Gravitational Waves</h2>
+        <span class="text-[10px] italic text-kernel-500 sm:ml-auto">Praecessio et undae gravitatis</span>
       </div>
       <p class="text-sm text-kernel-400 mb-4 max-w-2xl leading-relaxed">
         Orbital precession δφ = 6πΓ(ω)/(1+Γ)² grows super-linearly near the horizon.
