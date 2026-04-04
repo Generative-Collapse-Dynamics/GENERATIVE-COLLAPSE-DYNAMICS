@@ -515,12 +515,13 @@ def verify_t_fqc_3(results: list[FQCKernelResult]) -> dict:
     # Spearman rank correlation
     from scipy.stats import spearmanr  # type: ignore[import-untyped]
 
-    rho_val, _ = spearmanr(purities, ics)
-    passed = float(rho_val) > 0.85
+    result = spearmanr(purities, ics)
+    rho_val = float(result[0])  # type: ignore[arg-type]
+    passed = rho_val > 0.85
     return {
         "name": "T-FQC-3",
         "passed": bool(passed),
-        "spearman_rho": float(rho_val),
+        "spearman_rho": rho_val,
         "threshold": 0.85,
     }
 
