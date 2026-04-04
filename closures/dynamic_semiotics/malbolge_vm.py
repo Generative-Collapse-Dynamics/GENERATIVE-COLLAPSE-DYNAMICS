@@ -1,7 +1,10 @@
 """Malbolge Virtual Machine — Complete Faithful Implementation.
 
-Tier-0 implementation of the Malbolge virtual machine as specified by
-Ben Olmstead (1998), following reference interpreter conventions.
+Tier-2 infrastructure supporting the dynamic_semiotics domain closure.
+Implements the Malbolge virtual machine as specified by Ben Olmstead (1998),
+following reference interpreter conventions. This is domain-specific execution
+substrate used by malbolge_dynamics.py for channel extraction — not Tier-0
+protocol machinery (which lives in src/umcp/).
 
 The VM implements:
   - Ternary (base-3) arithmetic with 10-trit words (range 0–59048)
@@ -10,9 +13,9 @@ The VM implements:
   - Instruction decode: (C + mem[C]) % 94
   - Memory initialization: fill with crazy(mem[i-1], mem[i-2])
 
-This is a Tier-0 implementation (protocol machinery). The ternary operations
-are exact. The cipher table is the canonical one from the Esolang wiki,
-matching the reference interpreter (94 characters, verified derangement).
+The ternary operations are exact. The cipher table is the canonical one from
+the Esolang wiki, matching the reference interpreter (94 characters, verified
+derangement).
 
 *Numquam binarius; tertia via semper patet.*
 """
